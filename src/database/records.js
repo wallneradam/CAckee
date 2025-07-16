@@ -29,9 +29,10 @@ const add = async (data) => {
 	}
 
 	return enhance(
-		await Record.create({
-			clientId: data.clientId,
-			domainId: data.domainId,
+                await Record.create({
+                        clientId: data.clientId,
+                        visitorId: data.visitorId,
+                        domainId: data.domainId,
 			siteLocation: data.siteLocation,
 			siteReferrer: data.siteReferrer,
 			siteLanguage: data.siteLanguage,

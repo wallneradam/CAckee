@@ -1,6 +1,6 @@
 'use strict'
 
-const { subMilliseconds, subHours, subDays, subMonths, subYears, startOfDay, startOfMonth, startOfYear } = require('date-fns')
+const { subMilliseconds, subHours, subDays, subWeeks, subMonths, subYears, startOfDay, startOfWeek, startOfMonth, startOfYear } = require('date-fns')
 const serverTimeZone = require('./timeZone')
 const intervals = require('../constants/intervals')
 
@@ -24,30 +24,34 @@ module.exports = (userTimeZone = serverTimeZone) => {
 		lastMilliseconds: (milliseconds) => subMilliseconds(currentDate, milliseconds),
 		lastHours: (hours) => subHours(currentDate, hours),
 		lastDays: (days) => subDays(currentDate, days),
-		lastMonths: (months) => subMonths(currentDate, months),
-		lastYears: (years) => subYears(currentDate, years),
+                lastMonths: (months) => subMonths(currentDate, months),
+                lastWeeks: (weeks) => subWeeks(currentDate, weeks),
+                lastYears: (years) => subYears(currentDate, years),
 		// Get a date with an offset that always includes the whole unit of the given interval and a timezone toleranz
 		includeDays: (days) => subHours(subDays(startOfDay(currentDate), days - 1), timeZoneToleranz),
-		includeMonths: (months) => subHours(subMonths(startOfMonth(currentDate), months - 1), timeZoneToleranz),
-		includeYears: (years) => subHours(subYears(startOfYear(currentDate), years - 1), timeZoneToleranz),
+                includeMonths: (months) => subHours(subMonths(startOfMonth(currentDate), months - 1), timeZoneToleranz),
+                includeWeeks: (weeks) => subHours(subWeeks(startOfWeek(currentDate), weeks - 1), timeZoneToleranz),
+                includeYears: (years) => subHours(subYears(startOfYear(currentDate), years - 1), timeZoneToleranz),
 	}
 
 	// Get the last-function that matches the interval
 	const lastFnByInterval = (interval) => {
-		switch (interval) {
-			case intervals.INTERVALS_DAILY: return instance.lastDays
-			case intervals.INTERVALS_MONTHLY: return instance.lastMonths
-			case intervals.INTERVALS_YEARLY: return instance.lastYears
-		}
+                switch (interval) {
+                        case intervals.INTERVALS_DAILY: return instance.lastDays
+                        case intervals.INTERVALS_WEEKLY: return instance.lastWeeks
+                        case intervals.INTERVALS_MONTHLY: return instance.lastMonths
+                        case intervals.INTERVALS_YEARLY: return instance.lastYears
+                }
 	}
 
 	// Get the include-function that matches the interval
 	const includeFnByInterval = (interval) => {
-		switch (interval) {
-			case intervals.INTERVALS_DAILY: return instance.includeDays
-			case intervals.INTERVALS_MONTHLY: return instance.includeMonths
-			case intervals.INTERVALS_YEARLY: return instance.includeYears
-		}
+                switch (interval) {
+                        case intervals.INTERVALS_DAILY: return instance.includeDays
+                        case intervals.INTERVALS_WEEKLY: return instance.includeWeeks
+                        case intervals.INTERVALS_MONTHLY: return instance.includeMonths
+                        case intervals.INTERVALS_YEARLY: return instance.includeYears
+                }
 	}
 
 	return {

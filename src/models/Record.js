@@ -13,10 +13,14 @@ const schema = new mongoose.Schema({
 		unique: true,
 		default: uuid,
 	},
-	clientId: {
-		type: String,
-		index: true,
-	},
+        clientId: {
+                type: String,
+                index: true,
+        },
+        visitorId: {
+                type: String,
+                index: true,
+        },
 	domainId: {
 		type: String,
 		required: true,

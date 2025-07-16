@@ -10,7 +10,10 @@ const defaults = {
 	},
 	viewsToday: 0,
 	viewsMonth: 0,
-	viewsYear: 0,
+        viewsYear: 0,
+        visitorsToday: 0,
+        visitorsWeek: 0,
+        visitorsYear: 0,
 }
 
 export default (facts = {}) => {
