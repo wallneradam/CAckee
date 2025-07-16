@@ -40,11 +40,14 @@ const CardFacts = (props) => {
 	const {
 		activeVisitors,
 		averageViews,
-		averageDuration,
-		viewsToday,
-		viewsMonth,
-		viewsYear,
-	} = value
+                averageDuration,
+                viewsToday,
+                viewsMonth,
+                visitorsToday,
+                visitorsWeek,
+                visitorsYear,
+                viewsYear,
+        } = value
 
 	return (
 		h('div', {
@@ -80,13 +83,28 @@ const CardFacts = (props) => {
 				value: formatNumber(viewsMonth),
 				unit: pluralize([ 'views', 'view', 'views' ], viewsMonth),
 			}),
-			h(Presentation, {
-				headline: 'Views this year',
-				value: formatNumber(viewsYear),
-				unit: pluralize([ 'views', 'view', 'views' ], viewsYear),
-			}),
-		)
-	)
+                        h(Presentation, {
+                                headline: 'Views this year',
+                                value: formatNumber(viewsYear),
+                                unit: pluralize([ 'views', 'view', 'views' ], viewsYear),
+                        }),
+                        h(Presentation, {
+                                headline: 'Visitors today',
+                                value: formatNumber(visitorsToday),
+                                unit: pluralize([ 'visitors', 'visitor', 'visitors' ], visitorsToday),
+                        }),
+                        h(Presentation, {
+                                headline: 'Visitors this week',
+                                value: formatNumber(visitorsWeek),
+                                unit: pluralize([ 'visitors', 'visitor', 'visitors' ], visitorsWeek),
+                        }),
+                        h(Presentation, {
+                                headline: 'Visitors this year',
+                                value: formatNumber(visitorsYear),
+                                unit: pluralize([ 'visitors', 'visitor', 'visitors' ], visitorsYear),
+                        }),
+                )
+        )
 }
 
 CardFacts.propTypes = {

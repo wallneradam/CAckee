@@ -14,6 +14,9 @@ export default gql`
 		}
 		viewsToday
 		viewsMonth
-		viewsYear
-	}
+                viewsYear
+                visitorsToday
+                visitorsWeek
+                visitorsYear
+        }
 `

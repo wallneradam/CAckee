@@ -55,11 +55,23 @@ module.exports = gql`
 		Number of unique views this month.
 		"""
 		viewsMonth: UnsignedInt!
-		"""
-		Number of unique views this year.
-		"""
-		viewsYear: UnsignedInt!
-	}
+                """
+                Number of unique views this year.
+                """
+                viewsYear: UnsignedInt!
+                """
+                Number of unique visitors today.
+                """
+                visitorsToday: UnsignedInt!
+                """
+                Number of unique visitors this week.
+                """
+                visitorsWeek: UnsignedInt!
+                """
+                Number of unique visitors this year.
+                """
+                visitorsYear: UnsignedInt!
+        }
 
 	type Query {
 		"""
