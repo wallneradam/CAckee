@@ -1,4 +1,4 @@
-'use static'
+'use strict'
 
 const COOKIE_NAME = 'ackee_ignore'
 
