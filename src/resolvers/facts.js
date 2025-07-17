@@ -61,7 +61,7 @@ module.exports = {
 		}),
 		averageViews: pipe(requireAuth, async (domain, _, { dateDetails }) => {
 			const ids = await domainIds(domain)
-			const entries = views.get(ids, viewsType.VIEWS_TYPE_UNIQUE, intervals.INTERVALS_DAILY, 15, dateDetails)
+			const entries = views.get(ids, viewsType.VIEWS_TYPE_TOTAL, intervals.INTERVALS_DAILY, 15, dateDetails)
 
 			return entries
 		}),
@@ -73,19 +73,19 @@ module.exports = {
 		}),
 		viewsToday: pipe(requireAuth, async (domain, _, { dateDetails }) => {
 			const ids = await domainIds(domain)
-			const entries = await views.get(ids, viewsType.VIEWS_TYPE_UNIQUE, intervals.INTERVALS_DAILY, 1, dateDetails)
+			const entries = await views.get(ids, viewsType.VIEWS_TYPE_TOTAL, intervals.INTERVALS_DAILY, 1, dateDetails)
 
 			return entries[0].count
 		}),
 		viewsMonth: pipe(requireAuth, async (domain, _, { dateDetails }) => {
 			const ids = await domainIds(domain)
-			const entries = await views.get(ids, viewsType.VIEWS_TYPE_UNIQUE, intervals.INTERVALS_MONTHLY, 1, dateDetails)
+			const entries = await views.get(ids, viewsType.VIEWS_TYPE_TOTAL, intervals.INTERVALS_MONTHLY, 1, dateDetails)
 
 			return entries[0].count
 		}),
                 viewsYear: pipe(requireAuth, async (domain, _, { dateDetails }) => {
                         const ids = await domainIds(domain)
-                        const entries = await views.get(ids, viewsType.VIEWS_TYPE_UNIQUE, intervals.INTERVALS_YEARLY, 1, dateDetails)
+                        const entries = await views.get(ids, viewsType.VIEWS_TYPE_TOTAL, intervals.INTERVALS_YEARLY, 1, dateDetails)
 
                         return entries[0].count
                 }),

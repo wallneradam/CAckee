@@ -43,4 +43,4 @@ dist/*
 CLAUDE.md
 .mcp.json
 MEMORY.md
-.claude
+.claude/
