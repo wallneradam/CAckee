@@ -269,7 +269,7 @@ var wE="undefined"!=typeof navigator&&navigator.userAgent.toLowerCase().indexOf(
 	}
 
 	${Ik}
-`;var Q_=(e,t)=>WE($_,(e=>e?.statistics.views),(t=>z_(t,e.limit)),{variables:e,...t}),U_=(e=[],t)=>Pk(t).map(((t,n)=>{const r=e[n];return null==r?0:r.count}));const B_=Cy`
+`;var Q_=(e,t)=>WE($_,(e=>e?.statistics.views),(t=>z_(t,e.limit)),{variables:e,...t,fetchPolicy:"no-cache"}),U_=(e=[],t)=>Pk(t).map(((t,n)=>{const r=e[n];return null==r?0:r.count}));const B_=Cy`
 	query fetchMergedDurations($interval: Interval!, $limit: Int) {
 		statistics {
 			id
@@ -279,6 +279,54 @@ var wE="undefined"!=typeof navigator&&navigator.userAgent.toLowerCase().indexOf(
 
 	${Yk}
 `;var W_=e=>WE(B_,(e=>e?.statistics.durations),(t=>U_(t,e.limit)),{variables:e}),H_=Cy`
+	fragment visitorsField on DomainStatistics {
+		visitors(interval: $interval, limit: $limit) {
+			id
+			count
+		}
+	}
+`,K_=(e=[],t)=>Pk(t).map(((t,n)=>{const r=e[n];return null==r?0:r.count}));const Y_=Cy`
+	query fetchMergedVisitors($interval: Interval!, $limit: Int) {
+		statistics {
+			id
+			...visitorsField
+		}
+	}
+
+	${H_}
+`;var G_=(e,t)=>WE(Y_,(e=>e?.statistics.visitors),(t=>K_(t,e.limit)),{variables:e,...t,fetchPolicy:"no-cache"});const J_=Cy`
+	query fetchMergedReturningVisitors($interval: Interval!, $limit: Int) {
+		statistics {
+			id
+			...returningVisitorsField
+		}
+	}
+
+	${Cy`
+	fragment returningVisitorsField on DomainStatistics {
+		returningVisitors(interval: $interval, limit: $limit) {
+			id
+			count
+		}
+	}
+`}
+`;var X_=(e,t)=>WE(J_,(e=>e?.statistics.returningVisitors),(t=>K_(t,e.limit)),{variables:e,...t,fetchPolicy:"no-cache"});const Z_=Cy`
+	query fetchMergedNewVisitors($interval: Interval!, $limit: Int) {
+		statistics {
+			id
+			...newVisitorsField
+		}
+	}
+
+	${Cy`
+	fragment newVisitorsField on DomainStatistics {
+		newVisitors(interval: $interval, limit: $limit) {
+			id
+			count
+		}
+	}
+`}
+`;var eS=(e,t)=>WE(Z_,(e=>e?.statistics.newVisitors),(t=>K_(t,e.limit)),{variables:e,...t,fetchPolicy:"no-cache"}),tS=Cy`
 	fragment pagesField on DomainStatistics {
 		pages(sorting: $sorting, range: $range) {
 			id
@@ -287,7 +335,7 @@ var wE="undefined"!=typeof navigator&&navigator.userAgent.toLowerCase().indexOf(
 			created
 		}
 	}
-`,K_=(e=[])=>e.map((e=>({url:new URL(e.value),text:new URL(e.value).href,count:e.count,date:null==e.created?null:new Date(e.created)})));const Y_=Cy`
+`,nS=(e=[])=>e.map((e=>({url:new URL(e.value),text:new URL(e.value).href,count:e.count,date:null==e.created?null:new Date(e.created)})));const rS=Cy`
 	query fetchMergedPages($sorting: Sorting!, $range: Range) {
 		statistics {
 			id
@@ -295,8 +343,8 @@ var wE="undefined"!=typeof navigator&&navigator.userAgent.toLowerCase().indexOf(
 		}
 	}
 
-	${H_}
-`;var G_=e=>WE(Y_,(e=>e?.statistics.pages),K_,{variables:e}),J_=Cy`
+	${tS}
+`;var iS=e=>WE(rS,(e=>e?.statistics.pages),nS,{variables:e}),aS=Cy`
 	fragment referrersField on DomainStatistics {
 		referrers(sorting: $sorting, type: $type, range: $range) {
 			id
@@ -305,7 +353,7 @@ var wE="undefined"!=typeof navigator&&navigator.userAgent.toLowerCase().indexOf(
 			created
 		}
 	}
-`,X_=function(e){if("string"!=typeof e)return!1;var t=e.match(Z_);if(!t)return!1;var n=t[1];if(!n)return!1;if(eS.test(n)||tS.test(n))return!0;return!1},Z_=/^(?:\w+:)?\/\/(\S+)$/,eS=/^localhost[\:?\d]*(?:[^\:?\d]\S*)?$/,tS=/^[^\s\.]+\.\S{2,}$/;var nS=(e=[])=>e.map((e=>({url:!0===X_(e.value)?new URL(e.value):null,text:!0===X_(e.value)?new URL(e.value).href:e.value,count:e.count,date:null==e.created?null:new Date(e.created)})));const rS=Cy`
+`,oS=function(e){if("string"!=typeof e)return!1;var t=e.match(sS);if(!t)return!1;var n=t[1];if(!n)return!1;if(lS.test(n)||uS.test(n))return!0;return!1},sS=/^(?:\w+:)?\/\/(\S+)$/,lS=/^localhost[\:?\d]*(?:[^\:?\d]\S*)?$/,uS=/^[^\s\.]+\.\S{2,}$/;var cS=(e=[])=>e.map((e=>({url:!0===oS(e.value)?new URL(e.value):null,text:!0===oS(e.value)?new URL(e.value).href:e.value,count:e.count,date:null==e.created?null:new Date(e.created)})));const fS=Cy`
 	query fetchMergedReferrers($sorting: Sorting!, $type: ReferrerType!, $range: Range) {
 		statistics {
 			id
@@ -313,8 +361,8 @@ var wE="undefined"!=typeof navigator&&navigator.userAgent.toLowerCase().indexOf(
 		}
 	}
 
-	${J_}
-`;var iS=e=>WE(rS,(e=>e?.statistics.referrers),nS,{variables:e}),aS=Cy`
+	${aS}
+`;var dS=e=>WE(fS,(e=>e?.statistics.referrers),cS,{variables:e}),pS=Cy`
 	fragment systemsField on DomainStatistics {
 		systems(sorting: $sorting, type: $type, range: $range) {
 			id
@@ -323,7 +371,7 @@ var wE="undefined"!=typeof navigator&&navigator.userAgent.toLowerCase().indexOf(
 			created
 		}
 	}
-`,oS=(e=[])=>e.map((e=>({text:e.value,count:e.count,date:null==e.created?null:new Date(e.created)})));const sS=Cy`
+`,hS=(e=[])=>e.map((e=>({text:e.value,count:e.count,date:null==e.created?null:new Date(e.created)})));const mS=Cy`
 	query fetchMergedSystems($sorting: Sorting!, $type: SystemType!, $range: Range) {
 		statistics {
 			id
@@ -331,8 +379,8 @@ var wE="undefined"!=typeof navigator&&navigator.userAgent.toLowerCase().indexOf(
 		}
 	}
 
-	${aS}
-`;var lS=e=>WE(sS,(e=>e?.statistics.systems),oS,{variables:e}),uS=Cy`
+	${pS}
+`;var vS=e=>WE(mS,(e=>e?.statistics.systems),hS,{variables:e}),yS=Cy`
 	fragment devicesField on DomainStatistics {
 		devices(sorting: $sorting, type: $type, range: $range) {
 			id
@@ -341,7 +389,7 @@ var wE="undefined"!=typeof navigator&&navigator.userAgent.toLowerCase().indexOf(
 			created
 		}
 	}
-`,cS=(e=[])=>e.map((e=>({text:e.value,count:e.count,date:null==e.created?null:new Date(e.created)})));const fS=Cy`
+`,gS=(e=[])=>e.map((e=>({text:e.value,count:e.count,date:null==e.created?null:new Date(e.created)})));const bS=Cy`
 	query fetchMergedDevices($sorting: Sorting!, $type: DeviceType!, $range: Range) {
 		statistics {
 			id
@@ -349,8 +397,8 @@ var wE="undefined"!=typeof navigator&&navigator.userAgent.toLowerCase().indexOf(
 		}
 	}
 
-	${uS}
-`;var dS=e=>WE(fS,(e=>e?.statistics.devices),cS,{variables:e}),pS=Cy`
+	${yS}
+`;var wS=e=>WE(bS,(e=>e?.statistics.devices),gS,{variables:e}),ES=Cy`
 	fragment browsersField on DomainStatistics {
 		browsers(sorting: $sorting, type: $type, range: $range) {
 			id
@@ -359,7 +407,7 @@ var wE="undefined"!=typeof navigator&&navigator.userAgent.toLowerCase().indexOf(
 			created
 		}
 	}
-`,hS=(e=[])=>e.map((e=>({text:e.value,count:e.count,date:null==e.created?null:new Date(e.created)})));const mS=Cy`
+`,kS=(e=[])=>e.map((e=>({text:e.value,count:e.count,date:null==e.created?null:new Date(e.created)})));const _S=Cy`
 	query fetchMergedBrowsers($sorting: Sorting!, $type: BrowserType!, $range: Range) {
 		statistics {
 			id
@@ -367,8 +415,8 @@ var wE="undefined"!=typeof navigator&&navigator.userAgent.toLowerCase().indexOf(
 		}
 	}
 
-	${pS}
-`;var vS=e=>WE(mS,(e=>e?.statistics.browsers),hS,{variables:e}),yS=Cy`
+	${ES}
+`;var SS=e=>WE(_S,(e=>e?.statistics.browsers),kS,{variables:e}),xS=Cy`
 	fragment sizesField on DomainStatistics {
 		sizes(sorting: $sorting, type: $type, range: $range) {
 			id
@@ -377,7 +425,7 @@ var wE="undefined"!=typeof navigator&&navigator.userAgent.toLowerCase().indexOf(
 			created
 		}
 	}
-`,gS=(e=[])=>e.map((e=>({text:e.value,count:e.count,date:null==e.created?null:new Date(e.created)})));const bS=Cy`
+`,TS=(e=[])=>e.map((e=>({text:e.value,count:e.count,date:null==e.created?null:new Date(e.created)})));const OS=Cy`
 	query fetchMergedSizes($sorting: Sorting!, $type: SizeType!, $range: Range) {
 		statistics {
 			id
@@ -385,8 +433,8 @@ var wE="undefined"!=typeof navigator&&navigator.userAgent.toLowerCase().indexOf(
 		}
 	}
 
-	${yS}
-`;var wS=e=>WE(bS,(e=>e?.statistics.sizes),gS,{variables:e}),ES=Cy`
+	${xS}
+`;var CS=e=>WE(OS,(e=>e?.statistics.sizes),TS,{variables:e}),NS=Cy`
 	fragment languagesField on DomainStatistics {
 		languages(sorting: $sorting, range: $range) {
 			id
@@ -395,7 +443,7 @@ var wE="undefined"!=typeof navigator&&navigator.userAgent.toLowerCase().indexOf(
 			created
 		}
 	}
-`,kS=(e=[])=>e.map((e=>({text:e.value,count:e.count,date:null==e.created?null:new Date(e.created)})));const _S=Cy`
+`,RS=(e=[])=>e.map((e=>({text:e.value,count:e.count,date:null==e.created?null:new Date(e.created)})));const DS=Cy`
 	query fetchMergedLanguages($sorting: Sorting!, $range: Range) {
 		statistics {
 			id
@@ -403,8 +451,8 @@ var wE="undefined"!=typeof navigator&&navigator.userAgent.toLowerCase().indexOf(
 		}
 	}
 
-	${ES}
-`;var SS=e=>WE(_S,(e=>e?.statistics.languages),kS,{variables:e});const xS=["K","M","B","T"];var TS=(e,t)=>{let n=0;for(;e>=1e3&&++n<=xS.length;)e/=1e3;return t&&(e=t(e)),String(0===n?e:e+xS[n-1])},OS=e=>{const t=Math.round(e),n=TS(t,(e=>Number.parseFloat(e).toFixed(1)));return n.replace(".0","")},CS=(e,t)=>{switch(t){case 0:return e[0];case 1:return e[1];default:return e[2]}};const NS=e=>q.createElement("div",{className:Lw("badge",`badge--${e.type}`)},q.createElement("span",{className:"badge__value"},e.value));NS.propTypes={type:Dw.oneOf(["positive","negative","neutral"]).isRequired,value:Dw.string.isRequired};const RS=e=>q.createElement("svg",{viewBox:"0 0 512 512",className:e.className},q.createElement("path",{d:"m464 256c0-114.87-93.13-208-208-208s-208 93.13-208 208 93.13 208 208 208 208-93.13 208-208zm-212.65 91.36a16 16 0 0 1 -.09-22.63l52.32-52.73h-133.58a16 16 0 0 1 0-32h133.58l-52.32-52.73a16 16 0 1 1 22.74-22.54l79.39 80a16 16 0 0 1 0 22.54l-79.39 80a16 16 0 0 1 -22.65.09z"}));RS.propTypes={className:Dw.string};const DS=e=>e>5?"positive":e<-5?"negative":"neutral",IS=(e,t)=>e>0?`A ${t} increase when comparing the last 7 days with the previous 7 days`:e<0?`A ${t} decrease when comparing the last 7 days with the previous 7 days`:"No change when comparing the last 7 days with the previous 7 days",PS=e=>{const t=e.value,n=`${Math.abs(e.value)}%`;return q.createElement("div",{className:Lw("badge","badge--with-icon",`badge--${DS(t)}`),title:IS(t,n)},q.createElement(RS,{className:"badge__icon"}),q.createElement("span",{className:"badge__value"},n))};PS.propTypes={value:Dw.number.isRequired};const FS=e=>q.createElement("div",{className:"valueUnit"},q.createElement(Mw,{type:"div",spacing:!1},e.value),q.createElement(qw,{type:"div",spacing:!1},e.unit));FS.propTypes={value:Dw.oneOfType([Dw.number,Dw.string]).isRequired,unit:Dw.string.isRequired};const AS=e=>q.createElement("div",{className:"facts__card"},q.createElement(Mw,{type:"h2",size:"small",className:"facts__top"},e.headline),q.createElement("div",{className:"facts__left",title:e.title},q.createElement(FS,{value:e.value,unit:e.unit})),null!=e.addition&&q.createElement("div",{className:"facts__right"},e.addition)),LS=e=>{const{value:t}=e.hook(...e.hookArgs),{activeVisitors:n,averageViews:r,averageDuration:i,viewsToday:a,viewsMonth:o,visitorsToday:s,visitorsWeek:l,visitorsYear:u,viewsYear:c,returningVisitorsToday:f,returningVisitorsWeek:d,returningVisitorsYear:p,newVisitorsToday:h,newVisitorsWeek:m,newVisitorsYear:v}=t;return q.createElement("div",{className:"facts"},q.createElement(AS,{headline:"Active visitors",value:n,unit:CS(["visitors","visitor","visitors"],n),addition:q.createElement(NS,{type:"positive",value:"Live"})}),q.createElement(AS,{headline:"Average views",value:OS(r.count),unit:"per day",title:`An average of ${r.count} views per day during the last 14 days`,addition:null!=r.change&&q.createElement(PS,{value:r.change})}),q.createElement(AS,{headline:"Average duration",value:e_(i.count).value,unit:e_(i.count).unit,title:`An average visit duration of ${e_(i.count).value}${e_(i.count).unit} per day during the last 14 days`,addition:null!=i.change&&q.createElement(PS,{value:i.change})}),q.createElement(AS,{headline:"Visitors today",value:OS(s),unit:CS(["visitors","visitor","visitors"],s)}),q.createElement(AS,{headline:"Visitors this week",value:OS(l),unit:CS(["visitors","visitor","visitors"],l)}),q.createElement(AS,{headline:"Visitors this year",value:OS(u),unit:CS(["visitors","visitor","visitors"],u)}),q.createElement(AS,{headline:"Returning visitors today",value:OS(f),unit:CS(["visitors","visitor","visitors"],f)}),q.createElement(AS,{headline:"Returning visitors this week",value:OS(d),unit:CS(["visitors","visitor","visitors"],d)}),q.createElement(AS,{headline:"Returning visitors this year",value:OS(p),unit:CS(["visitors","visitor","visitors"],p)}),q.createElement(AS,{headline:"New visitors today",value:OS(h),unit:CS(["visitors","visitor","visitors"],h)}),q.createElement(AS,{headline:"New visitors this week",value:OS(m),unit:CS(["visitors","visitor","visitors"],m)}),q.createElement(AS,{headline:"New visitors this year",value:OS(v),unit:CS(["visitors","visitor","visitors"],v)}),q.createElement(AS,{headline:"Views today",value:OS(a),unit:CS(["views","view","views"],a)}),q.createElement(AS,{headline:"Views this month",value:OS(o),unit:CS(["views","view","views"],o)}),q.createElement(AS,{headline:"Views this year",value:OS(c),unit:CS(["views","view","views"],c)}))};LS.propTypes={hook:Dw.func.isRequired,hookArgs:Dw.array.isRequired};const MS=e=>{const{value:t,status:n}=e.hook(...e.hookArgs),[r,i]=q.useState(" ");return q.createElement("div",{className:Lw({card:!0,"card--wide":!0===e.wide})},q.createElement("div",{className:"card__inner"},q.createElement(Mw,{type:"h2",size:"medium",onClick:e.onMore},e.headline),q.createElement(qw,{type:"div",spacing:!1},q.createElement(Ok,n,r)),q.createElement(e.renderer,{...e.rendererProps,items:t,setStatusLabel:i})))};MS.propTypes={wide:Dw.bool,headline:Dw.string.isRequired,onMore:Dw.func,hook:Dw.func.isRequired,hookArgs:Dw.array.isRequired,renderer:Dw.elementType.isRequired,rendererProps:Dw.object};const qS=e=>{return t=Math.max.apply(Math,e),10*Math.ceil(t/10);var t},jS=(e,t)=>0===e&&0===t?0:e/t*100,VS=e=>q.createElement("div",{className:Lw({barChart__row:!0,"barChart__row--top":"top"===e.position,"barChart__row--middle":"middle"===e.position,"barChart__row--bottom":"bottom"===e.position,"color-light":!0})},e.children),zS=e=>q.createElement("div",{className:Lw({barChart__column:!0,"barChart__column--disabled":null==e.onClick,active:e.active}),onMouseEnter:e.onEnter,onMouseLeave:e.onLeave,onClick:e.onClick},q.createElement("div",{className:"barChart__bar color-black",style:{"--size":e.size},"data-label":e.label})),$S=e=>{return q.createElement("div",{className:"barChart"},q.createElement("div",{className:"barChart__axis"},q.createElement(VS,{position:"top"},e.formatter(qS(e.items))),q.createElement(VS,{position:"middle"},e.formatter((t=e.items,qS(t)/2))),q.createElement(VS,{position:"bottom"},e.formatter(0))),q.createElement("div",{className:"barChart__columns"},e.items.map(((t,n)=>q.createElement(zS,{key:n,active:e.active===n,size:`${jS(t,qS(e.items))}%`,onEnter:()=>e.onItemEnter(n),onLeave:()=>e.onItemLeave(n),onClick:null==e.onItemClick?void 0:()=>e.onItemClick(n),label:e.formatter(t)})))));var t};$S.propTypes={items:Dw.arrayOf(Dw.number).isRequired,formatter:Dw.func.isRequired,onItemEnter:Dw.func.isRequired,onItemLeave:Dw.func.isRequired,onItemClick:Dw.func};const QS=e=>{const[t,n]=q.useState(0),r=q.useCallback((e=>n(e)),[n]),i=q.useCallback((()=>n(0)),[n]),a=((e,t)=>Wk(t)(e))(t,e.interval);return q.useEffect((()=>e.setStatusLabel(a)),[a]),q.createElement($S,{items:e.items,formatter:e.formatter,active:t,onItemEnter:r,onItemLeave:i,onItemClick:e.onItemClick})};QS.propTypes={items:Dw.array.isRequired,interval:Dw.string.isRequired,formatter:Dw.func.isRequired,setStatusLabel:Dw.func.isRequired,onItemClick:Dw.func};var US=e=>q.createElement(QS,{...e,formatter:OS});const BS=e=>e_(e).toString();var WS=e=>q.createElement(QS,{...e,formatter:BS});function HS(e,t,n,r,i,a){var o=Math.round(Math.abs(e)/t);return a?o<=1?i:"in "+o+" "+n+"s":o<=1?r:o+" "+n+"s ago"}var KS=[{max:276e4,value:6e4,name:"minute",past:"a minute ago",future:"in a minute"},{max:72e6,value:36e5,name:"hour",past:"an hour ago",future:"in an hour"},{max:5184e5,value:864e5,name:"day",past:"yesterday",future:"tomorrow"},{max:24192e5,value:6048e5,name:"week",past:"last week",future:"in a week"},{max:28512e6,value:2592e6,name:"month",past:"last month",future:"in a month"}],YS=e=>{const t=function(e,t){var n=Date.now()-e.getTime();if(Math.abs(n)<6e4)return"just now";for(var r=0;r<KS.length;r++)if(Math.abs(n)<KS[r].max||t&&KS[r].name===t)return HS(n,KS[r].value,KS[r].name,KS[r].past,KS[r].future,n<0);return HS(n,31536e6,"year","last year","in a year",n<0)}(e);return t.charAt(0).toUpperCase()+t.slice(1)},GS=e=>({[wb]:"Last 24 hours",[Eb]:"Last 7 days",[kb]:"Last 30 days",[_b]:"Last 6 months"}[e]);const JS=e=>{const t=null!=e.url,n=!0===t?"a":"div",r=!0===t?{href:Ck(e.url).href,target:"_blank",rel:"noopener"}:{};return q.createElement(n,{className:"flexList__row flexList__row--has-hover",onMouseEnter:e.onEnter,onMouseLeave:e.onLeave,...r},q.createElement("div",{className:"flexList__column flexList__column--text-adjustment"},q.createElement("span",{className:"flexList__truncated",title:e.text},e.text)))},XS=e=>q.createElement("div",{className:"flexList"},q.createElement("div",{className:"flexList__inner"},e.items.map(((t,n)=>q.createElement(JS,{key:t.text+n,onEnter:()=>e.onItemEnter(n),onLeave:()=>e.onItemLeave(n),...t})))));XS.propTypes={items:Dw.arrayOf(Dw.shape({url:Dw.object,text:Dw.string.isRequired})).isRequired,onItemEnter:Dw.func.isRequired,onItemLeave:Dw.func.isRequired};const ZS=e=>{const[t,n]=q.useState(),r=q.useCallback((e=>n(e)),[n]),i=q.useCallback((()=>n()),[n]),a=(o=e.items[t],s=e.range,l=e.sorting===bb,o&&o.date?YS(o.date):l?"Recent":GS(s));var o,s,l;return q.useEffect((()=>e.setStatusLabel(a)),[a]),e.sorting===yb?q.createElement(Dk,{items:e.items,formatter:Hk}):q.createElement(XS,{items:e.items,onItemEnter:r,onItemLeave:i})};ZS.propTypes={items:Dw.array.isRequired,sorting:Dw.string.isRequired,range:Dw.string.isRequired,setStatusLabel:Dw.func.isRequired};const ex=e=>{const t=null==e.url,[n,r]=q.useState(t);return q.createElement("img",{className:Lw({favicon:!0,"favicon--missing":!0===n}),src:!0===n?"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=":e.url,onError:()=>r(!0)})};ex.propTypes={url:Dw.string};const tx=e=>{const t=null!=e.barWidth;return q.createElement("div",{className:"flexList__column flexList__column--spacing-right"},!0===t&&q.createElement("div",{className:"flexList__bar flexList__bar--favicon",style:{"--width":`${e.barWidth}%`}}),q.createElement(ex,{url:e.faviconUrl}))},nx=e=>{const t=e.url.hostname,n=e.url.pathname;return q.createElement("a",{className:"flexList__row",href:Ck(e.url).href,target:"_blank",rel:"noopener",onMouseEnter:e.onEnter,onMouseLeave:e.onLeave},q.createElement(tx,{barWidth:e.barWidth,faviconUrl:e.faviconUrl}),q.createElement("div",{className:"flexList__column flexList__column--text-adjustment"},q.createElement("span",{},t),q.createElement("span",{className:"flexList__obscured",title:n},n)))},rx=e=>q.createElement("a",{className:"flexList__row flexList__row--has-hover",onMouseEnter:e.onEnter,onMouseLeave:e.onLeave},q.createElement(tx,{barWidth:e.barWidth}),q.createElement("div",{className:"flexList__column flexList__column--text-adjustment"},q.createElement("span",{className:"flexList__truncated",title:e.text},e.text))),ix=e=>{const t=e.items.reduce(Nk("count"),0),n=!1===Number.isNaN(t),r=({count:e})=>e/t*100;return q.createElement("div",{className:"flexList"},q.createElement("div",{className:"flexList__inner"},e.items.map(((t,i)=>{const a={key:t.text+i,barWidth:!0===n?r(t):void 0,onEnter:()=>e.onItemEnter(i),onLeave:()=>e.onItemLeave(i)};return null==t.url?q.createElement(rx,{...a,text:t.text}):q.createElement(nx,{...a,faviconUrl:new URL("/favicon.ico",t.url).href,url:t.url})}))))};ix.propTypes={items:Dw.arrayOf(Dw.shape({url:Dw.object,text:Dw.string.isRequired,count:Dw.number})).isRequired,onItemEnter:Dw.func.isRequired,onItemLeave:Dw.func.isRequired};const ax=e=>{const[t,n]=q.useState(),r=q.useCallback((e=>n(e)),[n]),i=q.useCallback((()=>n()),[n]),a=(o=e.items[t],s=e.range,l=e.sorting===bb,u=e.sorting===gb,o&&o.date?YS(o.date):o&&o.count?`${o.count} ${1===o.count?"visit":"visits"}`:l?"Recent":u?"New":GS(s));var o,s,l,u;return q.useEffect((()=>e.setStatusLabel(a)),[a]),q.createElement(ix,{items:e.items,onItemEnter:r,onItemLeave:i})};ax.propTypes={items:Dw.array.isRequired,sorting:Dw.string.isRequired,range:Dw.string.isRequired,setStatusLabel:Dw.func.isRequired};const ox=e=>(WE(M_,(e=>e?.facts),L_,{pollInterval:5e3}),q.createElement(q.Fragment,{},q.createElement(LS,{hook:V_,hookArgs:[]}),q.createElement("div",{className:"content__spacer"}),q.createElement(MS,{wide:!0,headline:"Views",onMore:()=>e.setRoute("/insights/views"),hook:Q_,hookArgs:[{interval:Sb,type:Ob,limit:14}],renderer:US,rendererProps:{interval:Sb,onItemClick:t=>e.addModal(ck,{index:t,interval:Sb,type:Ob,limit:14})}}),q.createElement(MS,{wide:!0,headline:"Durations",onMore:()=>e.setRoute("/insights/durations"),hook:W_,hookArgs:[{interval:Sb,limit:14}],renderer:WS,rendererProps:{interval:Sb,onItemClick:t=>e.addModal(fk,{index:t,interval:Sb,limit:14})}}),q.createElement(MS,{headline:"Pages",onMore:()=>e.setRoute("/insights/pages"),hook:G_,hookArgs:[{sorting:yb,range:wb}],renderer:ZS,rendererProps:{sorting:yb,range:wb}}),q.createElement(MS,{headline:"Referrers",onMore:()=>e.setRoute("/insights/referrers"),hook:iS,hookArgs:[{sorting:yb,type:Nb,range:wb}],renderer:ax,rendererProps:{sorting:yb,range:wb}}),q.createElement("div",{className:"content__spacer"}),q.createElement(MS,{headline:"Systems",onMore:()=>e.setRoute("/insights/systems"),hook:lS,hookArgs:[{sorting:yb,type:$b,range:wb}],renderer:ZS,rendererProps:{sorting:yb,range:wb}}),q.createElement(MS,{headline:"Devices",onMore:()=>e.setRoute("/insights/devices"),hook:dS,hookArgs:[{sorting:yb,type:Ib,range:wb}],renderer:ZS,rendererProps:{sorting:yb,range:wb}}),q.createElement(MS,{headline:"Browsers",onMore:()=>e.setRoute("/insights/browsers"),hook:vS,hookArgs:[{sorting:yb,type:Fb,range:wb}],renderer:ZS,rendererProps:{sorting:yb,range:wb}}),q.createElement(MS,{headline:"Sizes",onMore:()=>e.setRoute("/insights/sizes"),hook:wS,hookArgs:[{sorting:yb,type:Mb,range:wb}],renderer:ZS,rendererProps:{sorting:yb,range:wb}}),q.createElement(MS,{headline:"Languages",onMore:()=>e.setRoute("/insights/languages"),hook:SS,hookArgs:[{sorting:yb,range:wb}],renderer:ZS,rendererProps:{sorting:yb,range:wb}})));ox.propTypes={setRoute:Dw.func.isRequired};const sx=Cy`
+	${NS}
+`;var IS=e=>WE(DS,(e=>e?.statistics.languages),RS,{variables:e});const PS=["K","M","B","T"];var FS=(e,t)=>{let n=0;for(;e>=1e3&&++n<=PS.length;)e/=1e3;return t&&(e=t(e)),String(0===n?e:e+PS[n-1])},AS=e=>{const t=Math.round(e),n=FS(t,(e=>Number.parseFloat(e).toFixed(1)));return n.replace(".0","")},LS=(e,t)=>{switch(t){case 0:return e[0];case 1:return e[1];default:return e[2]}};const MS=e=>q.createElement("div",{className:Lw("badge",`badge--${e.type}`)},q.createElement("span",{className:"badge__value"},e.value));MS.propTypes={type:Dw.oneOf(["positive","negative","neutral"]).isRequired,value:Dw.string.isRequired};const qS=e=>q.createElement("svg",{viewBox:"0 0 512 512",className:e.className},q.createElement("path",{d:"m464 256c0-114.87-93.13-208-208-208s-208 93.13-208 208 93.13 208 208 208 208-93.13 208-208zm-212.65 91.36a16 16 0 0 1 -.09-22.63l52.32-52.73h-133.58a16 16 0 0 1 0-32h133.58l-52.32-52.73a16 16 0 1 1 22.74-22.54l79.39 80a16 16 0 0 1 0 22.54l-79.39 80a16 16 0 0 1 -22.65.09z"}));qS.propTypes={className:Dw.string};const jS=e=>e>5?"positive":e<-5?"negative":"neutral",VS=(e,t)=>e>0?`A ${t} increase when comparing the last 7 days with the previous 7 days`:e<0?`A ${t} decrease when comparing the last 7 days with the previous 7 days`:"No change when comparing the last 7 days with the previous 7 days",zS=e=>{const t=e.value,n=`${Math.abs(e.value)}%`;return q.createElement("div",{className:Lw("badge","badge--with-icon",`badge--${jS(t)}`),title:VS(t,n)},q.createElement(qS,{className:"badge__icon"}),q.createElement("span",{className:"badge__value"},n))};zS.propTypes={value:Dw.number.isRequired};const $S=e=>q.createElement("div",{className:"valueUnit"},q.createElement(Mw,{type:"div",spacing:!1},e.value),q.createElement(qw,{type:"div",spacing:!1},e.unit));$S.propTypes={value:Dw.oneOfType([Dw.number,Dw.string]).isRequired,unit:Dw.string.isRequired};const QS=e=>q.createElement("div",{className:"facts__card"},q.createElement(Mw,{type:"h2",size:"small",className:"facts__top"},e.headline),q.createElement("div",{className:"facts__left",title:e.title},q.createElement($S,{value:e.value,unit:e.unit})),null!=e.addition&&q.createElement("div",{className:"facts__right"},e.addition)),US=e=>{const{value:t}=e.hook(...e.hookArgs),{activeVisitors:n,averageViews:r,averageDuration:i,viewsToday:a,viewsMonth:o,visitorsToday:s,visitorsWeek:l,visitorsYear:u,viewsYear:c,returningVisitorsToday:f,returningVisitorsWeek:d,returningVisitorsYear:p,newVisitorsToday:h,newVisitorsWeek:m,newVisitorsYear:v}=t;return q.createElement("div",{className:"facts"},q.createElement(QS,{headline:"Active visitors",value:n,unit:LS(["visitors","visitor","visitors"],n),addition:q.createElement(MS,{type:"positive",value:"Live"})}),q.createElement(QS,{headline:"Average views",value:AS(r.count),unit:"per day",title:`An average of ${r.count} views per day during the last 14 days`,addition:null!=r.change&&q.createElement(zS,{value:r.change})}),q.createElement(QS,{headline:"Average duration",value:e_(i.count).value,unit:e_(i.count).unit,title:`An average visit duration of ${e_(i.count).value}${e_(i.count).unit} per day during the last 14 days`,addition:null!=i.change&&q.createElement(zS,{value:i.change})}),q.createElement(QS,{headline:"Visitors today",value:AS(s),unit:LS(["visitors","visitor","visitors"],s)}),q.createElement(QS,{headline:"Visitors this week",value:AS(l),unit:LS(["visitors","visitor","visitors"],l)}),q.createElement(QS,{headline:"Visitors this year",value:AS(u),unit:LS(["visitors","visitor","visitors"],u)}),q.createElement(QS,{headline:"Returning visitors today",value:AS(f),unit:LS(["visitors","visitor","visitors"],f)}),q.createElement(QS,{headline:"Returning visitors this week",value:AS(d),unit:LS(["visitors","visitor","visitors"],d)}),q.createElement(QS,{headline:"Returning visitors this year",value:AS(p),unit:LS(["visitors","visitor","visitors"],p)}),q.createElement(QS,{headline:"New visitors today",value:AS(h),unit:LS(["visitors","visitor","visitors"],h)}),q.createElement(QS,{headline:"New visitors this week",value:AS(m),unit:LS(["visitors","visitor","visitors"],m)}),q.createElement(QS,{headline:"New visitors this year",value:AS(v),unit:LS(["visitors","visitor","visitors"],v)}),q.createElement(QS,{headline:"Views today",value:AS(a),unit:LS(["views","view","views"],a)}),q.createElement(QS,{headline:"Views this month",value:AS(o),unit:LS(["views","view","views"],o)}),q.createElement(QS,{headline:"Views this year",value:AS(c),unit:LS(["views","view","views"],c)}))};US.propTypes={hook:Dw.func.isRequired,hookArgs:Dw.array.isRequired};const BS=e=>{const{value:t,status:n}=e.hook(...e.hookArgs),[r,i]=q.useState(" ");return q.createElement("div",{className:Lw({card:!0,"card--wide":!0===e.wide})},q.createElement("div",{className:"card__inner"},q.createElement(Mw,{type:"h2",size:"medium",onClick:e.onMore},e.headline),q.createElement(qw,{type:"div",spacing:!1},q.createElement(Ok,n,r)),q.createElement(e.renderer,{...e.rendererProps,items:t,setStatusLabel:i})))};BS.propTypes={wide:Dw.bool,headline:Dw.string.isRequired,onMore:Dw.func,hook:Dw.func.isRequired,hookArgs:Dw.array.isRequired,renderer:Dw.elementType.isRequired,rendererProps:Dw.object};const WS=e=>{return t=Math.max.apply(Math,e),10*Math.ceil(t/10);var t},HS=(e,t)=>0===e&&0===t?0:e/t*100,KS=e=>q.createElement("div",{className:Lw({barChart__row:!0,"barChart__row--top":"top"===e.position,"barChart__row--middle":"middle"===e.position,"barChart__row--bottom":"bottom"===e.position,"color-light":!0})},e.children),YS=e=>q.createElement("div",{className:Lw({barChart__column:!0,"barChart__column--disabled":null==e.onClick,active:e.active}),onMouseEnter:e.onEnter,onMouseLeave:e.onLeave,onClick:e.onClick},q.createElement("div",{className:"barChart__bar color-black",style:{"--size":e.size},"data-label":e.label})),GS=e=>{return q.createElement("div",{className:"barChart"},q.createElement("div",{className:"barChart__axis"},q.createElement(KS,{position:"top"},e.formatter(WS(e.items))),q.createElement(KS,{position:"middle"},e.formatter((t=e.items,WS(t)/2))),q.createElement(KS,{position:"bottom"},e.formatter(0))),q.createElement("div",{className:"barChart__columns"},e.items.map(((t,n)=>q.createElement(YS,{key:n,active:e.active===n,size:`${HS(t,WS(e.items))}%`,onEnter:()=>e.onItemEnter(n),onLeave:()=>e.onItemLeave(n),onClick:null==e.onItemClick?void 0:()=>e.onItemClick(n),label:e.formatter(t)})))));var t};GS.propTypes={items:Dw.arrayOf(Dw.number).isRequired,formatter:Dw.func.isRequired,onItemEnter:Dw.func.isRequired,onItemLeave:Dw.func.isRequired,onItemClick:Dw.func};const JS=e=>{const[t,n]=q.useState(0),r=q.useCallback((e=>n(e)),[n]),i=q.useCallback((()=>n(0)),[n]),a=((e,t)=>Wk(t)(e))(t,e.interval);return q.useEffect((()=>e.setStatusLabel(a)),[a]),q.createElement(GS,{items:e.items,formatter:e.formatter,active:t,onItemEnter:r,onItemLeave:i,onItemClick:e.onItemClick})};JS.propTypes={items:Dw.array.isRequired,interval:Dw.string.isRequired,formatter:Dw.func.isRequired,setStatusLabel:Dw.func.isRequired,onItemClick:Dw.func};var XS=e=>q.createElement(JS,{...e,formatter:AS});const ZS=e=>e_(e).toString();var ex=e=>q.createElement(JS,{...e,formatter:ZS}),tx=e=>q.createElement(JS,{...e,formatter:AS});function nx(e,t,n,r,i,a){var o=Math.round(Math.abs(e)/t);return a?o<=1?i:"in "+o+" "+n+"s":o<=1?r:o+" "+n+"s ago"}var rx=[{max:276e4,value:6e4,name:"minute",past:"a minute ago",future:"in a minute"},{max:72e6,value:36e5,name:"hour",past:"an hour ago",future:"in an hour"},{max:5184e5,value:864e5,name:"day",past:"yesterday",future:"tomorrow"},{max:24192e5,value:6048e5,name:"week",past:"last week",future:"in a week"},{max:28512e6,value:2592e6,name:"month",past:"last month",future:"in a month"}],ix=e=>{const t=function(e,t){var n=Date.now()-e.getTime();if(Math.abs(n)<6e4)return"just now";for(var r=0;r<rx.length;r++)if(Math.abs(n)<rx[r].max||t&&rx[r].name===t)return nx(n,rx[r].value,rx[r].name,rx[r].past,rx[r].future,n<0);return nx(n,31536e6,"year","last year","in a year",n<0)}(e);return t.charAt(0).toUpperCase()+t.slice(1)},ax=e=>({[wb]:"Last 24 hours",[Eb]:"Last 7 days",[kb]:"Last 30 days",[_b]:"Last 6 months"}[e]);const ox=e=>{const t=null!=e.url,n=!0===t?"a":"div",r=!0===t?{href:Ck(e.url).href,target:"_blank",rel:"noopener"}:{};return q.createElement(n,{className:"flexList__row flexList__row--has-hover",onMouseEnter:e.onEnter,onMouseLeave:e.onLeave,...r},q.createElement("div",{className:"flexList__column flexList__column--text-adjustment"},q.createElement("span",{className:"flexList__truncated",title:e.text},e.text)))},sx=e=>q.createElement("div",{className:"flexList"},q.createElement("div",{className:"flexList__inner"},e.items.map(((t,n)=>q.createElement(ox,{key:t.text+n,onEnter:()=>e.onItemEnter(n),onLeave:()=>e.onItemLeave(n),...t})))));sx.propTypes={items:Dw.arrayOf(Dw.shape({url:Dw.object,text:Dw.string.isRequired})).isRequired,onItemEnter:Dw.func.isRequired,onItemLeave:Dw.func.isRequired};const lx=e=>{const[t,n]=q.useState(),r=q.useCallback((e=>n(e)),[n]),i=q.useCallback((()=>n()),[n]),a=(o=e.items[t],s=e.range,l=e.sorting===bb,o&&o.date?ix(o.date):l?"Recent":ax(s));var o,s,l;return q.useEffect((()=>e.setStatusLabel(a)),[a]),e.sorting===yb?q.createElement(Dk,{items:e.items,formatter:Hk}):q.createElement(sx,{items:e.items,onItemEnter:r,onItemLeave:i})};lx.propTypes={items:Dw.array.isRequired,sorting:Dw.string.isRequired,range:Dw.string.isRequired,setStatusLabel:Dw.func.isRequired};const ux=e=>{const t=null==e.url,[n,r]=q.useState(t);return q.createElement("img",{className:Lw({favicon:!0,"favicon--missing":!0===n}),src:!0===n?"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=":e.url,onError:()=>r(!0)})};ux.propTypes={url:Dw.string};const cx=e=>{const t=null!=e.barWidth;return q.createElement("div",{className:"flexList__column flexList__column--spacing-right"},!0===t&&q.createElement("div",{className:"flexList__bar flexList__bar--favicon",style:{"--width":`${e.barWidth}%`}}),q.createElement(ux,{url:e.faviconUrl}))},fx=e=>{const t=e.url.hostname,n=e.url.pathname;return q.createElement("a",{className:"flexList__row",href:Ck(e.url).href,target:"_blank",rel:"noopener",onMouseEnter:e.onEnter,onMouseLeave:e.onLeave},q.createElement(cx,{barWidth:e.barWidth,faviconUrl:e.faviconUrl}),q.createElement("div",{className:"flexList__column flexList__column--text-adjustment"},q.createElement("span",{},t),q.createElement("span",{className:"flexList__obscured",title:n},n)))},dx=e=>q.createElement("a",{className:"flexList__row flexList__row--has-hover",onMouseEnter:e.onEnter,onMouseLeave:e.onLeave},q.createElement(cx,{barWidth:e.barWidth}),q.createElement("div",{className:"flexList__column flexList__column--text-adjustment"},q.createElement("span",{className:"flexList__truncated",title:e.text},e.text))),px=e=>{const t=e.items.reduce(Nk("count"),0),n=!1===Number.isNaN(t),r=({count:e})=>e/t*100;return q.createElement("div",{className:"flexList"},q.createElement("div",{className:"flexList__inner"},e.items.map(((t,i)=>{const a={key:t.text+i,barWidth:!0===n?r(t):void 0,onEnter:()=>e.onItemEnter(i),onLeave:()=>e.onItemLeave(i)};return null==t.url?q.createElement(dx,{...a,text:t.text}):q.createElement(fx,{...a,faviconUrl:new URL("/favicon.ico",t.url).href,url:t.url})}))))};px.propTypes={items:Dw.arrayOf(Dw.shape({url:Dw.object,text:Dw.string.isRequired,count:Dw.number})).isRequired,onItemEnter:Dw.func.isRequired,onItemLeave:Dw.func.isRequired};const hx=e=>{const[t,n]=q.useState(),r=q.useCallback((e=>n(e)),[n]),i=q.useCallback((()=>n()),[n]),a=(o=e.items[t],s=e.range,l=e.sorting===bb,u=e.sorting===gb,o&&o.date?ix(o.date):o&&o.count?`${o.count} ${1===o.count?"visit":"visits"}`:l?"Recent":u?"New":ax(s));var o,s,l,u;return q.useEffect((()=>e.setStatusLabel(a)),[a]),q.createElement(px,{items:e.items,onItemEnter:r,onItemLeave:i})};hx.propTypes={items:Dw.array.isRequired,sorting:Dw.string.isRequired,range:Dw.string.isRequired,setStatusLabel:Dw.func.isRequired};const mx=e=>(WE(M_,(e=>e?.facts),L_,{pollInterval:5e3}),q.createElement(q.Fragment,{},q.createElement(US,{hook:V_,hookArgs:[]}),q.createElement("div",{className:"content__spacer"}),q.createElement(BS,{wide:!0,headline:"Unique Visitors",hook:G_,hookArgs:[{interval:Sb,limit:14}],renderer:tx,rendererProps:{interval:Sb,onItemClick:t=>e.addModal("modals_visitors",{index:t,interval:Sb,limit:14})}}),q.createElement(BS,{wide:!0,headline:"Views",onMore:()=>e.setRoute("/insights/views"),hook:Q_,hookArgs:[{interval:Sb,type:Cb,limit:14}],renderer:XS,rendererProps:{interval:Sb,onItemClick:t=>e.addModal(ck,{index:t,interval:Sb,type:Cb,limit:14})}}),q.createElement(BS,{wide:!0,headline:"Durations",onMore:()=>e.setRoute("/insights/durations"),hook:W_,hookArgs:[{interval:Sb,limit:14}],renderer:ex,rendererProps:{interval:Sb,onItemClick:t=>e.addModal(fk,{index:t,interval:Sb,limit:14})}}),q.createElement(BS,{wide:!0,headline:"Returning Visitors",hook:X_,hookArgs:[{interval:Sb,limit:14}],renderer:tx,rendererProps:{interval:Sb,onItemClick:t=>e.addModal("modals_returning_visitors",{index:t,interval:Sb,limit:14})}}),q.createElement(BS,{wide:!0,headline:"New Visitors",hook:eS,hookArgs:[{interval:Sb,limit:14}],renderer:tx,rendererProps:{interval:Sb,onItemClick:t=>e.addModal("modals_new_visitors",{index:t,interval:Sb,limit:14})}}),q.createElement(BS,{headline:"Pages",onMore:()=>e.setRoute("/insights/pages"),hook:iS,hookArgs:[{sorting:yb,range:wb}],renderer:lx,rendererProps:{sorting:yb,range:wb}}),q.createElement(BS,{headline:"Referrers",onMore:()=>e.setRoute("/insights/referrers"),hook:dS,hookArgs:[{sorting:yb,type:Nb,range:wb}],renderer:hx,rendererProps:{sorting:yb,range:wb}}),q.createElement("div",{className:"content__spacer"}),q.createElement(BS,{headline:"Systems",onMore:()=>e.setRoute("/insights/systems"),hook:vS,hookArgs:[{sorting:yb,type:$b,range:wb}],renderer:lx,rendererProps:{sorting:yb,range:wb}}),q.createElement(BS,{headline:"Devices",onMore:()=>e.setRoute("/insights/devices"),hook:wS,hookArgs:[{sorting:yb,type:Ib,range:wb}],renderer:lx,rendererProps:{sorting:yb,range:wb}}),q.createElement(BS,{headline:"Browsers",onMore:()=>e.setRoute("/insights/browsers"),hook:SS,hookArgs:[{sorting:yb,type:Fb,range:wb}],renderer:lx,rendererProps:{sorting:yb,range:wb}}),q.createElement(BS,{headline:"Sizes",onMore:()=>e.setRoute("/insights/sizes"),hook:CS,hookArgs:[{sorting:yb,type:Mb,range:wb}],renderer:lx,rendererProps:{sorting:yb,range:wb}}),q.createElement(BS,{headline:"Languages",onMore:()=>e.setRoute("/insights/languages"),hook:IS,hookArgs:[{sorting:yb,range:wb}],renderer:lx,rendererProps:{sorting:yb,range:wb}})));mx.propTypes={setRoute:Dw.func.isRequired};const vx=Cy`
 	query fetchActiveVisitors($id: ID!) {
 		domain(id: $id) {
 			id
@@ -414,7 +462,7 @@ var wE="undefined"!=typeof navigator&&navigator.userAgent.toLowerCase().indexOf(
 			}
 		}
 	}
-`;const lx=Cy`
+`;const yx=Cy`
 	query fetchFacts($id: ID!) {
 		domain(id: $id) {
 			id
@@ -425,7 +473,7 @@ var wE="undefined"!=typeof navigator&&navigator.userAgent.toLowerCase().indexOf(
 	}
 
 	${q_}
-`;var ux=e=>WE(lx,(e=>e?.domain.facts),L_,{variables:{id:e}});const cx=Cy`
+`;var gx=e=>WE(yx,(e=>e?.domain.facts),L_,{variables:{id:e}});const bx=Cy`
 	query fetchViews($id: ID!, $interval: Interval!, $type: ViewType!, $limit: Int) {
 		domain(id: $id) {
 			id
@@ -437,7 +485,7 @@ var wE="undefined"!=typeof navigator&&navigator.userAgent.toLowerCase().indexOf(
 	}
 
 	${Ik}
-`;var fx=(e,t)=>WE(cx,(e=>e?.domain.statistics.views),(e=>z_(e,t.limit)),{variables:{...t,id:e}});const dx=Cy`
+`;var wx=(e,t)=>WE(bx,(e=>e?.domain.statistics.views),(e=>z_(e,t.limit)),{variables:{...t,id:e}});const Ex=Cy`
 	query fetchDurations($id: ID!, $interval: Interval!, $limit: Int) {
 		domain(id: $id) {
 			id
@@ -449,7 +497,7 @@ var wE="undefined"!=typeof navigator&&navigator.userAgent.toLowerCase().indexOf(
 	}
 
 	${Yk}
-`;var px=(e,t)=>WE(dx,(e=>e?.domain.statistics.durations),(e=>U_(e,t.limit)),{variables:{...t,id:e}});const hx=Cy`
+`;var kx=(e,t)=>WE(Ex,(e=>e?.domain.statistics.durations),(e=>U_(e,t.limit)),{variables:{...t,id:e}});const _x=Cy`
 	query fetchPages($id: ID!, $sorting: Sorting!, $range: Range) {
 		domain(id: $id) {
 			id
@@ -460,8 +508,8 @@ var wE="undefined"!=typeof navigator&&navigator.userAgent.toLowerCase().indexOf(
 		}
 	}
 
-	${H_}
-`;var mx=(e,t)=>WE(hx,(e=>e?.domain.statistics.pages),K_,{variables:{...t,id:e}});const vx=Cy`
+	${tS}
+`;var Sx=(e,t)=>WE(_x,(e=>e?.domain.statistics.pages),nS,{variables:{...t,id:e}});const xx=Cy`
 	query fetchReferrers($id: ID!, $sorting: Sorting!, $type: ReferrerType!, $range: Range) {
 		domain(id: $id) {
 			id
@@ -472,8 +520,8 @@ var wE="undefined"!=typeof navigator&&navigator.userAgent.toLowerCase().indexOf(
 		}
 	}
 
-	${J_}
-`;var yx=(e,t)=>WE(vx,(e=>e?.domain.statistics.referrers),nS,{variables:{...t,id:e}});const gx=Cy`
+	${aS}
+`;var Tx=(e,t)=>WE(xx,(e=>e?.domain.statistics.referrers),cS,{variables:{...t,id:e}});const Ox=Cy`
 	query fetchSystems($id: ID!, $sorting: Sorting!, $type: SystemType!, $range: Range) {
 		domain(id: $id) {
 			id
@@ -484,8 +532,8 @@ var wE="undefined"!=typeof navigator&&navigator.userAgent.toLowerCase().indexOf(
 		}
 	}
 
-	${aS}
-`;var bx=(e,t)=>WE(gx,(e=>e?.domain.statistics.systems),oS,{variables:{...t,id:e}});const wx=Cy`
+	${pS}
+`;var Cx=(e,t)=>WE(Ox,(e=>e?.domain.statistics.systems),hS,{variables:{...t,id:e}});const Nx=Cy`
 	query fetchDevices($id: ID!, $sorting: Sorting!, $type: DeviceType!, $range: Range) {
 		domain(id: $id) {
 			id
@@ -496,8 +544,8 @@ var wE="undefined"!=typeof navigator&&navigator.userAgent.toLowerCase().indexOf(
 		}
 	}
 
-	${uS}
-`;var Ex=(e,t)=>WE(wx,(e=>e?.domain.statistics.devices),cS,{variables:{...t,id:e}});const kx=Cy`
+	${yS}
+`;var Rx=(e,t)=>WE(Nx,(e=>e?.domain.statistics.devices),gS,{variables:{...t,id:e}});const Dx=Cy`
 	query fetchBrowsers($id: ID!, $sorting: Sorting!, $type: BrowserType!, $range: Range) {
 		domain(id: $id) {
 			id
@@ -508,8 +556,8 @@ var wE="undefined"!=typeof navigator&&navigator.userAgent.toLowerCase().indexOf(
 		}
 	}
 
-	${pS}
-`;var _x=(e,t)=>WE(kx,(e=>e?.domain.statistics.browsers),hS,{variables:{...t,id:e}});const Sx=Cy`
+	${ES}
+`;var Ix=(e,t)=>WE(Dx,(e=>e?.domain.statistics.browsers),kS,{variables:{...t,id:e}});const Px=Cy`
 	query fetchSizes($id: ID!, $sorting: Sorting!, $type: SizeType!, $range: Range) {
 		domain(id: $id) {
 			id
@@ -520,8 +568,8 @@ var wE="undefined"!=typeof navigator&&navigator.userAgent.toLowerCase().indexOf(
 		}
 	}
 
-	${yS}
-`;var xx=(e,t)=>WE(Sx,(e=>e?.domain.statistics.sizes),gS,{variables:{...t,id:e}});const Tx=Cy`
+	${xS}
+`;var Fx=(e,t)=>WE(Px,(e=>e?.domain.statistics.sizes),TS,{variables:{...t,id:e}});const Ax=Cy`
 	query fetchLanguages($id: ID!, $sorting: Sorting!, $range: Range) {
 		domain(id: $id) {
 			id
@@ -532,8 +580,8 @@ var wE="undefined"!=typeof navigator&&navigator.userAgent.toLowerCase().indexOf(
 		}
 	}
 
-	${ES}
-`;var Ox=(e,t)=>WE(Tx,(e=>e?.domain.statistics.languages),kS,{variables:{...t,id:e}});const Cx=e=>{const t=Hw(e.route).params.domainId;return(e=>{WE(sx,(e=>e?.domain.facts),L_,{variables:{id:e},pollInterval:5e3})})(t),q.createElement(q.Fragment,{},q.createElement(LS,{hook:ux,hookArgs:[t]}),q.createElement("div",{className:"content__spacer"}),q.createElement(MS,{wide:!0,headline:"Views",onMore:()=>e.setRoute("/insights/views"),hook:fx,hookArgs:[t,{interval:Sb,type:Ob,limit:14}],renderer:US,rendererProps:{interval:Sb}}),q.createElement(MS,{wide:!0,headline:"Durations",onMore:()=>e.setRoute("/insights/durations"),hook:px,hookArgs:[t,{interval:Sb,limit:14}],renderer:WS,rendererProps:{interval:Sb}}),q.createElement(MS,{headline:"Pages",onMore:()=>e.setRoute("/insights/pages"),hook:mx,hookArgs:[t,{sorting:yb,range:wb}],renderer:ZS,rendererProps:{sorting:yb,range:wb}}),q.createElement(MS,{headline:"Referrers",onMore:()=>e.setRoute("/insights/referrers"),hook:yx,hookArgs:[t,{sorting:yb,type:Nb,range:wb}],renderer:ax,rendererProps:{sorting:yb,range:wb}}),q.createElement("div",{className:"content__spacer"}),q.createElement(MS,{headline:"Systems",onMore:()=>e.setRoute("/insights/systems"),hook:bx,hookArgs:[t,{sorting:yb,type:$b,range:wb}],renderer:ZS,rendererProps:{sorting:yb,range:wb}}),q.createElement(MS,{headline:"Devices",onMore:()=>e.setRoute("/insights/devices"),hook:Ex,hookArgs:[t,{sorting:yb,type:Ib,range:wb}],renderer:ZS,rendererProps:{sorting:yb,range:wb}}),q.createElement(MS,{headline:"Browsers",onMore:()=>e.setRoute("/insights/browsers"),hook:_x,hookArgs:[t,{sorting:yb,type:Fb,range:wb}],renderer:ZS,rendererProps:{sorting:yb,range:wb}}),q.createElement(MS,{headline:"Sizes",onMore:()=>e.setRoute("/insights/sizes"),hook:xx,hookArgs:[t,{sorting:yb,type:Mb,range:wb}],renderer:ZS,rendererProps:{sorting:yb,range:wb}}),q.createElement(MS,{headline:"Languages",onMore:()=>e.setRoute("/insights/languages"),hook:Ox,hookArgs:[t,{sorting:yb,range:wb}],renderer:ZS,rendererProps:{sorting:yb,range:wb}}))};Cx.propTypes={route:Dw.string.isRequired,setRoute:Dw.func.isRequired};const Nx=e=>{const t=YE();return q.createElement(q.Fragment,{},q.createElement(MS,{wide:!0,headline:{[Ob]:"Site Views",[Cb]:"Page Views"}[e.filters.viewsType],hook:Q_,hookArgs:[{interval:e.filters.interval,type:e.filters.viewsType,limit:14}],renderer:US,rendererProps:{interval:e.filters.interval,onItemClick:t=>e.addModal(ck,{index:t,interval:e.filters.interval,type:e.filters.viewsType,limit:14})}}),t.value.map((t=>q.createElement(MS,{key:t.id,headline:t.title,onMore:()=>e.setRoute(`/domains/${t.id}`),hook:fx,hookArgs:[t.id,{interval:e.filters.interval,type:e.filters.viewsType,limit:7}],renderer:US,rendererProps:{interval:e.filters.interval}}))))};Nx.propTypes={setRoute:Dw.func.isRequired,filters:Dw.object.isRequired};const Rx=e=>YE().value.map((t=>q.createElement(MS,{key:t.id,headline:t.title,onMore:()=>e.setRoute(`/domains/${t.id}`),hook:mx,hookArgs:[t.id,{sorting:e.filters.sorting,range:e.filters.range}],renderer:ZS,rendererProps:{sorting:e.filters.sorting,range:e.filters.range}})));Rx.propTypes={setRoute:Dw.func.isRequired,filters:Dw.object.isRequired};const Dx=e=>YE().value.map((t=>q.createElement(MS,{key:t.id,headline:t.title,onMore:()=>e.setRoute(`/domains/${t.id}`),hook:yx,hookArgs:[t.id,{sorting:e.filters.sorting,type:e.filters.referrersType,range:e.filters.range}],renderer:ax,rendererProps:{sorting:e.filters.sorting,range:e.filters.range}})));Dx.propTypes={setRoute:Dw.func.isRequired,filters:Dw.object.isRequired};const Ix=e=>{const t=YE();return q.createElement(q.Fragment,{},q.createElement(MS,{wide:!0,headline:"Durations",hook:W_,hookArgs:[{interval:e.filters.interval,limit:14}],renderer:WS,rendererProps:{interval:e.filters.interval,onItemClick:t=>e.addModal(fk,{index:t,interval:e.filters.interval,limit:14})}}),t.value.map((t=>q.createElement(MS,{key:t.id,headline:t.title,onMore:()=>e.setRoute(`/domains/${t.id}`),hook:px,hookArgs:[t.id,{interval:e.filters.interval,limit:7}],renderer:WS,rendererProps:{interval:e.filters.interval}}))))};Ix.propTypes={setRoute:Dw.func.isRequired,filters:Dw.object.isRequired};const Px=Cy`
+	${NS}
+`;var Lx=(e,t)=>WE(Ax,(e=>e?.domain.statistics.languages),RS,{variables:{...t,id:e}});const Mx=e=>{const t=Hw(e.route).params.domainId;return(e=>{WE(vx,(e=>e?.domain.facts),L_,{variables:{id:e},pollInterval:5e3})})(t),q.createElement(q.Fragment,{},q.createElement(US,{hook:gx,hookArgs:[t]}),q.createElement("div",{className:"content__spacer"}),q.createElement(BS,{wide:!0,headline:"Views",onMore:()=>e.setRoute("/insights/views"),hook:wx,hookArgs:[t,{interval:Sb,type:Ob,limit:14}],renderer:XS,rendererProps:{interval:Sb}}),q.createElement(BS,{wide:!0,headline:"Durations",onMore:()=>e.setRoute("/insights/durations"),hook:kx,hookArgs:[t,{interval:Sb,limit:14}],renderer:ex,rendererProps:{interval:Sb}}),q.createElement(BS,{headline:"Pages",onMore:()=>e.setRoute("/insights/pages"),hook:Sx,hookArgs:[t,{sorting:yb,range:wb}],renderer:lx,rendererProps:{sorting:yb,range:wb}}),q.createElement(BS,{headline:"Referrers",onMore:()=>e.setRoute("/insights/referrers"),hook:Tx,hookArgs:[t,{sorting:yb,type:Nb,range:wb}],renderer:hx,rendererProps:{sorting:yb,range:wb}}),q.createElement("div",{className:"content__spacer"}),q.createElement(BS,{headline:"Systems",onMore:()=>e.setRoute("/insights/systems"),hook:Cx,hookArgs:[t,{sorting:yb,type:$b,range:wb}],renderer:lx,rendererProps:{sorting:yb,range:wb}}),q.createElement(BS,{headline:"Devices",onMore:()=>e.setRoute("/insights/devices"),hook:Rx,hookArgs:[t,{sorting:yb,type:Ib,range:wb}],renderer:lx,rendererProps:{sorting:yb,range:wb}}),q.createElement(BS,{headline:"Browsers",onMore:()=>e.setRoute("/insights/browsers"),hook:Ix,hookArgs:[t,{sorting:yb,type:Fb,range:wb}],renderer:lx,rendererProps:{sorting:yb,range:wb}}),q.createElement(BS,{headline:"Sizes",onMore:()=>e.setRoute("/insights/sizes"),hook:Fx,hookArgs:[t,{sorting:yb,type:Mb,range:wb}],renderer:lx,rendererProps:{sorting:yb,range:wb}}),q.createElement(BS,{headline:"Languages",onMore:()=>e.setRoute("/insights/languages"),hook:Lx,hookArgs:[t,{sorting:yb,range:wb}],renderer:lx,rendererProps:{sorting:yb,range:wb}}))};Mx.propTypes={route:Dw.string.isRequired,setRoute:Dw.func.isRequired};const qx=e=>{const t=YE();return q.createElement(q.Fragment,{},q.createElement(BS,{wide:!0,headline:{[Ob]:"Site Views",[Cb]:"Page Views"}[e.filters.viewsType],hook:Q_,hookArgs:[{interval:e.filters.interval,type:e.filters.viewsType,limit:14}],renderer:XS,rendererProps:{interval:e.filters.interval,onItemClick:t=>e.addModal(ck,{index:t,interval:e.filters.interval,type:e.filters.viewsType,limit:14})}}),t.value.map((t=>q.createElement(BS,{key:t.id,headline:t.title,onMore:()=>e.setRoute(`/domains/${t.id}`),hook:wx,hookArgs:[t.id,{interval:e.filters.interval,type:e.filters.viewsType,limit:7}],renderer:XS,rendererProps:{interval:e.filters.interval}}))))};qx.propTypes={setRoute:Dw.func.isRequired,filters:Dw.object.isRequired};const jx=e=>YE().value.map((t=>q.createElement(BS,{key:t.id,headline:t.title,onMore:()=>e.setRoute(`/domains/${t.id}`),hook:Sx,hookArgs:[t.id,{sorting:e.filters.sorting,range:e.filters.range}],renderer:lx,rendererProps:{sorting:e.filters.sorting,range:e.filters.range}})));jx.propTypes={setRoute:Dw.func.isRequired,filters:Dw.object.isRequired};const Vx=e=>YE().value.map((t=>q.createElement(BS,{key:t.id,headline:t.title,onMore:()=>e.setRoute(`/domains/${t.id}`),hook:Tx,hookArgs:[t.id,{sorting:e.filters.sorting,type:e.filters.referrersType,range:e.filters.range}],renderer:hx,rendererProps:{sorting:e.filters.sorting,range:e.filters.range}})));Vx.propTypes={setRoute:Dw.func.isRequired,filters:Dw.object.isRequired};const zx=e=>{const t=YE();return q.createElement(q.Fragment,{},q.createElement(BS,{wide:!0,headline:"Durations",hook:W_,hookArgs:[{interval:e.filters.interval,limit:14}],renderer:ex,rendererProps:{interval:e.filters.interval,onItemClick:t=>e.addModal(fk,{index:t,interval:e.filters.interval,limit:14})}}),t.value.map((t=>q.createElement(BS,{key:t.id,headline:t.title,onMore:()=>e.setRoute(`/domains/${t.id}`),hook:kx,hookArgs:[t.id,{interval:e.filters.interval,limit:7}],renderer:ex,rendererProps:{interval:e.filters.interval}}))))};zx.propTypes={setRoute:Dw.func.isRequired,filters:Dw.object.isRequired};const $x=Cy`
 	query fetchEvents {
 		events {
 			...eventFields
@@ -541,14 +589,14 @@ var wE="undefined"!=typeof navigator&&navigator.userAgent.toLowerCase().indexOf(
 	}
 
 	${y_}
-`;var Fx=()=>WE(Px,(e=>e?.events),((e=[])=>e),{fetchPolicy:"cache-first",nextFetchPolicy:"cache-first"}),Ax=Cy`
+`;var Qx=()=>WE($x,(e=>e?.events),((e=[])=>e),{fetchPolicy:"cache-first",nextFetchPolicy:"cache-first"}),Ux=Cy`
 	fragment chartField on EventStatistics {
 		chart(interval: $interval, type: $type, limit: $limit) {
 			id
 			count
 		}
 	}
-`;const Lx=Cy`
+`;const Bx=Cy`
 	query fetchEventChartEntries($id: ID!, $interval: Interval!, $type: EventChartType!, $limit: Int) {
 		event(id: $id) {
 			id
@@ -559,8 +607,8 @@ var wE="undefined"!=typeof navigator&&navigator.userAgent.toLowerCase().indexOf(
 		}
 	}
 
-	${Ax}
-`;var Mx=(e,t)=>WE(Lx,(e=>e?.event.statistics.chart),(e=>((e=[],t)=>Pk(t).map(((t,n)=>{const r=e[n];return null==r?0:r.count})))(e,t.limit)),{variables:{...t,id:e}}),qx=Cy`
+	${Ux}
+`;var Wx=(e,t)=>WE(Bx,(e=>e?.event.statistics.chart),(e=>((e=[],t)=>Pk(t).map(((t,n)=>{const r=e[n];return null==r?0:r.count})))(e,t.limit)),{variables:{...t,id:e}}),Hx=Cy`
 	fragment listField on EventStatistics {
 		list(sorting: $sorting, type: $type, range: $range) {
 			id
@@ -569,7 +617,7 @@ var wE="undefined"!=typeof navigator&&navigator.userAgent.toLowerCase().indexOf(
 			created
 		}
 	}
-`,jx=(e=[])=>e.map((e=>({text:e.value,count:e.count,date:null==e.created?null:new Date(e.created)})));const Vx=Cy`
+`,Kx=(e=[])=>e.map((e=>({text:e.value,count:e.count,date:null==e.created?null:new Date(e.created)})));const Yx=Cy`
 	query fetchEventListEntries($id: ID!, $sorting: Sorting!, $type: EventListType!, $range: Range) {
 		event(id: $id) {
 			id
@@ -580,14 +628,14 @@ var wE="undefined"!=typeof navigator&&navigator.userAgent.toLowerCase().indexOf(
 		}
 	}
 
-	${qx}
-`;var zx=(e,t)=>WE(Vx,(e=>e?.event.statistics.list),jx,{variables:{...t,id:e}}),$x=e=>{const t=TS(e,(e=>Number.parseFloat(e).toFixed(2)));return t.replace(".00","")},Qx=e=>q.createElement(QS,{...e,formatter:$x});const Ux=(e,t)=>{switch(e.type){case d_:case p_:return{hook:Mx,hookArgs:[e.id,{interval:t.filters.interval,type:e.type===p_?"AVERAGE":"TOTAL",limit:7}],renderer:Qx,rendererProps:{interval:t.filters.interval}};case h_:case m_:return{hook:zx,hookArgs:[e.id,{sorting:t.filters.sorting,type:e.type===m_?"AVERAGE":"TOTAL",range:t.filters.range}],renderer:ZS,rendererProps:{sorting:t.filters.sorting,range:t.filters.range}}}},Bx=e=>Fx().value.map((t=>q.createElement(MS,{key:t.id,headline:t.title,...Ux(t,e)})));Bx.propTypes={filters:Dw.object.isRequired};const Wx=e=>YE().value.map((t=>q.createElement(MS,{key:t.id,headline:t.title,onMore:()=>e.setRoute(`/domains/${t.id}`),hook:bx,hookArgs:[t.id,{sorting:e.filters.sorting,type:e.filters.systemsType,range:e.filters.range}],renderer:ZS,rendererProps:{sorting:e.filters.sorting,range:e.filters.range}})));Wx.propTypes={setRoute:Dw.func.isRequired,filters:Dw.object.isRequired};const Hx=e=>YE().value.map((t=>q.createElement(MS,{key:t.id,headline:t.title,onMore:()=>e.setRoute(`/domains/${t.id}`),hook:Ex,hookArgs:[t.id,{sorting:e.filters.sorting,type:e.filters.devicesType,range:e.filters.range}],renderer:ZS,rendererProps:{sorting:e.filters.sorting,range:e.filters.range}})));Hx.propTypes={setRoute:Dw.func.isRequired,filters:Dw.object.isRequired};const Kx=e=>YE().value.map((t=>q.createElement(MS,{key:t.id,headline:t.title,onMore:()=>e.setRoute(`/domains/${t.id}`),hook:_x,hookArgs:[t.id,{sorting:e.filters.sorting,type:e.filters.browsersType,range:e.filters.range}],renderer:ZS,rendererProps:{sorting:e.filters.sorting,range:e.filters.range}})));Kx.propTypes={setRoute:Dw.func.isRequired,filters:Dw.object.isRequired};const Yx=e=>YE().value.map((t=>q.createElement(MS,{key:t.id,headline:t.title,onMore:()=>e.setRoute(`/domains/${t.id}`),hook:xx,hookArgs:[t.id,{sorting:e.filters.sorting,type:e.filters.sizesType,range:e.filters.range}],renderer:ZS,rendererProps:{sorting:e.filters.sorting,range:e.filters.range}})));Yx.propTypes={setRoute:Dw.func.isRequired,filters:Dw.object.isRequired};const Gx=e=>YE().value.map((t=>q.createElement(MS,{key:t.id,headline:t.title,onMore:()=>e.setRoute(`/domains/${t.id}`),hook:Ox,hookArgs:[t.id,{sorting:e.filters.sorting,range:e.filters.range}],renderer:ZS,rendererProps:{sorting:e.filters.sorting,range:e.filters.range}})));Gx.propTypes={setRoute:Dw.func.isRequired,filters:Dw.object.isRequired};const Jx=Cy`
+	${Hx}
+`;var Gx=(e,t)=>WE(Yx,(e=>e?.event.statistics.list),Kx,{variables:{...t,id:e}}),Jx=e=>{const t=FS(e,(e=>Number.parseFloat(e).toFixed(2)));return t.replace(".00","")},Xx=e=>q.createElement(JS,{...e,formatter:Jx});const Zx=(e,t)=>{switch(e.type){case d_:case p_:return{hook:Wx,hookArgs:[e.id,{interval:t.filters.interval,type:e.type===p_?"AVERAGE":"TOTAL",limit:7}],renderer:Xx,rendererProps:{interval:t.filters.interval}};case h_:case m_:return{hook:Gx,hookArgs:[e.id,{sorting:t.filters.sorting,type:e.type===m_?"AVERAGE":"TOTAL",range:t.filters.range}],renderer:lx,rendererProps:{sorting:t.filters.sorting,range:t.filters.range}}}},eT=e=>Qx().value.map((t=>q.createElement(BS,{key:t.id,headline:t.title,...Zx(t,e)})));eT.propTypes={filters:Dw.object.isRequired};const tT=e=>YE().value.map((t=>q.createElement(BS,{key:t.id,headline:t.title,onMore:()=>e.setRoute(`/domains/${t.id}`),hook:Cx,hookArgs:[t.id,{sorting:e.filters.sorting,type:e.filters.systemsType,range:e.filters.range}],renderer:lx,rendererProps:{sorting:e.filters.sorting,range:e.filters.range}})));tT.propTypes={setRoute:Dw.func.isRequired,filters:Dw.object.isRequired};const nT=e=>YE().value.map((t=>q.createElement(BS,{key:t.id,headline:t.title,onMore:()=>e.setRoute(`/domains/${t.id}`),hook:Rx,hookArgs:[t.id,{sorting:e.filters.sorting,type:e.filters.devicesType,range:e.filters.range}],renderer:lx,rendererProps:{sorting:e.filters.sorting,range:e.filters.range}})));nT.propTypes={setRoute:Dw.func.isRequired,filters:Dw.object.isRequired};const rT=e=>YE().value.map((t=>q.createElement(BS,{key:t.id,headline:t.title,onMore:()=>e.setRoute(`/domains/${t.id}`),hook:Ix,hookArgs:[t.id,{sorting:e.filters.sorting,type:e.filters.browsersType,range:e.filters.range}],renderer:lx,rendererProps:{sorting:e.filters.sorting,range:e.filters.range}})));rT.propTypes={setRoute:Dw.func.isRequired,filters:Dw.object.isRequired};const iT=e=>YE().value.map((t=>q.createElement(BS,{key:t.id,headline:t.title,onMore:()=>e.setRoute(`/domains/${t.id}`),hook:Fx,hookArgs:[t.id,{sorting:e.filters.sorting,type:e.filters.sizesType,range:e.filters.range}],renderer:lx,rendererProps:{sorting:e.filters.sorting,range:e.filters.range}})));iT.propTypes={setRoute:Dw.func.isRequired,filters:Dw.object.isRequired};const aT=e=>YE().value.map((t=>q.createElement(BS,{key:t.id,headline:t.title,onMore:()=>e.setRoute(`/domains/${t.id}`),hook:Lx,hookArgs:[t.id,{sorting:e.filters.sorting,range:e.filters.range}],renderer:lx,rendererProps:{sorting:e.filters.sorting,range:e.filters.range}})));aT.propTypes={setRoute:Dw.func.isRequired,filters:Dw.object.isRequired};const oT=Cy`
 	mutation deleteToken($id: ID!) {
 		deleteToken(id: $id) {
 			success
 		}
 	}
-`;const Xx=Cy`
+`;const sT=Cy`
 	query permanentTokens {
 		permanentTokens {
 			...permanentTokenFields
@@ -595,4 +643,4 @@ var wE="undefined"!=typeof navigator&&navigator.userAgent.toLowerCase().indexOf(
 	}
 
 	${x_}
-`;const Zx=e=>q.createElement("div",{className:"card card--wide"},q.createElement("div",{className:"card__inner"},q.createElement(Mw,{type:"h2",size:"medium"},e.headline),q.createElement(Aw,{size:1.6}),e.children));Zx.propTypes={headline:Dw.string.isRequired,children:Dw.oneOfType([Dw.arrayOf(Dw.node),Dw.node]).isRequired};const eT=e=>q.createElement(e.type,{onClick:e.onClick,href:e.href,target:e.target,className:Lw({linkItem:!0,"linkItem--disabled":!0===e.disabled,link:!0})},q.createElement("span",{},e.children),null!=e.text&&q.createElement("span",{},e.text));eT.propTypes={type:Dw.oneOf(["p","a","button"]).isRequired,href:Dw.string,target:Dw.string,onClick:Dw.func,disabled:Dw.bool,text:Dw.string,children:Dw.node.isRequired};const tT=()=>q.createElement("hr",{className:"line"}),nT=e=>q.createElement(jw,{status:"warning"},`Loading ${e.label}...`),rT=e=>{const t=(()=>{const[e,{loading:t,error:n}]=Yy(Jx);return{mutate:e,loading:t,error:n}})(),n=YE(),r=Fx(),i=WE(Xx,(e=>e?.permanentTokens),((e=[])=>e),{fetchPolicy:"cache-first",nextFetchPolicy:"cache-first"}),a=(e,t,n,r)=>[...e.map((e=>[q.createElement(eT,{type:"button",text:e.id,onClick:()=>t(e)},e.title),q.createElement(tT)])).flat(),q.createElement(eT,{type:"button",onClick:n},r)],o=q.createElement(nT,{label:"domains"}),s=q.createElement(nT,{label:"events"}),l=q.createElement(nT,{label:"permanent tokens"}),u=a(n.value,(t=>e.addModal(pk,t)),(()=>e.addModal(dk)),"New domain"),c=a(r.value,(t=>e.addModal(mk,t)),(()=>e.addModal(hk)),"New event"),f=a(i.value,(t=>e.addModal(yk,t)),(()=>e.addModal(vk)),"New permanent token");return q.createElement(q.Fragment,{},q.createElement(Zx,{headline:"Account"},q.createElement(eT,{type:"p",disabled:!0,text:ng},"Version"),q.createElement(tT),q.createElement(eT,{type:"button",onClick:async()=>{await t.mutate({variables:{id:e.token}}),e.reset()}},"Sign Out")),q.createElement(Zx,{headline:"Domains"},...!0===n.status.isInitializing?[o]:u),q.createElement(Zx,{headline:"Events"},...!0===r.status.isInitializing?[s]:c),q.createElement(Zx,{headline:"Permanent Tokens"},...!0===i.status.isInitializing?[l]:f),q.createElement(Zx,{headline:"Donate"},q.createElement(eT,{type:"a",href:"https://github.com/sponsors/electerious",target:"_blank",rel:"noopener"},"Become a GitHub sponsor"),q.createElement(tT),q.createElement(eT,{type:"a",href:"https://www.buymeacoffee.com/electerious",target:"_blank",rel:"noopener"},"Buy me a coffee"),q.createElement(tT),q.createElement(eT,{type:"a",href:"https://paypal.me/electerious",target:"_blank",rel:"noopener"},"Donate via PayPal")),q.createElement(Zx,{headline:"Help"},q.createElement(eT,{type:"a",href:"https://ackee.electerious.com",target:"_blank",rel:"noopener"},"Website and documentation"),q.createElement(tT),q.createElement(eT,{type:"a",href:rg,target:"_blank",rel:"noopener"},"Ackee on GitHub"),q.createElement(tT),q.createElement(eT,{type:"a",href:"https://github.com/electerious/ackee-tracker",target:"_blank",rel:"noopener"},"Add Ackee to your sites")))};rT.propTypes={reset:Dw.func.isRequired,token:Dw.string.isRequired,addModal:Dw.func.isRequired};const iT={[Sg]:ox,[xg]:Cx,[Tg]:Nx,[Og]:Rx,[Cg]:Dx,[Ng]:Ix,[Rg]:Bx,[Dg]:Wx,[Ig]:Hx,[Pg]:Kx,[Fg]:Yx,[Ag]:Gx,[Lg]:rT},aT=e=>{const t=Hw(e.route),n=YE();BE("o",(()=>e.setRoute("/"))),BE("v",(()=>e.setRoute("/insights/views"))),BE("p",(()=>e.setRoute("/insights/pages"))),BE("r",(()=>e.setRoute("/insights/referrers"))),BE("d",(()=>e.setRoute("/insights/durations"))),BE("e",(()=>e.setRoute("/insights/events"))),BE("s",(()=>e.setRoute("/settings"))),BE("0,1,2,3,4,5,6,7,8,9",((t,{key:r})=>((e,t,n)=>{const r=e[n];null!=r&&t(`/domains/${r.id}`)})(n.value,e.setRoute,r)),[n.value]);const r=n.value.length>0,i=n.value.map(((t,n)=>lk(t.title,`/domains/${t.id}`,e.route,e.setRoute,((e,t)=>e<t?e:void 0)(n,10)))),a=[lk("Views","/insights/views",e.route,e.setRoute,"v"),lk("Pages","/insights/pages",e.route,e.setRoute,"p"),lk("Referrers","/insights/referrers",e.route,e.setRoute,"r"),lk("Durations","/insights/durations",e.route,e.setRoute,"d"),uk(),lk("Events","/insights/events",e.route,e.setRoute,"e"),uk(),lk("Systems","/insights/systems",e.route,e.setRoute),lk("Devices","/insights/devices",e.route,e.setRoute),lk("Browsers","/insights/browsers",e.route,e.setRoute),lk("Sizes","/insights/sizes",e.route,e.setRoute),lk("Languages","/insights/languages",e.route,e.setRoute)],o=[ok("Overview","/",e.route,e.setRoute),!0===r?sk((e=>null==e?"Domains":e.label),i):void 0,sk((e=>null==e?"Insights":e.label),a),ok("Settings","/settings",e.route,e.setRoute)].filter(Boolean);return q.createElement("div",{},q.createElement(F_,{modals:e.modals,removeModal:e.removeModal}),q.createElement(ak,{loading:e.loading,items:o}),q.createElement("main",{className:"content"},q.createElement(iT[t.key],{reset:e.reset,route:e.route,setRoute:e.setRoute,token:e.token,addModal:e.addModal,filters:e.filters})))},oT=e=>{const t=e.useErrors(),n=((e,t,n)=>!1!=(null!=e)&&(1!=t.filter(aw).length>0||(n(),!1)))(e.token,t,e.reset);if(!0===(!1===n))return q.createElement(Ww,{setToken:e.setToken});return!0===t.length>0?q.createElement(Vw,{errors:t,reset:e.reset}):q.createElement(q.Fragment,{},q.createElement(bE,{filters:e.filters,setSortingFilter:e.setSortingFilter,setRangeFilter:e.setRangeFilter,setIntervalFilter:e.setIntervalFilter,setViewsTypeFilter:e.setViewsTypeFilter,setReferrersTypeFilter:e.setReferrersTypeFilter,setDevicesTypeFilter:e.setDevicesTypeFilter,setBrowsersTypeFilter:e.setBrowsersTypeFilter,setSizesTypeFilter:e.setSizesTypeFilter,setSystemsTypeFilter:e.setSystemsTypeFilter,route:e.route}),q.createElement(aT,e))},sT=class extends q.Component{constructor(e){super(e),this.state={error:void 0}}static getDerivedStateFromError(e){return{error:e}}render(){return!0===(null!=this.state.error)?q.createElement(Vw,{errors:[this.state.error],reset:this.props.reset}):this.props.children}};sT.propTypes={reset:Dw.func.isRequired},!0===window.env.isDemoMode&&console.warn("Ackee runs in demo mode");const{statusLink:lT,useLoading:uT,useErrors:cT}=(()=>{const{link:e,useApolloNetworkStatusReducer:t}=Zy.createNetworkStatusNotifier();return{statusLink:e,useLoading:()=>t(eg,0)>0,useErrors:()=>t(tg,[])}})(),fT=(dT=[lT,(pT=(e,{headers:t})=>({headers:{...t,Authorization:`Bearer ${sg()}`}}),new Dh((function(e,t){var n=Td(e,[]);return new Ap((function(r){var i,a=!1;return Promise.resolve(n).then((function(t){return pT(t,e.getContext())})).then(e.setContext).then((function(){a||(i=t(e).subscribe({next:r.next.bind(r),error:r.error.bind(r),complete:r.complete.bind(r)}))})).catch(r.error.bind(r)),function(){a=!0,i&&i.unsubscribe()}}))}))),new hg({uri:"/api",headers:{"Time-Zone":mg}})],new by({link:Ph(dT),cache:new Zv({})}));var dT,pT;const hT=document.querySelector("#main");Qc.createRoot(hT).render(q.createElement((()=>{const[e,t]=q.useState(Date.now()),n=uT(),r=(()=>{const e=q.useMemo((()=>gg()),[]),[t,n]=q.useState(jg(e.location));return q.useEffect((()=>e.listen((({location:e})=>{n(jg(e))}))),[e]),{setRoute:q.useCallback((t=>{e.push({pathname:t})}),[e]),route:t}})(),i=(()=>{const[e,t]=q.useReducer(cg,sg()),n=q.useCallback((e=>t({type:ag,token:e})),[t]);return{token:e,setToken:n,resetToken:q.useCallback((()=>t({type:og})),[t])}})(),a=(()=>{const[e,t]=q.useReducer(vb,mb),n=q.useCallback(((e,n)=>t({type:db,modalId:fb(),payload:{type:e,props:n}})),[t]);return{modals:e,addModal:n,removeModal:q.useCallback((e=>t({type:pb,modalId:e})),[t]),resetModals:q.useCallback((()=>t({type:hb})),[t])}})(),o=(()=>{const[e,t]=q.useReducer(rw,ew());return{filters:e,setSortingFilter:q.useCallback((e=>t({type:Ub,payload:e})),[t]),setRangeFilter:q.useCallback((e=>t({type:Bb,payload:e})),[t]),setIntervalFilter:q.useCallback((e=>t({type:Wb,payload:e})),[t]),setViewsTypeFilter:q.useCallback((e=>t({type:Hb,payload:e})),[t]),setReferrersTypeFilter:q.useCallback((e=>t({type:Kb,payload:e})),[t]),setDevicesTypeFilter:q.useCallback((e=>t({type:Yb,payload:e})),[t]),setBrowsersTypeFilter:q.useCallback((e=>t({type:Gb,payload:e})),[t]),setSizesTypeFilter:q.useCallback((e=>t({type:Jb,payload:e})),[t]),setSystemsTypeFilter:q.useCallback((e=>t({type:Xb,payload:e})),[t]),resetFilters:q.useCallback((()=>t({type:Zb})),[t])}})(),s=q.useCallback((()=>{i.resetToken(),a.resetModals(),o.resetFilters(),fT.clearStore(),t(Date.now())}),[i.resetToken,a.resetModals,o.resetFilters,fT.resetStore,t]);var l;return q.useEffect((()=>{if(0!=(!0===navigator.platform.includes("Win")))return document.body.classList.add("customScrollbar"),()=>document.body.classList.remove("customScrollbar")}),[]),l=r.route,q.useEffect((()=>{document.scrollingElement.scrollTop=0}),[l]),q.createElement(uh,{client:fT},q.createElement(sT,{reset:s},q.createElement(oT,{key:e,reset:s,useErrors:cT,loading:n,...status,...r,...i,...a,...o})))})))}();
+`;const lT=e=>q.createElement("div",{className:"card card--wide"},q.createElement("div",{className:"card__inner"},q.createElement(Mw,{type:"h2",size:"medium"},e.headline),q.createElement(Aw,{size:1.6}),e.children));lT.propTypes={headline:Dw.string.isRequired,children:Dw.oneOfType([Dw.arrayOf(Dw.node),Dw.node]).isRequired};const uT=e=>q.createElement(e.type,{onClick:e.onClick,href:e.href,target:e.target,className:Lw({linkItem:!0,"linkItem--disabled":!0===e.disabled,link:!0})},q.createElement("span",{},e.children),null!=e.text&&q.createElement("span",{},e.text));uT.propTypes={type:Dw.oneOf(["p","a","button"]).isRequired,href:Dw.string,target:Dw.string,onClick:Dw.func,disabled:Dw.bool,text:Dw.string,children:Dw.node.isRequired};const cT=()=>q.createElement("hr",{className:"line"}),fT=e=>q.createElement(jw,{status:"warning"},`Loading ${e.label}...`),dT=e=>{const t=(()=>{const[e,{loading:t,error:n}]=Yy(oT);return{mutate:e,loading:t,error:n}})(),n=YE(),r=Qx(),i=WE(sT,(e=>e?.permanentTokens),((e=[])=>e),{fetchPolicy:"cache-first",nextFetchPolicy:"cache-first"}),a=(e,t,n,r)=>[...e.map((e=>[q.createElement(uT,{type:"button",text:e.id,onClick:()=>t(e)},e.title),q.createElement(cT)])).flat(),q.createElement(uT,{type:"button",onClick:n},r)],o=q.createElement(fT,{label:"domains"}),s=q.createElement(fT,{label:"events"}),l=q.createElement(fT,{label:"permanent tokens"}),u=a(n.value,(t=>e.addModal(pk,t)),(()=>e.addModal(dk)),"New domain"),c=a(r.value,(t=>e.addModal(mk,t)),(()=>e.addModal(hk)),"New event"),f=a(i.value,(t=>e.addModal(yk,t)),(()=>e.addModal(vk)),"New permanent token");return q.createElement(q.Fragment,{},q.createElement(lT,{headline:"Account"},q.createElement(uT,{type:"p",disabled:!0,text:ng},"Version"),q.createElement(cT),q.createElement(uT,{type:"button",onClick:async()=>{await t.mutate({variables:{id:e.token}}),e.reset()}},"Sign Out")),q.createElement(lT,{headline:"Domains"},...!0===n.status.isInitializing?[o]:u),q.createElement(lT,{headline:"Events"},...!0===r.status.isInitializing?[s]:c),q.createElement(lT,{headline:"Permanent Tokens"},...!0===i.status.isInitializing?[l]:f),q.createElement(lT,{headline:"Donate"},q.createElement(uT,{type:"a",href:"https://github.com/sponsors/electerious",target:"_blank",rel:"noopener"},"Become a GitHub sponsor"),q.createElement(cT),q.createElement(uT,{type:"a",href:"https://www.buymeacoffee.com/electerious",target:"_blank",rel:"noopener"},"Buy me a coffee"),q.createElement(cT),q.createElement(uT,{type:"a",href:"https://paypal.me/electerious",target:"_blank",rel:"noopener"},"Donate via PayPal")),q.createElement(lT,{headline:"Help"},q.createElement(uT,{type:"a",href:"https://ackee.electerious.com",target:"_blank",rel:"noopener"},"Website and documentation"),q.createElement(cT),q.createElement(uT,{type:"a",href:rg,target:"_blank",rel:"noopener"},"Ackee on GitHub"),q.createElement(cT),q.createElement(uT,{type:"a",href:"https://github.com/electerious/ackee-tracker",target:"_blank",rel:"noopener"},"Add Ackee to your sites")))};dT.propTypes={reset:Dw.func.isRequired,token:Dw.string.isRequired,addModal:Dw.func.isRequired};const pT={[Sg]:mx,[xg]:Mx,[Tg]:qx,[Og]:jx,[Cg]:Vx,[Ng]:zx,[Rg]:eT,[Dg]:tT,[Ig]:nT,[Pg]:rT,[Fg]:iT,[Ag]:aT,[Lg]:dT},hT=e=>{const t=Hw(e.route),n=YE();BE("o",(()=>e.setRoute("/"))),BE("v",(()=>e.setRoute("/insights/views"))),BE("p",(()=>e.setRoute("/insights/pages"))),BE("r",(()=>e.setRoute("/insights/referrers"))),BE("d",(()=>e.setRoute("/insights/durations"))),BE("e",(()=>e.setRoute("/insights/events"))),BE("s",(()=>e.setRoute("/settings"))),BE("0,1,2,3,4,5,6,7,8,9",((t,{key:r})=>((e,t,n)=>{const r=e[n];null!=r&&t(`/domains/${r.id}`)})(n.value,e.setRoute,r)),[n.value]);const r=n.value.length>0,i=n.value.map(((t,n)=>lk(t.title,`/domains/${t.id}`,e.route,e.setRoute,((e,t)=>e<t?e:void 0)(n,10)))),a=[lk("Views","/insights/views",e.route,e.setRoute,"v"),lk("Pages","/insights/pages",e.route,e.setRoute,"p"),lk("Referrers","/insights/referrers",e.route,e.setRoute,"r"),lk("Durations","/insights/durations",e.route,e.setRoute,"d"),uk(),lk("Events","/insights/events",e.route,e.setRoute,"e"),uk(),lk("Systems","/insights/systems",e.route,e.setRoute),lk("Devices","/insights/devices",e.route,e.setRoute),lk("Browsers","/insights/browsers",e.route,e.setRoute),lk("Sizes","/insights/sizes",e.route,e.setRoute),lk("Languages","/insights/languages",e.route,e.setRoute)],o=[ok("Overview","/",e.route,e.setRoute),!0===r?sk((e=>null==e?"Domains":e.label),i):void 0,sk((e=>null==e?"Insights":e.label),a),ok("Settings","/settings",e.route,e.setRoute)].filter(Boolean);return q.createElement("div",{},q.createElement(F_,{modals:e.modals,removeModal:e.removeModal}),q.createElement(ak,{loading:e.loading,items:o}),q.createElement("main",{className:"content"},q.createElement(pT[t.key],{reset:e.reset,route:e.route,setRoute:e.setRoute,token:e.token,addModal:e.addModal,filters:e.filters})))},mT=e=>{const t=e.useErrors(),n=((e,t,n)=>!1!=(null!=e)&&(1!=t.filter(aw).length>0||(n(),!1)))(e.token,t,e.reset);if(!0===(!1===n))return q.createElement(Ww,{setToken:e.setToken});return!0===t.length>0?q.createElement(Vw,{errors:t,reset:e.reset}):q.createElement(q.Fragment,{},q.createElement(bE,{filters:e.filters,setSortingFilter:e.setSortingFilter,setRangeFilter:e.setRangeFilter,setIntervalFilter:e.setIntervalFilter,setViewsTypeFilter:e.setViewsTypeFilter,setReferrersTypeFilter:e.setReferrersTypeFilter,setDevicesTypeFilter:e.setDevicesTypeFilter,setBrowsersTypeFilter:e.setBrowsersTypeFilter,setSizesTypeFilter:e.setSizesTypeFilter,setSystemsTypeFilter:e.setSystemsTypeFilter,route:e.route}),q.createElement(hT,e))},vT=class extends q.Component{constructor(e){super(e),this.state={error:void 0}}static getDerivedStateFromError(e){return{error:e}}render(){return!0===(null!=this.state.error)?q.createElement(Vw,{errors:[this.state.error],reset:this.props.reset}):this.props.children}};vT.propTypes={reset:Dw.func.isRequired},!0===window.env.isDemoMode&&console.warn("Ackee runs in demo mode");const{statusLink:yT,useLoading:gT,useErrors:bT}=(()=>{const{link:e,useApolloNetworkStatusReducer:t}=Zy.createNetworkStatusNotifier();return{statusLink:e,useLoading:()=>t(eg,0)>0,useErrors:()=>t(tg,[])}})(),wT=(ET=[yT,(kT=(e,{headers:t})=>({headers:{...t,Authorization:`Bearer ${sg()}`}}),new Dh((function(e,t){var n=Td(e,[]);return new Ap((function(r){var i,a=!1;return Promise.resolve(n).then((function(t){return kT(t,e.getContext())})).then(e.setContext).then((function(){a||(i=t(e).subscribe({next:r.next.bind(r),error:r.error.bind(r),complete:r.complete.bind(r)}))})).catch(r.error.bind(r)),function(){a=!0,i&&i.unsubscribe()}}))}))),new hg({uri:"/api",headers:{"Time-Zone":mg}})],new by({link:Ph(ET),cache:new Zv({})}));var ET,kT;const _T=document.querySelector("#main");Qc.createRoot(_T).render(q.createElement((()=>{const[e,t]=q.useState(Date.now()),n=gT(),r=(()=>{const e=q.useMemo((()=>gg()),[]),[t,n]=q.useState(jg(e.location));return q.useEffect((()=>e.listen((({location:e})=>{n(jg(e))}))),[e]),{setRoute:q.useCallback((t=>{e.push({pathname:t})}),[e]),route:t}})(),i=(()=>{const[e,t]=q.useReducer(cg,sg()),n=q.useCallback((e=>t({type:ag,token:e})),[t]);return{token:e,setToken:n,resetToken:q.useCallback((()=>t({type:og})),[t])}})(),a=(()=>{const[e,t]=q.useReducer(vb,mb),n=q.useCallback(((e,n)=>t({type:db,modalId:fb(),payload:{type:e,props:n}})),[t]);return{modals:e,addModal:n,removeModal:q.useCallback((e=>t({type:pb,modalId:e})),[t]),resetModals:q.useCallback((()=>t({type:hb})),[t])}})(),o=(()=>{const[e,t]=q.useReducer(rw,ew());return{filters:e,setSortingFilter:q.useCallback((e=>t({type:Ub,payload:e})),[t]),setRangeFilter:q.useCallback((e=>t({type:Bb,payload:e})),[t]),setIntervalFilter:q.useCallback((e=>t({type:Wb,payload:e})),[t]),setViewsTypeFilter:q.useCallback((e=>t({type:Hb,payload:e})),[t]),setReferrersTypeFilter:q.useCallback((e=>t({type:Kb,payload:e})),[t]),setDevicesTypeFilter:q.useCallback((e=>t({type:Yb,payload:e})),[t]),setBrowsersTypeFilter:q.useCallback((e=>t({type:Gb,payload:e})),[t]),setSizesTypeFilter:q.useCallback((e=>t({type:Jb,payload:e})),[t]),setSystemsTypeFilter:q.useCallback((e=>t({type:Xb,payload:e})),[t]),resetFilters:q.useCallback((()=>t({type:Zb})),[t])}})(),s=q.useCallback((()=>{i.resetToken(),a.resetModals(),o.resetFilters(),wT.clearStore(),t(Date.now())}),[i.resetToken,a.resetModals,o.resetFilters,wT.resetStore,t]);var l;return q.useEffect((()=>{if(0!=(!0===navigator.platform.includes("Win")))return document.body.classList.add("customScrollbar"),()=>document.body.classList.remove("customScrollbar")}),[]),l=r.route,q.useEffect((()=>{document.scrollingElement.scrollTop=0}),[l]),q.createElement(uh,{client:wT},q.createElement(vT,{reset:s},q.createElement(mT,{key:e,reset:s,useErrors:bT,loading:n,...status,...r,...i,...a,...o})))})))}();

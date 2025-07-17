@@ -4,19 +4,22 @@ import PropTypes from 'prop-types'
 import { SORTINGS_TOP } from '../../../../constants/sortings'
 import { RANGES_LAST_24_HOURS } from '../../../../constants/ranges'
 import { INTERVALS_DAILY } from '../../../../constants/intervals'
-import { VIEWS_TYPE_UNIQUE } from '../../../../constants/views'
+import { VIEWS_TYPE_TOTAL } from '../../../../constants/views'
 import { REFERRERS_TYPE_WITH_SOURCE } from '../../../../constants/referrers'
 import { SYSTEMS_TYPE_WITH_VERSION } from '../../../../constants/systems'
 import { DEVICES_TYPE_WITH_MODEL } from '../../../../constants/devices'
 import { BROWSERS_TYPE_WITH_VERSION } from '../../../../constants/browsers'
 import { SIZES_TYPE_BROWSER_RESOLUTION } from '../../../../constants/sizes'
 
-import { MODALS_VIEWS, MODALS_DURATIONS } from '../../constants/modals'
+import { MODALS_VIEWS, MODALS_DURATIONS, MODALS_VISITORS, MODALS_RETURNING_VISITORS, MODALS_NEW_VISITORS } from '../../constants/modals'
 
 import useMergedActiveVisitors from '../../api/hooks/facts/useMergedActiveVisitors'
 import useMergedFacts from '../../api/hooks/facts/useMergedFacts'
 import useMergedViews from '../../api/hooks/views/useMergedViews'
 import useMergedDurations from '../../api/hooks/durations/useMergedDurations'
+import useMergedVisitors from '../../api/hooks/visitors/useMergedVisitors'
+import useMergedReturningVisitors from '../../api/hooks/visitors/useMergedReturningVisitors'
+import useMergedNewVisitors from '../../api/hooks/visitors/useMergedNewVisitors'
 import useMergedPages from '../../api/hooks/pages/useMergedPages'
 import useMergedReferrers from '../../api/hooks/referrers/useMergedReferrers'
 import useMergedSystems from '../../api/hooks/systems/useMergedSystems'
@@ -30,6 +33,7 @@ import CardStatistics from '../cards/CardStatistics'
 
 import RendererViews from '../renderers/RendererViews'
 import RendererDurations from '../renderers/RendererDurations'
+import RendererVisitors from '../renderers/RendererVisitors'
 import RendererList from '../renderers/RendererList'
 import RendererReferrers from '../renderers/RendererReferrers'
 
@@ -45,13 +49,33 @@ const RouteOverview = (props) => {
 			h('div', { className: 'content__spacer' }),
 			h(CardStatistics, {
 				wide: true,
+				headline: 'Unique Visitors',
+				hook: useMergedVisitors,
+				hookArgs: [
+					{
+						interval: INTERVALS_DAILY,
+						limit: 14,
+					},
+				],
+				renderer: RendererVisitors,
+				rendererProps: {
+					interval: INTERVALS_DAILY,
+					onItemClick: (index) => props.addModal(MODALS_VISITORS, {
+						index,
+						interval: INTERVALS_DAILY,
+						limit: 14,
+					}),
+				},
+			}),
+			h(CardStatistics, {
+				wide: true,
 				headline: 'Views',
 				onMore: () => props.setRoute('/insights/views'),
 				hook: useMergedViews,
 				hookArgs: [
 					{
 						interval: INTERVALS_DAILY,
-						type: VIEWS_TYPE_UNIQUE,
+						type: VIEWS_TYPE_TOTAL,
 						limit: 14,
 					},
 				],
@@ -61,7 +85,7 @@ const RouteOverview = (props) => {
 					onItemClick: (index) => props.addModal(MODALS_VIEWS, {
 						index,
 						interval: INTERVALS_DAILY,
-						type: VIEWS_TYPE_UNIQUE,
+						type: VIEWS_TYPE_TOTAL,
 						limit: 14,
 					}),
 				},
@@ -81,6 +105,46 @@ const RouteOverview = (props) => {
 				rendererProps: {
 					interval: INTERVALS_DAILY,
 					onItemClick: (index) => props.addModal(MODALS_DURATIONS, {
+						index,
+						interval: INTERVALS_DAILY,
+						limit: 14,
+					}),
+				},
+			}),
+			h(CardStatistics, {
+				wide: true,
+				headline: 'Returning Visitors',
+				hook: useMergedReturningVisitors,
+				hookArgs: [
+					{
+						interval: INTERVALS_DAILY,
+						limit: 14,
+					},
+				],
+				renderer: RendererVisitors,
+				rendererProps: {
+					interval: INTERVALS_DAILY,
+					onItemClick: (index) => props.addModal(MODALS_RETURNING_VISITORS, {
+						index,
+						interval: INTERVALS_DAILY,
+						limit: 14,
+					}),
+				},
+			}),
+			h(CardStatistics, {
+				wide: true,
+				headline: 'New Visitors',
+				hook: useMergedNewVisitors,
+				hookArgs: [
+					{
+						interval: INTERVALS_DAILY,
+						limit: 14,
+					},
+				],
+				renderer: RendererVisitors,
+				rendererProps: {
+					interval: INTERVALS_DAILY,
+					onItemClick: (index) => props.addModal(MODALS_NEW_VISITORS, {
 						index,
 						interval: INTERVALS_DAILY,
 						limit: 14,

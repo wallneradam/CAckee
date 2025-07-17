@@ -12,7 +12,7 @@ const QUERY = gql`
 		}
 	}
 
-	${ viewsField }
+	${viewsField}
 `
 
 export default (filters, options) => {
@@ -22,5 +22,6 @@ export default (filters, options) => {
 	return useQuery(QUERY, selector, enhancer, {
 		variables: filters,
 		...options,
+		fetchPolicy: 'no-cache',
 	})
 }

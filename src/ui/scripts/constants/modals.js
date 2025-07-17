@@ -1,5 +1,8 @@
 export const MODALS_VIEWS = 'modals_views'
 export const MODALS_DURATIONS = 'modals_durations'
+export const MODALS_VISITORS = 'modals_visitors'
+export const MODALS_RETURNING_VISITORS = 'modals_returning_visitors'
+export const MODALS_NEW_VISITORS = 'modals_new_visitors'
 export const MODALS_DOMAIN_ADD = 'modals_domain_add'
 export const MODALS_DOMAIN_EDIT = 'modals_domain_edit'
 export const MODALS_EVENT_ADD = 'modals_event_add'

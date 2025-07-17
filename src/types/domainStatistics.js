@@ -99,6 +99,22 @@ module.exports = gql`
 		count: UnsignedInt!
 	}
 
+	type Visitor {
+		"""
+		Visitor identifier.
+		"""
+		id: ID!
+		"""
+		Date of visits.
+		Either YYYY, YYYY-MM or YYYY-MM-DD depending on the current interval.
+		"""
+		value: String!
+		"""
+		Amount of unique visitors.
+		"""
+		count: UnsignedInt!
+	}
+
 	enum SystemType {
 		"""
 		Include system version.
@@ -365,6 +381,36 @@ module.exports = gql`
 			"""
 			limit: Int = 30
 		): [Language!]
+		"""
+		Unique visitors grouped by day, month or year.
+		"""
+		visitors(
+			interval: Interval!,
+			"""
+			Number of entries to return. Starts with the current day, month or year depending on the chosen interval.
+			"""
+			limit: Int = 14
+		): [Visitor!]
+		"""
+		Returning visitors grouped by day, month or year.
+		"""
+		returningVisitors(
+			interval: Interval!,
+			"""
+			Number of entries to return. Starts with the current day, month or year depending on the chosen interval.
+			"""
+			limit: Int = 14
+		): [Visitor!]
+		"""
+		New visitors grouped by day, month or year.
+		"""
+		newVisitors(
+			interval: Interval!,
+			"""
+			Number of entries to return. Starts with the current day, month or year depending on the chosen interval.
+			"""
+			limit: Int = 14
+		): [Visitor!]
 	}
 
 	type Query {

@@ -9,6 +9,8 @@ const devices = require('../database/devices')
 const browsers = require('../database/browsers')
 const sizes = require('../database/sizes')
 const languages = require('../database/languages')
+const visitors = require('../database/visitors')
+const returningVisitors = require('../database/returningVisitors')
 const pipe = require('../utils/pipe')
 const domainIds = require('../utils/domainIds')
 const recursiveId = require('../utils/recursiveId')
@@ -59,6 +61,18 @@ module.exports = {
 		languages: pipe(requireAuth, async (domain, { sorting, range, limit }, { dateDetails }) => {
 			const ids = await domainIds(domain)
 			return languages.get(ids, sorting, range, limit, dateDetails)
+		}),
+		visitors: pipe(requireAuth, async (domain, { interval, limit }, { dateDetails }) => {
+			const ids = await domainIds(domain)
+			return visitors.get(ids, interval, limit, dateDetails)
+		}),
+		returningVisitors: pipe(requireAuth, async (domain, { interval, limit }, { dateDetails }) => {
+			const ids = await domainIds(domain)
+			return returningVisitors.getReturningVisitors(ids, interval, limit, dateDetails)
+		}),
+		newVisitors: pipe(requireAuth, async (domain, { interval, limit }, { dateDetails }) => {
+			const ids = await domainIds(domain)
+			return returningVisitors.getNewVisitors(ids, interval, limit, dateDetails)
 		}),
 	},
 	Query: {
