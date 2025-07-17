@@ -98,15 +98,6 @@ const RouteSettings = (props) => {
 				...(permanentTokens.status.isInitializing === true ? [ permanentTokensLoading ] : permanentTokensItems),
 			),
 
-			h(CardSetting, {
-				headline: 'Donate',
-			},
-				h(LinkItem, { type: 'a', href: 'https://github.com/sponsors/electerious', target: '_blank', rel: 'noopener' }, 'Become a GitHub sponsor'),
-				h(Line),
-				h(LinkItem, { type: 'a', href: 'https://www.buymeacoffee.com/electerious', target: '_blank', rel: 'noopener' }, 'Buy me a coffee'),
-				h(Line),
-				h(LinkItem, { type: 'a', href: 'https://paypal.me/electerious', target: '_blank', rel: 'noopener' }, 'Donate via PayPal'),
-			),
 
 			h(CardSetting, {
 				headline: 'Help',
