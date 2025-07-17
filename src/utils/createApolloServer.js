@@ -4,7 +4,7 @@ const {
 	ApolloServerPluginLandingPageGraphQLPlayground: apolloServerPluginLandingPageGraphQLPlayground,
 	ApolloServerPluginLandingPageDisabled: apolloServerPluginLandingPageDisabled,
 } = require('apollo-server-core')
-const httpHeadersPlugin = require('apollo-server-plugin-http-headers')
+const httpHeadersPlugin = require('./httpHeadersPlugin')
 const {
 	UnsignedIntResolver,
 	UnsignedIntTypeDefinition,

@@ -74,6 +74,21 @@ const CardFacts = (props) => {
 				addition: averageDuration.change != null && h(ChangeBadge, { value: averageDuration.change }),
 			}),
 			h(Presentation, {
+				headline: 'Visitors today',
+				value: formatNumber(visitorsToday),
+				unit: pluralize([ 'visitors', 'visitor', 'visitors' ], visitorsToday),
+			}),
+			h(Presentation, {
+				headline: 'Visitors this week',
+				value: formatNumber(visitorsWeek),
+				unit: pluralize([ 'visitors', 'visitor', 'visitors' ], visitorsWeek),
+			}),
+			h(Presentation, {
+				headline: 'Visitors this year',
+				value: formatNumber(visitorsYear),
+				unit: pluralize([ 'visitors', 'visitor', 'visitors' ], visitorsYear),
+			}),
+			h(Presentation, {
 				headline: 'Views today',
 				value: formatNumber(viewsToday),
 				unit: pluralize([ 'views', 'view', 'views' ], viewsToday),
@@ -83,26 +98,11 @@ const CardFacts = (props) => {
 				value: formatNumber(viewsMonth),
 				unit: pluralize([ 'views', 'view', 'views' ], viewsMonth),
 			}),
-                        h(Presentation, {
-                                headline: 'Visitors today',
-                                value: formatNumber(visitorsToday),
-                                unit: pluralize([ 'visitors', 'visitor', 'visitors' ], visitorsToday),
-                        }),
-                        h(Presentation, {
-                                headline: 'Views this year',
-                                value: formatNumber(viewsYear),
-                                unit: pluralize([ 'views', 'view', 'views' ], viewsYear),
-                        }),
-                        h(Presentation, {
-                                headline: 'Visitors this week',
-                                value: formatNumber(visitorsWeek),
-                                unit: pluralize([ 'visitors', 'visitor', 'visitors' ], visitorsWeek),
-                        }),
-                        h(Presentation, {
-                                headline: 'Visitors this year',
-                                value: formatNumber(visitorsYear),
-                                unit: pluralize([ 'visitors', 'visitor', 'visitors' ], visitorsYear),
-                        }),
+			h(Presentation, {
+				headline: 'Views this year',
+				value: formatNumber(viewsYear),
+				unit: pluralize([ 'views', 'view', 'views' ], viewsYear),
+			}),
                 )
         )
 }

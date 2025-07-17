@@ -5,7 +5,8 @@
       "Bash(gh pr view:*)",
       "Bash(gh pr diff:*)",
       "Bash(grep:*)",
-      "mcp__project-mem-mcp__get_project_memory"
+      "mcp__project-mem-mcp__get_project_memory",
+      "mcp__project-mem-mcp__update_project_memory"
     ],
     "deny": []
   },
