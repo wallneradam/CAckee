@@ -18,5 +18,11 @@ export default gql`
                 visitorsToday
                 visitorsWeek
                 visitorsYear
+                returningVisitorsToday
+                returningVisitorsWeek
+                returningVisitorsYear
+                newVisitorsToday
+                newVisitorsWeek
+                newVisitorsYear
         }
 `

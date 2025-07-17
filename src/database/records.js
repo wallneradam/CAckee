@@ -28,6 +28,30 @@ const add = async (data) => {
 		return entry == null ? entry : response(entry)
 	}
 
+	// Determine if this is a new visitor session
+	const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
+	const now = new Date()
+	let isNewVisitorSession = true
+
+	if (data.visitorId) {
+		// Check if visitor exists and get their first visit time
+		const visitorFirstRecord = await Record.findOne({
+			visitorId: data.visitorId
+		}).sort({ created: 1 })
+
+		if (visitorFirstRecord) {
+			// Visitor already exists, check if still within session timeout
+			const timeSinceFirst = now - visitorFirstRecord.created
+			isNewVisitorSession = timeSinceFirst > SESSION_TIMEOUT
+			console.log(`[DEBUG] Visitor ${data.visitorId}: timeSinceFirst=${timeSinceFirst}ms, SESSION_TIMEOUT=${SESSION_TIMEOUT}ms, isNewVisitorSession=${isNewVisitorSession}`)
+		} else {
+			console.log(`[DEBUG] Visitor ${data.visitorId}: First time visitor, isNewVisitorSession=true`)
+		}
+		// If no previous record found, remains true (new visitor)
+	}
+
+	console.log(`[DEBUG] Creating record with isNewVisitorSession=${isNewVisitorSession}`)
+	
 	return enhance(
                 await Record.create({
                         clientId: data.clientId,
@@ -48,6 +72,7 @@ const add = async (data) => {
 			browserVersion: data.browserVersion,
 			browserWidth: data.browserWidth,
 			browserHeight: data.browserHeight,
+			isNewVisitorSession: isNewVisitorSession,
 		}),
 	)
 }

@@ -71,6 +71,30 @@ module.exports = gql`
                 Number of unique visitors this year.
                 """
                 visitorsYear: UnsignedInt!
+                """
+                Number of returning visitors today.
+                """
+                returningVisitorsToday: UnsignedInt!
+                """
+                Number of returning visitors this week.
+                """
+                returningVisitorsWeek: UnsignedInt!
+                """
+                Number of returning visitors this year.
+                """
+                returningVisitorsYear: UnsignedInt!
+                """
+                Number of new visitors today.
+                """
+                newVisitorsToday: UnsignedInt!
+                """
+                Number of new visitors this week.
+                """
+                newVisitorsWeek: UnsignedInt!
+                """
+                Number of new visitors this year.
+                """
+                newVisitorsYear: UnsignedInt!
         }
 
 	type Query {

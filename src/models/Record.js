@@ -98,6 +98,12 @@ const schema = new mongoose.Schema({
 		index: true,
 		default: Date.now,
 	},
+	isNewVisitorSession: {
+		type: Boolean,
+		required: true,
+		default: true,
+		index: true,
+	},
 })
 
 module.exports = mongoose.model('Record', schema)

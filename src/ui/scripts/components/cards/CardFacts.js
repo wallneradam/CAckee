@@ -47,6 +47,12 @@ const CardFacts = (props) => {
                 visitorsWeek,
                 visitorsYear,
                 viewsYear,
+                returningVisitorsToday,
+                returningVisitorsWeek,
+                returningVisitorsYear,
+                newVisitorsToday,
+                newVisitorsWeek,
+                newVisitorsYear,
         } = value
 
 	return (
@@ -87,6 +93,36 @@ const CardFacts = (props) => {
 				headline: 'Visitors this year',
 				value: formatNumber(visitorsYear),
 				unit: pluralize([ 'visitors', 'visitor', 'visitors' ], visitorsYear),
+			}),
+			h(Presentation, {
+				headline: 'Returning visitors today',
+				value: formatNumber(returningVisitorsToday),
+				unit: pluralize([ 'visitors', 'visitor', 'visitors' ], returningVisitorsToday),
+			}),
+			h(Presentation, {
+				headline: 'Returning visitors this week',
+				value: formatNumber(returningVisitorsWeek),
+				unit: pluralize([ 'visitors', 'visitor', 'visitors' ], returningVisitorsWeek),
+			}),
+			h(Presentation, {
+				headline: 'Returning visitors this year',
+				value: formatNumber(returningVisitorsYear),
+				unit: pluralize([ 'visitors', 'visitor', 'visitors' ], returningVisitorsYear),
+			}),
+			h(Presentation, {
+				headline: 'New visitors today',
+				value: formatNumber(newVisitorsToday),
+				unit: pluralize([ 'visitors', 'visitor', 'visitors' ], newVisitorsToday),
+			}),
+			h(Presentation, {
+				headline: 'New visitors this week',
+				value: formatNumber(newVisitorsWeek),
+				unit: pluralize([ 'visitors', 'visitor', 'visitors' ], newVisitorsWeek),
+			}),
+			h(Presentation, {
+				headline: 'New visitors this year',
+				value: formatNumber(newVisitorsYear),
+				unit: pluralize([ 'visitors', 'visitor', 'visitors' ], newVisitorsYear),
 			}),
 			h(Presentation, {
 				headline: 'Views today',
