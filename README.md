@@ -18,12 +18,14 @@ Self-hosted, Node.js based analytics tool for those who care about privacy. Acke
 
 ## 👋 Introduction
 
+> ⚠️ **IMPORTANT**: This is a modified fork of Ackee that uses cookies for tracking unique and returning visitors. This version is NOT privacy-first and does NOT follow the original Ackee's privacy principles. If you're looking for the original privacy-focused Ackee analytics tool, please visit the [official Ackee repository](https://github.com/electerious/Ackee).
+
 Ackee is a self-hosted analytics tool that cares about privacy. We believe that you don't need to track every aspect of your visitors. Ackee keeps tracked data anonymized to avoid that users are identifiable, while still providing helpful insights. It's the right tool for everyone who doesn't need a full-featured marketing analytics platform like Google Analytics or Matomo.
 
 - **Self-hosted**: Ackee runs on your own server and is 100% open-source
 - **Modern technologies**: Lightweight Node.js and MongoDB architecture
 - **Beautiful**: Minimal and focused interface
-- **No cookies**: No unique user tracking and therefore no required cookie message
+- **Uses cookies**: Tracks unique and returning visitors using cookies for enhanced analytics
 - **Events**: Track button clicks, newsletter subscriptions and more
 - **GraphQL API**: Fully documented GraphQL API that allows you to build new tools upon Ackee
 
