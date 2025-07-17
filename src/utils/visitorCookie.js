@@ -16,8 +16,8 @@ module.exports = {
                 value: uuid(),
                 options: {
                         maxAge: 365 * 24 * 60 * 60,
-                        sameSite: 'none',
-                        secure: true,
+                        sameSite: 'lax',
+                        secure: false,
                 },
         }),
 }

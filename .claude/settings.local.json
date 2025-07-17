@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__fetch__fetch",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr diff:*)",
+      "Bash(grep:*)",
+      "mcp__project-mem-mcp__get_project_memory"
+    ],
+    "deny": []
+  },
+  "enabledMcpjsonServers": [
+    "project-mem-mcp",
+    "context7"
+  ]
+}

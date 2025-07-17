@@ -28,9 +28,10 @@ const get = async (ids, interval, limit, dateDetails) => {
                         })
 
                         const value = (() => {
-                                if (matchDay === true) return `${ date.getFullYear() }-${ date.getMonth() + 1 }-${ date.getDate() }`
-                                if (matchWeek === true) return `${ date.getFullYear() }-W${ getISOWeek(date) }`
-                                if (matchYear === true) return `${ date.getFullYear() }`
+                                if (interval === intervals.INTERVALS_DAILY) return `${ date.getFullYear() }-${ date.getMonth() + 1 }-${ date.getDate() }`
+                                if (interval === intervals.INTERVALS_WEEKLY) return `${ date.getFullYear() }-W${ getISOWeek(date) }`
+                                if (interval === intervals.INTERVALS_MONTHLY) return `${ date.getFullYear() }-${ date.getMonth() + 1 }`
+                                if (interval === intervals.INTERVALS_YEARLY) return `${ date.getFullYear() }`
                         })()
 
                         return {

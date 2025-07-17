@@ -84,14 +84,14 @@ const CardFacts = (props) => {
 				unit: pluralize([ 'views', 'view', 'views' ], viewsMonth),
 			}),
                         h(Presentation, {
-                                headline: 'Views this year',
-                                value: formatNumber(viewsYear),
-                                unit: pluralize([ 'views', 'view', 'views' ], viewsYear),
-                        }),
-                        h(Presentation, {
                                 headline: 'Visitors today',
                                 value: formatNumber(visitorsToday),
                                 unit: pluralize([ 'visitors', 'visitor', 'visitors' ], visitorsToday),
+                        }),
+                        h(Presentation, {
+                                headline: 'Views this year',
+                                value: formatNumber(viewsYear),
+                                unit: pluralize([ 'views', 'view', 'views' ], viewsYear),
                         }),
                         h(Presentation, {
                                 headline: 'Visitors this week',

@@ -38,3 +38,8 @@ dist/*
 
 # Vercel
 .vercel
+
+# Claude
+CLAUDE.md
+.mcp.json
+MEMORY.md
