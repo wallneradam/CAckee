@@ -4,7 +4,7 @@ import { version } from '../../../../package.json'
 import { SORTINGS_TOP } from '../../../constants/sortings'
 import { RANGES_LAST_7_DAYS } from '../../../constants/ranges'
 import { INTERVALS_DAILY } from '../../../constants/intervals'
-import { VIEWS_TYPE_UNIQUE } from '../../../constants/views'
+import { VIEWS_TYPE_UNIQUE, VIEWS_TYPE_TOTAL } from '../../../constants/views'
 import { REFERRERS_TYPE_WITH_SOURCE } from '../../../constants/referrers'
 import { DEVICES_TYPE_WITH_MODEL } from '../../../constants/devices'
 import { BROWSERS_TYPE_WITH_VERSION } from '../../../constants/browsers'
@@ -30,7 +30,7 @@ const { get, set, reset } = createStorage(`ackee_filter_${ version }`, {
 	sorting: SORTINGS_TOP,
 	range: RANGES_LAST_7_DAYS,
 	interval: INTERVALS_DAILY,
-	viewsType: VIEWS_TYPE_UNIQUE,
+	viewsType: VIEWS_TYPE_TOTAL,
 	referrersType: REFERRERS_TYPE_WITH_SOURCE,
 	devicesType: DEVICES_TYPE_WITH_MODEL,
 	browsersType: BROWSERS_TYPE_WITH_VERSION,

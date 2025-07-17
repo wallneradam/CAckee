@@ -12,6 +12,7 @@ import Modals from './modals/Modals'
 import RouteOverview from './routes/RouteOverview'
 import RouteDomain from './routes/RouteDomain'
 import RouteViews from './routes/RouteViews'
+import RouteUniqueVisitors from './routes/RouteUniqueVisitors'
 import RoutePages from './routes/RoutePages'
 import RouteReferrers from './routes/RouteReferrers'
 import RouteDurations from './routes/RouteDurations'
@@ -27,6 +28,7 @@ const routeComponents = {
 	[routes.OVERVIEW]: RouteOverview,
 	[routes.DOMAIN]: RouteDomain,
 	[routes.VIEWS]: RouteViews,
+	[routes.UNIQUE_VISITORS]: RouteUniqueVisitors,
 	[routes.PAGES]: RoutePages,
 	[routes.REFERRERS]: RouteReferrers,
 	[routes.DURATIONS]: RouteDurations,
@@ -50,6 +52,7 @@ const Dashboard = (props) => {
 
 	useHotkeys('o', () => props.setRoute('/'))
 	useHotkeys('v', () => props.setRoute('/insights/views'))
+	useHotkeys('u', () => props.setRoute('/insights/unique-visitors'))
 	useHotkeys('p', () => props.setRoute('/insights/pages'))
 	useHotkeys('r', () => props.setRoute('/insights/referrers'))
 	useHotkeys('d', () => props.setRoute('/insights/durations'))
@@ -67,6 +70,7 @@ const Dashboard = (props) => {
 	)
 
 	const insightsItems = [
+		createDropdownButton('Unique Visitors', '/insights/unique-visitors', props.route, props.setRoute, 'u'),
 		createDropdownButton('Views', '/insights/views', props.route, props.setRoute, 'v'),
 		createDropdownButton('Pages', '/insights/pages', props.route, props.setRoute, 'p'),
 		createDropdownButton('Referrers', '/insights/referrers', props.route, props.setRoute, 'r'),

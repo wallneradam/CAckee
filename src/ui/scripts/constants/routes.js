@@ -3,6 +3,7 @@ import UrlPattern from 'url-pattern'
 export const OVERVIEW = Symbol()
 export const DOMAIN = Symbol()
 export const VIEWS = Symbol()
+export const UNIQUE_VISITORS = Symbol()
 export const PAGES = Symbol()
 export const REFERRERS = Symbol()
 export const DURATIONS = Symbol()
@@ -26,6 +27,10 @@ const routes = [
 	{
 		pattern: new UrlPattern('/insights/views'),
 		key: VIEWS,
+	},
+	{
+		pattern: new UrlPattern('/insights/unique-visitors'),
+		key: UNIQUE_VISITORS,
 	},
 	{
 		pattern: new UrlPattern('/insights/pages'),

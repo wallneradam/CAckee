@@ -50,6 +50,7 @@ const RouteOverview = (props) => {
 			h(CardStatistics, {
 				wide: true,
 				headline: 'Unique Visitors',
+				onMore: () => props.setRoute('/insights/unique-visitors'),
 				hook: useMergedVisitors,
 				hookArgs: [
 					{

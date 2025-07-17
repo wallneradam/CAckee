@@ -1,6 +1,7 @@
 import RouteOverview from '../components/routes/RouteOverview'
 import RouteDomain from '../components/routes/RouteDomain'
 import RouteViews from '../components/routes/RouteViews'
+import RouteUniqueVisitors from '../components/routes/RouteUniqueVisitors'
 import RoutePages from '../components/routes/RoutePages'
 import RouteReferrers from '../components/routes/RouteReferrers'
 import RouteDurations from '../components/routes/RouteDurations'
@@ -15,6 +16,7 @@ import RouteSettings from '../components/routes/RouteSettings'
 export const ROUTE_OVERVIEW = { key: 'route_overview', title: 'Overview', component: RouteOverview }
 export const ROUTE_DOMAIN = { key: 'route_domain', title: 'Domains', component: RouteDomain }
 export const ROUTE_VIEWS = { key: 'route_views', title: 'Views', component: RouteViews }
+export const ROUTE_UNIQUE_VISITORS = { key: 'route_unique_visitors', title: 'Unique Visitors', component: RouteUniqueVisitors }
 export const ROUTE_PAGES = { key: 'route_pages', title: 'Pages', component: RoutePages }
 export const ROUTE_REFERRERS = { key: 'route_referrers', title: 'Referrers', component: RouteReferrers }
 export const ROUTE_DURATIONS = { key: 'route_durations', title: 'Durations', component: RouteDurations }

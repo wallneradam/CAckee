@@ -4,12 +4,14 @@ import PropTypes from 'prop-types'
 import { SORTINGS_TOP } from '../../../../constants/sortings'
 import { RANGES_LAST_24_HOURS } from '../../../../constants/ranges'
 import { INTERVALS_DAILY } from '../../../../constants/intervals'
-import { VIEWS_TYPE_UNIQUE } from '../../../../constants/views'
+import { VIEWS_TYPE_TOTAL } from '../../../../constants/views'
 import { REFERRERS_TYPE_WITH_SOURCE } from '../../../../constants/referrers'
 import { SYSTEMS_TYPE_WITH_VERSION } from '../../../../constants/systems'
 import { DEVICES_TYPE_WITH_MODEL } from '../../../../constants/devices'
 import { BROWSERS_TYPE_WITH_VERSION } from '../../../../constants/browsers'
 import { SIZES_TYPE_BROWSER_RESOLUTION } from '../../../../constants/sizes'
+
+import { MODALS_VIEWS, MODALS_DURATIONS, MODALS_VISITORS, MODALS_RETURNING_VISITORS, MODALS_NEW_VISITORS } from '../../constants/modals'
 
 import useRoute from '../../hooks/useRoute'
 import useActiveVisitors from '../../api/hooks/facts/useActiveVisitors'
@@ -23,12 +25,16 @@ import useDevices from '../../api/hooks/devices/useDevices'
 import useBrowsers from '../../api/hooks/browsers/useBrowsers'
 import useSizes from '../../api/hooks/sizes/useSizes'
 import useLanguages from '../../api/hooks/languages/useLanguages'
+import useVisitors from '../../api/hooks/visitors/useVisitors'
+import useReturningVisitors from '../../api/hooks/visitors/useReturningVisitors'
+import useNewVisitors from '../../api/hooks/visitors/useNewVisitors'
 
 import CardFacts from '../cards/CardFacts'
 import CardStatistics from '../cards/CardStatistics'
 
 import RendererViews from '../renderers/RendererViews'
 import RendererDurations from '../renderers/RendererDurations'
+import RendererVisitors from '../renderers/RendererVisitors'
 import RendererList from '../renderers/RendererList'
 import RendererReferrers from '../renderers/RendererReferrers'
 
@@ -49,6 +55,29 @@ const RouteDomain = (props) => {
 			h('div', { className: 'content__spacer' }),
 			h(CardStatistics, {
 				wide: true,
+				headline: 'Unique Visitors',
+				onMore: () => props.setRoute('/insights/unique-visitors'),
+				hook: useVisitors,
+				hookArgs: [
+					domainId,
+					{
+						interval: INTERVALS_DAILY,
+						limit: 14,
+					},
+				],
+				renderer: RendererVisitors,
+				rendererProps: {
+					interval: INTERVALS_DAILY,
+					onItemClick: (index) => props.addModal(MODALS_VISITORS, {
+						domainId,
+						index,
+						interval: INTERVALS_DAILY,
+						limit: 14,
+					}),
+				},
+			}),
+			h(CardStatistics, {
+				wide: true,
 				headline: 'Views',
 				onMore: () => props.setRoute('/insights/views'),
 				hook: useViews,
@@ -56,13 +85,20 @@ const RouteDomain = (props) => {
 					domainId,
 					{
 						interval: INTERVALS_DAILY,
-						type: VIEWS_TYPE_UNIQUE,
+						type: VIEWS_TYPE_TOTAL,
 						limit: 14,
 					},
 				],
 				renderer: RendererViews,
 				rendererProps: {
 					interval: INTERVALS_DAILY,
+					onItemClick: (index) => props.addModal(MODALS_VIEWS, {
+						domainId,
+						index,
+						interval: INTERVALS_DAILY,
+						type: VIEWS_TYPE_TOTAL,
+						limit: 14,
+					}),
 				},
 			}),
 			h(CardStatistics, {
@@ -80,6 +116,56 @@ const RouteDomain = (props) => {
 				renderer: RendererDurations,
 				rendererProps: {
 					interval: INTERVALS_DAILY,
+					onItemClick: (index) => props.addModal(MODALS_DURATIONS, {
+						domainId,
+						index,
+						interval: INTERVALS_DAILY,
+						limit: 14,
+					}),
+				},
+			}),
+			h(CardStatistics, {
+				wide: true,
+				headline: 'Returning Visitors',
+				hook: useReturningVisitors,
+				hookArgs: [
+					domainId,
+					{
+						interval: INTERVALS_DAILY,
+						limit: 14,
+					},
+				],
+				renderer: RendererVisitors,
+				rendererProps: {
+					interval: INTERVALS_DAILY,
+					onItemClick: (index) => props.addModal(MODALS_RETURNING_VISITORS, {
+						domainId,
+						index,
+						interval: INTERVALS_DAILY,
+						limit: 14,
+					}),
+				},
+			}),
+			h(CardStatistics, {
+				wide: true,
+				headline: 'New Visitors',
+				hook: useNewVisitors,
+				hookArgs: [
+					domainId,
+					{
+						interval: INTERVALS_DAILY,
+						limit: 14,
+					},
+				],
+				renderer: RendererVisitors,
+				rendererProps: {
+					interval: INTERVALS_DAILY,
+					onItemClick: (index) => props.addModal(MODALS_NEW_VISITORS, {
+						domainId,
+						index,
+						interval: INTERVALS_DAILY,
+						limit: 14,
+					}),
 				},
 			}),
 			h(CardStatistics, {
@@ -214,6 +300,7 @@ const RouteDomain = (props) => {
 RouteDomain.propTypes = {
 	route: PropTypes.string.isRequired,
 	setRoute: PropTypes.func.isRequired,
+	addModal: PropTypes.func.isRequired,
 }
 
 export default RouteDomain

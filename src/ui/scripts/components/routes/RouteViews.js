@@ -27,7 +27,7 @@ const RouteViews = (props) => {
 				hookArgs: [
 					{
 						interval: props.filters.interval,
-						type: props.filters.viewsType,
+						type: props.filters.viewsType || VIEWS_TYPE_TOTAL,
 						limit: 14,
 					},
 				],
@@ -37,7 +37,7 @@ const RouteViews = (props) => {
 					onItemClick: (index) => props.addModal(MODALS_VIEWS, {
 						index,
 						interval: props.filters.interval,
-						type: props.filters.viewsType,
+						type: props.filters.viewsType || VIEWS_TYPE_TOTAL,
 						limit: 14,
 					}),
 				},
@@ -52,7 +52,7 @@ const RouteViews = (props) => {
 						domain.id,
 						{
 							interval: props.filters.interval,
-							type: props.filters.viewsType,
+							type: props.filters.viewsType || VIEWS_TYPE_TOTAL,
 							limit: 7,
 						},
 					],
