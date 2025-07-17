@@ -22,7 +22,12 @@ const get = async (ids, interval, limit, dateDetails) => {
                         const userZonedDate = utcToZonedTime(date, dateDetails.userTimeZone)
                         const entry = entries.find((entry) => {
                                 const dayOk = matchDay !== true || entry._id.day === userZonedDate.getDate()
-                                const weekOk = matchWeek !== true || entry._id.week === getISOWeek(userZonedDate)
+                                // MongoDB $week uses different week numbering than getISOWeek
+                                // Convert userZonedDate to MongoDB week format (0-based week of year)
+                                const startOfYear = new Date(userZonedDate.getFullYear(), 0, 1)
+                                const dayOfYear = Math.floor((userZonedDate - startOfYear) / (1000 * 60 * 60 * 24)) + 1
+                                const mongoWeek = Math.floor((dayOfYear - 1) / 7)
+                                const weekOk = matchWeek !== true || entry._id.week === mongoWeek
                                 const yearOk = matchYear !== true || entry._id.year === userZonedDate.getFullYear()
                                 return dayOk && weekOk && yearOk
                         })
