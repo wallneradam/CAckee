@@ -34,16 +34,24 @@ const add = async (data) => {
 	let isNewVisitorSession = true
 
 	if (data.visitorId) {
-		// Check if visitor exists and get their first visit time
+		// Check if visitor exists and get their FIRST visit time
 		const visitorFirstRecord = await Record.findOne({
 			visitorId: data.visitorId
 		}).sort({ created: 1 })
 
 		if (visitorFirstRecord) {
-			// Visitor already exists, check if still within session timeout
+			// Visitor already exists, check time since FIRST visit
 			const timeSinceFirst = now - visitorFirstRecord.created
-			isNewVisitorSession = timeSinceFirst > SESSION_TIMEOUT
-			console.log(`[DEBUG] Visitor ${data.visitorId}: timeSinceFirst=${timeSinceFirst}ms, SESSION_TIMEOUT=${SESSION_TIMEOUT}ms, isNewVisitorSession=${isNewVisitorSession}`)
+			// Within 30 minutes of first visit = still "new visitor" period
+			// After 30 minutes from first visit = "returning visitor"
+			if (timeSinceFirst <= SESSION_TIMEOUT) {
+				// Still within 30 min of first visit - new visitor
+				isNewVisitorSession = true
+			} else {
+				// More than 30 min since first visit - returning visitor
+				isNewVisitorSession = false
+			}
+			console.log(`[DEBUG] Visitor ${data.visitorId}: timeSinceFirst=${timeSinceFirst}ms (${Math.round(timeSinceFirst/1000/60)} min), SESSION_TIMEOUT=${SESSION_TIMEOUT}ms, isNewVisitorSession=${isNewVisitorSession}`)
 		} else {
 			console.log(`[DEBUG] Visitor ${data.visitorId}: First time visitor, isNewVisitorSession=true`)
 		}
