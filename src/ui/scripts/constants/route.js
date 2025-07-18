@@ -8,6 +8,7 @@ import RouteDurations from '../components/routes/RouteDurations'
 import RouteBrowsers from '../components/routes/RouteBrowsers'
 import RouteDevices from '../components/routes/RouteDevices'
 import RouteLanguages from '../components/routes/RouteLanguages'
+import RouteCountries from '../components/routes/RouteCountries'
 import RouteSystems from '../components/routes/RouteSystems'
 import RouteSizes from '../components/routes/RouteSizes'
 import RouteEvents from '../components/routes/RouteEvents'
@@ -21,6 +22,7 @@ export const ROUTE_PAGES = { key: 'route_pages', title: 'Pages', component: Rout
 export const ROUTE_REFERRERS = { key: 'route_referrers', title: 'Referrers', component: RouteReferrers }
 export const ROUTE_DURATIONS = { key: 'route_durations', title: 'Durations', component: RouteDurations }
 export const ROUTE_LANGUAGES = { key: 'route_languages', title: 'Languages', component: RouteLanguages }
+export const ROUTE_COUNTRIES = { key: 'route_countries', title: 'Countries', component: RouteCountries }
 export const ROUTE_SIZES = { key: 'route_sizes', title: 'Sizes', component: RouteSizes }
 export const ROUTE_SYSTEMS = { key: 'route_systems', title: 'Systems', component: RouteSystems }
 export const ROUTE_DEVICES = { key: 'route_devices', title: 'Devices', component: RouteDevices }

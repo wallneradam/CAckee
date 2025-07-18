@@ -22,6 +22,7 @@ import RouteDevices from './routes/RouteDevices'
 import RouteBrowsers from './routes/RouteBrowsers'
 import RouteSizes from './routes/RouteSizes'
 import RouteLanguages from './routes/RouteLanguages'
+import RouteCountries from './routes/RouteCountries'
 import RouteSettings from './routes/RouteSettings'
 
 const routeComponents = {
@@ -38,6 +39,7 @@ const routeComponents = {
 	[routes.BROWSERS]: RouteBrowsers,
 	[routes.SIZES]: RouteSizes,
 	[routes.LANGUAGES]: RouteLanguages,
+	[routes.COUNTRIES]: RouteCountries,
 	[routes.SETTINGS]: RouteSettings,
 }
 
@@ -83,6 +85,7 @@ const Dashboard = (props) => {
 		createDropdownButton('Browsers', '/insights/browsers', props.route, props.setRoute),
 		createDropdownButton('Sizes', '/insights/sizes', props.route, props.setRoute),
 		createDropdownButton('Languages', '/insights/languages', props.route, props.setRoute),
+		createDropdownButton('Countries', '/insights/countries', props.route, props.setRoute),
 	]
 
 	const items = [

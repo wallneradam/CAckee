@@ -27,6 +27,7 @@ import useMergedDevices from '../../api/hooks/devices/useMergedDevices'
 import useMergedBrowsers from '../../api/hooks/browsers/useMergedBrowsers'
 import useMergedSizes from '../../api/hooks/sizes/useMergedSizes'
 import useMergedLanguages from '../../api/hooks/languages/useMergedLanguages'
+import useMergedCountries from '../../api/hooks/countries/useMergedCountries'
 
 import CardFacts from '../cards/CardFacts'
 import CardStatistics from '../cards/CardStatistics'
@@ -258,6 +259,22 @@ const RouteOverview = (props) => {
 				headline: 'Languages',
 				onMore: () => props.setRoute('/insights/languages'),
 				hook: useMergedLanguages,
+				hookArgs: [
+					{
+						sorting: SORTINGS_TOP,
+						range: RANGES_LAST_24_HOURS,
+					},
+				],
+				renderer: RendererList,
+				rendererProps: {
+					sorting: SORTINGS_TOP,
+					range: RANGES_LAST_24_HOURS,
+				},
+			}),
+			h(CardStatistics, {
+				headline: 'Countries',
+				onMore: () => props.setRoute('/insights/countries'),
+				hook: useMergedCountries,
 				hookArgs: [
 					{
 						sorting: SORTINGS_TOP,

@@ -25,6 +25,7 @@ import useDevices from '../../api/hooks/devices/useDevices'
 import useBrowsers from '../../api/hooks/browsers/useBrowsers'
 import useSizes from '../../api/hooks/sizes/useSizes'
 import useLanguages from '../../api/hooks/languages/useLanguages'
+import useCountries from '../../api/hooks/countries/useCountries'
 import useVisitors from '../../api/hooks/visitors/useVisitors'
 import useReturningVisitors from '../../api/hooks/visitors/useReturningVisitors'
 import useNewVisitors from '../../api/hooks/visitors/useNewVisitors'
@@ -280,6 +281,23 @@ const RouteDomain = (props) => {
 				headline: 'Languages',
 				onMore: () => props.setRoute('/insights/languages'),
 				hook: useLanguages,
+				hookArgs: [
+					domainId,
+					{
+						sorting: SORTINGS_TOP,
+						range: RANGES_LAST_24_HOURS,
+					},
+				],
+				renderer: RendererList,
+				rendererProps: {
+					sorting: SORTINGS_TOP,
+					range: RANGES_LAST_24_HOURS,
+				},
+			}),
+			h(CardStatistics, {
+				headline: 'Countries',
+				onMore: () => props.setRoute('/insights/countries'),
+				hook: useCountries,
 				hookArgs: [
 					domainId,
 					{

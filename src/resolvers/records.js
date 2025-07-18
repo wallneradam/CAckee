@@ -1,5 +1,6 @@
 'use strict'
 
+const geoip = require('geoip-lite')
 const KnownError = require('../utils/KnownError')
 const normalizeUrl = require('../utils/normalizeUrl')
 const identifier = require('../utils/identifier')
@@ -59,7 +60,17 @@ module.exports = {
 			}
 
                         const clientId = identifier(ip, userAgent, domainId)
-                        const data = polish({ ...input, clientId, visitorId, domainId })
+                        
+                        // Get country from IP address
+                        let siteCountry = null
+                        if (ip) {
+                            const geo = geoip.lookup(ip)
+                            if (geo && geo.country) {
+                                siteCountry = geo.country
+                            }
+                        }
+                        
+                        const data = polish({ ...input, clientId, visitorId, domainId, siteCountry })
 
 			const domain = await domains.get(domainId)
 

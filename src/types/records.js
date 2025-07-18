@@ -28,6 +28,10 @@ module.exports = gql`
 		"""
 		siteLanguage: String
 		"""
+		Country of the user. ISO 3166-1 alpha-2 formatted.
+		"""
+		siteCountry: String
+		"""
 		Width of the screen used by the user to visit the site.
 		"""
 		screenWidth: UnsignedInt
@@ -98,6 +102,10 @@ module.exports = gql`
 		Preferred language of the user. ISO 639-1 formatted.
 		"""
 		siteLanguage: String
+		"""
+		Country of the user. ISO 3166-1 alpha-2 formatted.
+		"""
+		siteCountry: String
 		"""
 		Width of the screen used by the user to visit the site.
 		"""

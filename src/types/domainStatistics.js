@@ -270,6 +270,25 @@ module.exports = gql`
 		created: DateTime
 	}
 
+	type Country {
+		"""
+		Country identifier.
+		"""
+		id: ID!
+		"""
+		Name of the country or country code when unknown.
+		"""
+		value: String!
+		"""
+		Amount of occurrences.
+		"""
+		count: UnsignedInt
+		"""
+		Identifies the date and time when the object was created.
+		"""
+		created: DateTime
+	}
+
 	"""
 	Statistics of a domain. Usually data that needs to be represented in a list or chart.
 	"""
@@ -381,6 +400,17 @@ module.exports = gql`
 			"""
 			limit: Int = 30
 		): [Language!]
+		"""
+		Countries where your visitors are from.
+		"""
+		countries(
+			sorting: Sorting!,
+			range: Range = LAST_7_DAYS,
+			"""
+			Number of entries to return.
+			"""
+			limit: Int = 30
+		): [Country!]
 		"""
 		Unique visitors grouped by day, month or year.
 		"""

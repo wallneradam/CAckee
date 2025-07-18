@@ -40,6 +40,11 @@ const schema = new mongoose.Schema({
 		minlength: 2,
 		maxlength: 2,
 	},
+	siteCountry: {
+		type: String,
+		minlength: 2,
+		maxlength: 2,
+	},
 	source: {
 		type: String,
 	},
