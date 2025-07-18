@@ -16,6 +16,26 @@ Self-hosted, Node.js based analytics tool for those who care about privacy. Acke
 
 </div>
 
+## 🔄 Fork Features
+
+This is a modified Ackee fork that takes an honest approach to visitor tracking:
+
+### New features compared to original Ackee:
+- **Returning visitors tracking**: New and returning visitor analytics with cookie-based identification
+- **Visitor analytics charts**: Comprehensive visitor statistics with line charts
+- **Country-based analytics**: Visitor statistics by country with IP geolocation
+- **Enhanced dashboard**: Extended dashboard with new metrics and visualizations
+- **30-minute visitor classification**: Visitors are classified as "new" for 30 minutes after first visit, then "returning"
+
+### Honest privacy approach:
+- **Uses cookies**: We don't claim to be cookie-free - we use a 1-year `visitorId` cookie
+- **Anonymous data**: IP addresses are not stored, only used for country detection
+- **No external data sharing**: No data sent to third parties (Google, Facebook, etc.)
+- **Self-hosted**: All data stays on your own server
+- **Open-source**: Fully transparent and auditable code
+
+> ⚠️ **Important**: This is NOT the original privacy-first Ackee. If you want cookie-free analytics, use the [original Ackee](https://github.com/electerious/Ackee).
+
 ## 👋 Introduction
 
 > ⚠️ **IMPORTANT**: This is a modified fork of Ackee that uses cookies for tracking unique and returning visitors. This version is NOT privacy-first and does NOT follow the original Ackee's privacy principles. If you're looking for the original privacy-focused Ackee analytics tool, please visit the [official Ackee repository](https://github.com/electerious/Ackee).
