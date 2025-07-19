@@ -68,6 +68,10 @@ module.exports = gql`
                 """
                 visitorsWeek: UnsignedInt!
                 """
+                Number of unique visitors this month.
+                """
+                visitorsMonth: UnsignedInt!
+                """
                 Number of unique visitors this year.
                 """
                 visitorsYear: UnsignedInt!
@@ -80,6 +84,10 @@ module.exports = gql`
                 """
                 returningVisitorsWeek: UnsignedInt!
                 """
+                Number of returning visitors this month.
+                """
+                returningVisitorsMonth: UnsignedInt!
+                """
                 Number of returning visitors this year.
                 """
                 returningVisitorsYear: UnsignedInt!
@@ -91,6 +99,10 @@ module.exports = gql`
                 Number of new visitors this week.
                 """
                 newVisitorsWeek: UnsignedInt!
+                """
+                Number of new visitors this month.
+                """
+                newVisitorsMonth: UnsignedInt!
                 """
                 Number of new visitors this year.
                 """

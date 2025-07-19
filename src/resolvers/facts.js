@@ -102,6 +102,12 @@ module.exports = {
 
                         return entries[0].count
                 }),
+                visitorsMonth: pipe(requireAuth, async (domain, _, { dateDetails }) => {
+                        const ids = await domainIds(domain)
+                        const entries = await visitors.get(ids, intervals.INTERVALS_MONTHLY, 1, dateDetails)
+
+                        return entries[0].count
+                }),
                 visitorsYear: pipe(requireAuth, async (domain, _, { dateDetails }) => {
                         const ids = await domainIds(domain)
                         const entries = await visitors.get(ids, intervals.INTERVALS_YEARLY, 1, dateDetails)
@@ -120,6 +126,12 @@ module.exports = {
 
                         return entries[0].count
                 }),
+                returningVisitorsMonth: pipe(requireAuth, async (domain, _, { dateDetails }) => {
+                        const ids = await domainIds(domain)
+                        const entries = await returningVisitors.getReturningVisitors(ids, intervals.INTERVALS_MONTHLY, 1, dateDetails)
+
+                        return entries[0].count
+                }),
                 returningVisitorsYear: pipe(requireAuth, async (domain, _, { dateDetails }) => {
                         const ids = await domainIds(domain)
                         const entries = await returningVisitors.getReturningVisitors(ids, intervals.INTERVALS_YEARLY, 1, dateDetails)
@@ -135,6 +147,12 @@ module.exports = {
                 newVisitorsWeek: pipe(requireAuth, async (domain, _, { dateDetails }) => {
                         const ids = await domainIds(domain)
                         const entries = await returningVisitors.getNewVisitors(ids, intervals.INTERVALS_WEEKLY, 1, dateDetails)
+
+                        return entries[0].count
+                }),
+                newVisitorsMonth: pipe(requireAuth, async (domain, _, { dateDetails }) => {
+                        const ids = await domainIds(domain)
+                        const entries = await returningVisitors.getNewVisitors(ids, intervals.INTERVALS_MONTHLY, 1, dateDetails)
 
                         return entries[0].count
                 }),

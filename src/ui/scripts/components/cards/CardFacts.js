@@ -45,13 +45,16 @@ const CardFacts = (props) => {
                 viewsMonth,
                 visitorsToday,
                 visitorsWeek,
+                visitorsMonth,
                 visitorsYear,
                 viewsYear,
                 returningVisitorsToday,
                 returningVisitorsWeek,
+                returningVisitorsMonth,
                 returningVisitorsYear,
                 newVisitorsToday,
                 newVisitorsWeek,
+                newVisitorsMonth,
                 newVisitorsYear,
         } = value
 
@@ -85,9 +88,9 @@ const CardFacts = (props) => {
 				unit: pluralize([ 'visitors', 'visitor', 'visitors' ], visitorsToday),
 			}),
 			h(Presentation, {
-				headline: 'Visitors this week',
-				value: formatNumber(visitorsWeek),
-				unit: pluralize([ 'visitors', 'visitor', 'visitors' ], visitorsWeek),
+				headline: 'Visitors this month',
+				value: formatNumber(visitorsMonth),
+				unit: pluralize([ 'visitors', 'visitor', 'visitors' ], visitorsMonth),
 			}),
 			h(Presentation, {
 				headline: 'Visitors this year',
@@ -100,9 +103,9 @@ const CardFacts = (props) => {
 				unit: pluralize([ 'visitors', 'visitor', 'visitors' ], returningVisitorsToday),
 			}),
 			h(Presentation, {
-				headline: 'Returning visitors this week',
-				value: formatNumber(returningVisitorsWeek),
-				unit: pluralize([ 'visitors', 'visitor', 'visitors' ], returningVisitorsWeek),
+				headline: 'Returning visitors this month',
+				value: formatNumber(returningVisitorsMonth),
+				unit: pluralize([ 'visitors', 'visitor', 'visitors' ], returningVisitorsMonth),
 			}),
 			h(Presentation, {
 				headline: 'Returning visitors this year',
@@ -115,9 +118,9 @@ const CardFacts = (props) => {
 				unit: pluralize([ 'visitors', 'visitor', 'visitors' ], newVisitorsToday),
 			}),
 			h(Presentation, {
-				headline: 'New visitors this week',
-				value: formatNumber(newVisitorsWeek),
-				unit: pluralize([ 'visitors', 'visitor', 'visitors' ], newVisitorsWeek),
+				headline: 'New visitors this month',
+				value: formatNumber(newVisitorsMonth),
+				unit: pluralize([ 'visitors', 'visitor', 'visitors' ], newVisitorsMonth),
 			}),
 			h(Presentation, {
 				headline: 'New visitors this year',

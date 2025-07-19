@@ -17,12 +17,15 @@ export default gql`
                 viewsYear
                 visitorsToday
                 visitorsWeek
+                visitorsMonth
                 visitorsYear
                 returningVisitorsToday
                 returningVisitorsWeek
+                returningVisitorsMonth
                 returningVisitorsYear
                 newVisitorsToday
                 newVisitorsWeek
+                newVisitorsMonth
                 newVisitorsYear
         }
 `
