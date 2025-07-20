@@ -8,6 +8,7 @@ const aggregateVisitors = require('../aggregations/aggregateVisitors')
 const intervals = require('../constants/intervals')
 const createArray = require('../utils/createArray')
 const recursiveId = require('../utils/recursiveId')
+const matchesDate = require('../utils/matchesDate')
 
 const get = async (ids, interval, limit, dateDetails) => {
         const aggregation = aggregateVisitors(ids, interval, limit, dateDetails)
@@ -20,16 +21,14 @@ const get = async (ids, interval, limit, dateDetails) => {
                 return createArray(limit).map((_, index) => {
                         const date = dateDetails.lastFnByInterval(interval)(index)
                         const userZonedDate = utcToZonedTime(date, dateDetails.userTimeZone)
+                        
                         const entry = entries.find((entry) => {
-                                const dayOk = matchDay !== true || entry._id.day === userZonedDate.getDate()
-                                // MongoDB $week uses different week numbering than getISOWeek
-                                // Convert userZonedDate to MongoDB week format (0-based week of year)
-                                const startOfYear = new Date(userZonedDate.getFullYear(), 0, 1)
-                                const dayOfYear = Math.floor((userZonedDate - startOfYear) / (1000 * 60 * 60 * 24)) + 1
-                                const mongoWeek = Math.floor((dayOfYear - 1) / 7)
-                                const weekOk = matchWeek !== true || entry._id.week === mongoWeek
-                                const yearOk = matchYear !== true || entry._id.year === userZonedDate.getFullYear()
-                                return dayOk && weekOk && yearOk
+                                return matchesDate(
+                                        matchDay === true ? entry._id.day : undefined,
+                                        undefined, // no month in visitors aggregation
+                                        matchYear === true ? entry._id.year : undefined,
+                                        userZonedDate,
+                                )
                         })
 
                         const value = (() => {
