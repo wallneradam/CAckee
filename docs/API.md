@@ -198,6 +198,12 @@ query getDomainsStatistics {
 				count
 				created
 			}
+			visitorCountries(range: LAST_7_DAYS) {
+				id
+				code
+				value
+				count
+			}
 		}
 	}
 }

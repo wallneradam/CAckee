@@ -1,6 +1,7 @@
 import UrlPattern from 'url-pattern'
 
 export const OVERVIEW = Symbol()
+export const MAP = Symbol()
 export const DOMAIN = Symbol()
 export const VIEWS = Symbol()
 export const UNIQUE_VISITORS = Symbol()
@@ -20,6 +21,10 @@ const routes = [
 	{
 		pattern: new UrlPattern('/'),
 		key: OVERVIEW,
+	},
+	{
+		pattern: new UrlPattern('/map'),
+		key: MAP,
 	},
 	{
 		pattern: new UrlPattern('/domains/:domainId'),

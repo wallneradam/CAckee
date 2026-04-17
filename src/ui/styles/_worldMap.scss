@@ -1,0 +1,139 @@
+.worldMap {
+
+	display: grid;
+	gap: $gutter*1.5;
+	min-height: $cardContentHeight;
+
+	&__controls {
+		display: flex;
+		flex-wrap: wrap;
+		gap: math.div($gutter, 2);
+	}
+
+	&__control {
+		padding: .45rem .7rem;
+		border-radius: $innerRadius;
+		background: $dimmed;
+		color: $light;
+		transition: background .3s ease, color .3s ease;
+
+		&:focus,
+		&:hover,
+		&--active {
+			background: $primary;
+			color: $black;
+		}
+	}
+
+	&__body {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 260px;
+		gap: $gutter*1.5;
+		align-items: center;
+
+		@media (max-width: 800px) {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	&__svg {
+		width: 100%;
+		height: auto;
+		max-height: 480px;
+	}
+
+	&__country {
+		fill: $tertiary;
+		fill-opacity: .25;
+		stroke: $black;
+		stroke-width: .7;
+		outline: none;
+		transition: fill-opacity .2s ease, fill .2s ease;
+
+		&--filled {
+			cursor: pointer;
+			fill: $primary;
+			fill-opacity: calc(.28 + (var(--intensity) * .72));
+		}
+
+		&--filled:focus,
+		&--filled:hover,
+		&--active {
+			fill: $secondary;
+			fill-opacity: 1;
+			stroke: $white;
+			stroke-width: 1.6;
+		}
+	}
+
+	&__aside {
+		display: grid;
+		gap: $gutter;
+		align-content: center;
+		min-width: 0;
+	}
+
+	&__summary {
+		display: grid;
+		gap: math.div($gutter, 4);
+		min-width: 0;
+	}
+
+	&__label,
+	&__share {
+		font-size: .85em;
+	}
+
+	&__headline {
+		font-size: 1.4em;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	&__meta {
+		font-weight: bold;
+	}
+
+	&__list {
+		display: grid;
+		gap: math.div($gutter, 3);
+	}
+
+	&__row {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) min-content;
+		gap: $gutter;
+		align-items: center;
+		padding: .45rem .6rem;
+		border-radius: $innerRadius;
+		background: $dimmed;
+		color: $white;
+		text-align: left;
+		transition: background .3s ease;
+
+		&:focus,
+		&:hover,
+		&--active {
+			background: rgba(115, 250, 200, .12);
+		}
+	}
+
+	&__rowText {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	&__rowCount {
+		font-weight: bold;
+	}
+
+	&__empty {
+		display: grid;
+		align-content: center;
+		justify-content: center;
+		min-height: $cardContentHeight;
+	}
+
+}

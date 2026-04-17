@@ -21,10 +21,12 @@ const get = async (ids, sorting, range, limit, dateDetails) => {
 
 	const enhance = (entries) => {
 		return entries.map((entry) => {
+			const code = entry._id.siteCountry
 			const value = enhanceId(entry._id)
 
 			return {
 				id: recursiveId([ value, sorting, range, ...ids ]),
+				code,
 				value,
 				count: entry.count,
 				created: entry.created,

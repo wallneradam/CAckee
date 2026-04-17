@@ -10,6 +10,7 @@ import Header, { createButton, createDropdown, createDropdownButton, createDropd
 import Modals from './modals/Modals'
 
 import RouteOverview from './routes/RouteOverview'
+import RouteMap from './routes/RouteMap'
 import RouteDomain from './routes/RouteDomain'
 import RouteViews from './routes/RouteViews'
 import RouteUniqueVisitors from './routes/RouteUniqueVisitors'
@@ -27,6 +28,7 @@ import RouteSettings from './routes/RouteSettings'
 
 const routeComponents = {
 	[routes.OVERVIEW]: RouteOverview,
+	[routes.MAP]: RouteMap,
 	[routes.DOMAIN]: RouteDomain,
 	[routes.VIEWS]: RouteViews,
 	[routes.UNIQUE_VISITORS]: RouteUniqueVisitors,
@@ -53,6 +55,7 @@ const Dashboard = (props) => {
 	const domains = useDomains()
 
 	useHotkeys('o', () => props.setRoute('/'))
+	useHotkeys('m', () => props.setRoute('/map'))
 	useHotkeys('v', () => props.setRoute('/insights/views'))
 	useHotkeys('u', () => props.setRoute('/insights/unique-visitors'))
 	useHotkeys('p', () => props.setRoute('/insights/pages'))
@@ -90,6 +93,7 @@ const Dashboard = (props) => {
 
 	const items = [
 		createButton('Overview', '/', props.route, props.setRoute),
+		createButton('Map', '/map', props.route, props.setRoute),
 		hasDomains === true ? createDropdown(domainsLabel, domainsItems) : undefined,
 		createDropdown(insightsLabel, insightsItems),
 		createButton('Settings', '/settings', props.route, props.setRoute),

@@ -10,6 +10,7 @@ const browsers = require('../database/browsers')
 const sizes = require('../database/sizes')
 const languages = require('../database/languages')
 const countries = require('../database/countries')
+const visitorCountries = require('../database/visitorCountries')
 const visitors = require('../database/visitors')
 const returningVisitors = require('../database/returningVisitors')
 const pipe = require('../utils/pipe')
@@ -66,6 +67,10 @@ module.exports = {
 		countries: pipe(requireAuth, async (domain, { sorting, range, limit }, { dateDetails }) => {
 			const ids = await domainIds(domain)
 			return countries.get(ids, sorting, range, limit, dateDetails)
+		}),
+		visitorCountries: pipe(requireAuth, async (domain, { range, limit }, { dateDetails }) => {
+			const ids = await domainIds(domain)
+			return visitorCountries.get(ids, range, limit, dateDetails)
 		}),
 		visitors: pipe(requireAuth, async (domain, { interval, limit }, { dateDetails }) => {
 			const ids = await domainIds(domain)

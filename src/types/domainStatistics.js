@@ -276,6 +276,10 @@ module.exports = gql`
 		"""
 		id: ID!
 		"""
+		ISO 3166-1 alpha-2 country code.
+		"""
+		code: String!
+		"""
 		Name of the country or country code when unknown.
 		"""
 		value: String!
@@ -410,6 +414,16 @@ module.exports = gql`
 			Number of entries to return.
 			"""
 			limit: Int = 30
+		): [Country!]
+		"""
+		Unique visitors grouped by country.
+		"""
+		visitorCountries(
+			range: Range = LAST_7_DAYS,
+			"""
+			Number of entries to return.
+			"""
+			limit: Int = 250
 		): [Country!]
 		"""
 		Unique visitors grouped by day, month or year.
