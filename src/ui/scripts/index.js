@@ -6,6 +6,7 @@ import createStatusLink from './api/links/createStatusLink'
 import createAuthLink from './api/links/createAuthLink'
 import createHttpLink from './api/links/createHttpLink'
 import createClient from './api/utils/createClient'
+import triggerFullRefetch from './api/utils/triggerFullRefetch'
 
 import useCustomScrollbar from './hooks/useCustomScrollbar'
 import useScrollReset from './hooks/useScrollReset'
@@ -32,6 +33,11 @@ const client = createClient([
 	createAuthLink(),
 	createHttpLink(),
 ])
+
+document.addEventListener('visibilitychange', () => {
+	if (document.visibilityState !== 'visible') return
+	triggerFullRefetch(client)
+})
 
 const App = () => {
 	// Change the key to re-render the whole application. This will
