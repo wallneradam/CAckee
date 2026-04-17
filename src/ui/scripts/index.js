@@ -36,7 +36,7 @@ const client = createClient([
 
 document.addEventListener('visibilitychange', () => {
 	if (document.visibilityState !== 'visible') return
-	triggerFullRefetch(client)
+	triggerFullRefetch(client, 'visibilitychange')
 })
 
 const App = () => {

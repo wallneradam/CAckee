@@ -1,9 +1,13 @@
 const REFETCH_THROTTLE_MS = 2000
 let lastRefetch = 0
 
-export default (client) => {
+export default (client, reason) => {
 	const now = Date.now()
-	if (now - lastRefetch < REFETCH_THROTTLE_MS) return
+	if (now - lastRefetch < REFETCH_THROTTLE_MS) {
+		console.debug('[Ackee] full refetch skipped (throttled)', { reason })
+		return
+	}
 	lastRefetch = now
-	client.reFetchObservableQueries()
+	console.debug('[Ackee] full refetch triggered', { reason })
+	client.refetchQueries({ include: 'active' })
 }

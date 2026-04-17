@@ -12,7 +12,7 @@ export default (value) => {
 	useEffect(() => {
 		if (current == null) return
 		if (previous.current != null && previous.current !== current) {
-			triggerFullRefetch(client)
+			triggerFullRefetch(client, `activeVisitors ${ previous.current } -> ${ current }`)
 		}
 		previous.current = current
 	}, [ current, client ])
