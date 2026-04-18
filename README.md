@@ -21,31 +21,36 @@ Self-hosted, Node.js based analytics tool for those who care about privacy. Acke
 This is a modified Ackee fork that takes an honest approach to visitor tracking:
 
 ### New features compared to original Ackee:
-- **Returning visitors tracking**: New and returning visitor analytics with cookie-based identification
+- **Returning visitors tracking**: New and returning visitor analytics with a per-site `vid` identifier
 - **Visitor analytics charts**: Comprehensive visitor statistics with line charts
 - **Country-based analytics**: Visitor statistics by country with IP geolocation
+- **World map view**: Interactive map tab showing unique visitor distribution across countries for the last 24 hours, 7 days and 30 days
 - **Enhanced dashboard**: Extended dashboard with new metrics and visualizations
 - **30-minute visitor classification**: Visitors are classified as "new" for 30 minutes after first visit, then "returning"
+- **Live dashboard refresh**: The whole dashboard refreshes automatically in the background (via AJAX, no page reload) when you switch back to the tab or when the active visitors count changes. Polling is paused while the tab is hidden to save bandwidth
 
 ### Honest privacy approach:
-- **Uses cookies**: We don't claim to be cookie-free - we use a 1-year `visitorId` cookie
+- **Uses localStorage for visitor tracking**: The tracker stores a per-site `vid` in the visited site's own `localStorage`
+- **No cross-domain visitor linking**: The same browser gets separate `vid` values on different websites
+- **No visitor tracking cookie**: The visitor identifier is not stored in an Ackee-domain cookie
+- **Own-visit cookie remains**: Ackee may still set the `ackee_ignore` cookie when you log in, so your own visits can be ignored
 - **Anonymous data**: IP addresses are not stored, only used for country detection
 - **No external data sharing**: No data sent to third parties (Google, Facebook, etc.)
 - **Self-hosted**: All data stays on your own server
 - **Open-source**: Fully transparent and auditable code
 
-> ⚠️ **Important**: This is NOT the original privacy-first Ackee. If you want cookie-free analytics, use the [original Ackee](https://github.com/electerious/Ackee).
+> ⚠️ **Important**: This is NOT the original privacy-first Ackee. This fork intentionally tracks returning visitors using a first-party `localStorage` identifier. If you want the original cookie-free analytics behavior, use the [original Ackee](https://github.com/electerious/Ackee).
 
 ## 👋 Introduction
 
-> ⚠️ **IMPORTANT**: This is a modified fork of Ackee that uses cookies for tracking unique and returning visitors. This version is NOT privacy-first and does NOT follow the original Ackee's privacy principles. If you're looking for the original privacy-focused Ackee analytics tool, please visit the [official Ackee repository](https://github.com/electerious/Ackee).
+> ⚠️ **IMPORTANT**: This is a modified fork of Ackee that tracks unique and returning visitors with a per-site `vid` stored in the visited site's own `localStorage`. This version is NOT privacy-first and does NOT follow the original Ackee's privacy principles. If you're looking for the original privacy-focused Ackee analytics tool, please visit the [official Ackee repository](https://github.com/electerious/Ackee).
 
 Ackee is a self-hosted analytics tool that cares about privacy. We believe that you don't need to track every aspect of your visitors. Ackee keeps tracked data anonymized to avoid that users are identifiable, while still providing helpful insights. It's the right tool for everyone who doesn't need a full-featured marketing analytics platform like Google Analytics or Matomo.
 
 - **Self-hosted**: Ackee runs on your own server and is 100% open-source
 - **Modern technologies**: Lightweight Node.js and MongoDB architecture
 - **Beautiful**: Minimal and focused interface
-- **Uses cookies**: Tracks unique and returning visitors using cookies for enhanced analytics
+- **Returning visitor analytics**: Tracks unique and returning visitors using a per-site `vid` stored in first-party `localStorage`
 - **Events**: Track button clicks, newsletter subscriptions and more
 - **GraphQL API**: Fully documented GraphQL API that allows you to build new tools upon Ackee
 
