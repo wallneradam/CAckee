@@ -4,7 +4,7 @@ const micro = require('micro')
 const { resolve } = require('path')
 const { readFile } = require('fs').promises
 const { send, createError } = require('micro')
-const { router, get, post, put, patch, del } = require('microrouter')
+const { router, get, post, put, patch, del, options } = require('microrouter')
 const { ApolloServer } = require('apollo-server-micro')
 
 const KnownError = require('./utils/KnownError')
@@ -137,6 +137,8 @@ const routes = [
 	post(graphqlPath, awaitedHandler(apolloHandler)),
 	get(graphqlPath, awaitedHandler(apolloHandler)),
 	get('/.well-known/apollo/server-health', awaitedHandler(apolloHandler)),
+
+	options('/*', (request, response) => send(response, 204)),
 
 	get('/*', notFound),
 	post('/*', notFound),
