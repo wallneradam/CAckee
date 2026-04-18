@@ -1,10 +1,18 @@
 'use strict'
 
-const normalizeUrl = require('normalize-url')
+module.exports = (url) => {
+	const matches = (/^([a-z][a-z\d+.-]*:\/\/)([^/?#]*)(.*)$/i).exec(url)
 
-module.exports = (url) => normalizeUrl(url, {
-	normalizeProtocol: false,
-	stripWWW: false,
-	removeTrailingSlash: false,
-	sortQueryParameters: false,
-})
+	if (matches == null) {
+		return url
+	}
+
+	const [ , protocol, authority, path ] = matches
+	const authIndex = authority.lastIndexOf('@')
+
+	if (authIndex === -1) {
+		return url
+	}
+
+	return `${ protocol }${ authority.slice(authIndex + 1) }${ path }`
+}
