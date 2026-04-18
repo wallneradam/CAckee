@@ -62,6 +62,7 @@ const RendererWorldMap = (props) => {
 	const [ activeCountry, setActiveCountry ] = useState()
 	const [ viewBox, setViewBox ] = useState(baseViewBox)
 	const [ dragging, setDragging ] = useState(false)
+	const svgRef = useRef()
 	const drag = useRef()
 
 	const activeItems = props.items[activeRange] || []
@@ -87,8 +88,8 @@ const RendererWorldMap = (props) => {
 
 	const resetViewBox = () => setViewBox(baseViewBox)
 
-	const pointFromEvent = (event) => {
-		const rect = event.currentTarget.getBoundingClientRect()
+	const pointFromEvent = (event, element) => {
+		const rect = element.getBoundingClientRect()
 		const xRatio = (event.clientX - rect.left) / rect.width
 		const yRatio = (event.clientY - rect.top) / rect.height
 
@@ -101,24 +102,39 @@ const RendererWorldMap = (props) => {
 		}
 	}
 
-	const onWheel = (event) => {
-		event.preventDefault()
+	useEffect(() => {
+		const element = svgRef.current
+		if (element == null) return
 
-		const point = pointFromEvent(event)
-		const nextZoom = clamp(zoom * (event.deltaY < 0 ? 1.18 : 0.85), minZoom, maxZoom)
-		const nextWidth = baseViewBox.width / nextZoom
-		const nextHeight = baseViewBox.height / nextZoom
+		const onWheel = (event) => {
+			event.preventDefault()
 
-		setViewBox(clampViewBox({
-			x: point.x - point.xRatio * nextWidth,
-			y: point.y - point.yRatio * nextHeight,
-			width: nextWidth,
-			height: nextHeight,
-		}))
-	}
+			const point = pointFromEvent(event, element)
+			const nextZoom = clamp(zoom * (event.deltaY < 0 ? 1.18 : 0.85), minZoom, maxZoom)
+			const nextWidth = baseViewBox.width / nextZoom
+			const nextHeight = baseViewBox.height / nextZoom
+
+			setViewBox(clampViewBox({
+				x: point.x - point.xRatio * nextWidth,
+				y: point.y - point.yRatio * nextHeight,
+				width: nextWidth,
+				height: nextHeight,
+			}))
+		}
+
+		element.addEventListener('wheel', onWheel, {
+			passive: false,
+		})
+
+		return () => {
+			element.removeEventListener('wheel', onWheel)
+		}
+	}, [ viewBox, zoom ])
 
 	const onPointerDown = (event) => {
 		if (event.button !== 0) return
+
+		event.preventDefault()
 
 		setDragging(true)
 		drag.current = {
@@ -175,6 +191,7 @@ const RendererWorldMap = (props) => {
 			) : (
 				h('div', { className: 'worldMap__body' },
 					h('svg', {
+						'ref': svgRef,
 						'className': classNames({
 							'worldMap__svg': true,
 							'worldMap__svg--dragging': dragging === true,
@@ -182,7 +199,6 @@ const RendererWorldMap = (props) => {
 						'viewBox': viewBoxToString(viewBox),
 						'role': 'img',
 						'aria-label': `Unique visitors by country for the last ${ activeRangeLabel }`,
-						'onWheel': onWheel,
 						'onPointerDown': onPointerDown,
 						'onPointerMove': onPointerMove,
 						'onPointerUp': onPointerUp,
