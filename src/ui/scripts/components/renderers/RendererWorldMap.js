@@ -134,7 +134,7 @@ const RendererWorldMap = (props) => {
 				capture: true,
 			})
 		}
-	}, [ viewBox, zoom ])
+	}, [ total, viewBox, zoom ])
 
 	const onPointerDown = (event) => {
 		if (event.button !== 0) return
