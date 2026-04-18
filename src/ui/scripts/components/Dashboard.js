@@ -108,6 +108,8 @@ const Dashboard = (props) => {
 			h(Header, {
 				loading: props.loading,
 				items,
+				brandLogo: window.env.brandLogo,
+				brandName: window.env.brandName,
 			}),
 			h('main', { className: 'content' },
 				h(routeComponents[currentRoute.key], {

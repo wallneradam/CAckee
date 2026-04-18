@@ -11,6 +11,8 @@ const signale = require('../utils/signale')
 const index = () => {
 	return layout('<div id="main"></div>', 'favicon.ico', [ 'index.css' ], [ 'index.js' ], {
 		isDemoMode: config.isDemoMode,
+		brandLogo: config.brandLogo,
+		brandName: config.brandName,
 		customTracker,
 	})
 }

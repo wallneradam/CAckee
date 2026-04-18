@@ -14,6 +14,8 @@ module.exports = new Proxy({}, {
 			autoOrigin: process.env.ACKEE_AUTO_ORIGIN === 'true',
 			username: process.env.ACKEE_USERNAME,
 			password: process.env.ACKEE_PASSWORD,
+			brandLogo: process.env.ACKEE_BRAND_LOGO,
+			brandName: process.env.ACKEE_BRAND_NAME,
 			isDemoMode: process.env.ACKEE_DEMO === 'true',
 			isDevelopmentMode: process.env.NODE_ENV === 'development',
 			isPreBuildMode: process.env.BUILD_ENV === 'pre',

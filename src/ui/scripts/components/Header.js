@@ -42,8 +42,23 @@ const Spinner = (props) => {
 }
 
 const Logo = (props) => {
+	const hasBrandLogo = props.brandLogo != null && props.brandLogo !== ''
+
 	return (
-		h('div', { className: 'header__logo' },
+		h('div', {
+			'className': classNames({
+				'header__logo': true,
+				'header__logo--branded': hasBrandLogo === true,
+			}),
+			'role': hasBrandLogo === true ? 'img' : undefined,
+			'aria-label': hasBrandLogo === true ? props.brandName || 'Custom logo' : undefined,
+		},
+			hasBrandLogo === true && h('img', {
+				className: 'header__logoImage',
+				src: props.brandLogo,
+				alt: '',
+				draggable: false,
+			}),
 			h(Spinner, { color: 'white', loading: props.loading }),
 			h(Spinner, { color: 'primary', loading: props.loading }),
 		)
@@ -104,7 +119,11 @@ const Dropdown = (props) => {
 const Header = (props) => {
 	return (
 		h('header', { className: 'header' },
-			h(Logo, { loading: props.loading }),
+			h(Logo, {
+				loading: props.loading,
+				brandLogo: props.brandLogo,
+				brandName: props.brandName,
+			}),
 			h('nav', { className: 'header__nav' },
 				h('div', { className: 'header__buttons' },
 					props.items.map((item, index) => {
@@ -125,6 +144,8 @@ const Header = (props) => {
 }
 
 Header.propTypes = {
+	brandLogo: PropTypes.string,
+	brandName: PropTypes.string,
 	loading: PropTypes.bool.isRequired,
 	items: PropTypes.arrayOf(PropTypes.object).isRequired,
 }

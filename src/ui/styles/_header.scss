@@ -36,14 +36,41 @@
 	}
 
 	&__logo {
-		$size: 42px;
+		$size: 46px;
 
 		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		margin: $gutter 0 math.div($gutter, 2);
 		width: $size;
 		height: $size;
 		background: $gradient;
 		border-radius: 100%;
+		box-sizing: border-box;
+
+		&--branded {
+			background:
+				radial-gradient(circle at 35% 25%, rgba($primary, .2), rgba($black, .2) 50%),
+				$card;
+			border: 1px solid rgba($primary, .28);
+			box-shadow: $shadow;
+		}
+	}
+
+	&__logoImage {
+		$offset: 5px;
+
+		position: absolute;
+		top: $offset;
+		right: $offset;
+		bottom: $offset;
+		left: $offset;
+		width: calc(100% - #{ $offset*2 });
+		height: calc(100% - #{ $offset*2 });
+		object-fit: contain;
+		pointer-events: none;
+		user-select: none;
 	}
 
 	&__spinner {

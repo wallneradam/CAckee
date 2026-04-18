@@ -90,6 +90,13 @@ Ackee features a [GraphQL API](docs/API.md) that allows you to build custom tool
 
 Ackee uses environment variables and supports [`.env` files](https://www.npmjs.com/package/dotenv) in the root of the project if you want to store all variables in one file. [Options &#187;](docs/Options.md)
 
+This fork also supports optional dashboard branding through environment variables:
+
+| Variable           | Description                                                                                         |
+| ------------------ | --------------------------------------------------------------------------------------------------- |
+| `ACKEE_BRAND_LOGO` | URL of a custom logo shown in the dashboard header. Leave empty to use Ackee's default circle.      |
+| `ACKEE_BRAND_NAME` | Accessible label for the custom logo, for example the organization name.                            |
+
 ## Miscellaneous
 
 ### Donate
