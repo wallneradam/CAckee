@@ -108,6 +108,8 @@ const RendererWorldMap = (props) => {
 
 		const onWheel = (event) => {
 			event.preventDefault()
+			event.stopPropagation()
+			event.stopImmediatePropagation()
 
 			const point = pointFromEvent(event, element)
 			const nextZoom = clamp(zoom * (event.deltaY < 0 ? 1.18 : 0.85), minZoom, maxZoom)
@@ -123,11 +125,14 @@ const RendererWorldMap = (props) => {
 		}
 
 		element.addEventListener('wheel', onWheel, {
+			capture: true,
 			passive: false,
 		})
 
 		return () => {
-			element.removeEventListener('wheel', onWheel)
+			element.removeEventListener('wheel', onWheel, {
+				capture: true,
+			})
 		}
 	}, [ viewBox, zoom ])
 
