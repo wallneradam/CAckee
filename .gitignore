@@ -35,6 +35,7 @@ dist/*
 !dist/index.css
 !dist/index.js
 !dist/tracker.js
+!dist/robots.txt
 
 # Vercel
 .vercel

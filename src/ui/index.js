@@ -47,6 +47,10 @@ const tracker = () => {
 	})
 }
 
+const robots = () => {
+	return 'User-agent: *\nDisallow: /\n'
+}
+
 const build = async (path, fn) => {
 	try {
 		signale.await(`Building and writing '${ path }'`)
@@ -64,5 +68,6 @@ module.exports = {
 	styles,
 	scripts,
 	tracker,
+	robots,
 	build,
 }

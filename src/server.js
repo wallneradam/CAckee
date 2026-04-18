@@ -20,6 +20,7 @@ const favicon = readFile(resolve(__dirname, '../dist/favicon.ico')).catch(signal
 const styles = readFile(resolve(__dirname, '../dist/index.css')).catch(signale.fatal)
 const scripts = readFile(resolve(__dirname, '../dist/index.js')).catch(signale.fatal)
 const tracker = readFile(resolve(__dirname, '../dist/tracker.js')).catch(signale.fatal)
+const robots = readFile(resolve(__dirname, '../dist/robots.txt')).catch(signale.fatal)
 
 const handleMicroError = (error, response) => {
 	// This part is for micro errors and errors outside of GraphQL.
@@ -116,6 +117,10 @@ const routes = [
 	get('/favicon.ico', async (request, response) => {
 		response.setHeader('Content-Type', 'image/vnd.microsoft.icon')
 		response.end(await favicon)
+	}),
+	get('/robots.txt', async (request, response) => {
+		response.setHeader('Content-Type', 'text/plain; charset=utf-8')
+		response.end(await robots)
 	}),
 	get('/index.css', async (request, response) => {
 		response.setHeader('Content-Type', 'text/css; charset=utf-8')
