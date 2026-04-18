@@ -1,7 +1,7 @@
 'use strict'
 
 const { resolve } = require('path')
-const { writeFile, readFile } = require('fs').promises
+const { writeFile } = require('fs').promises
 
 const layout = require('../utils/layout')
 const config = require('../utils/config')
@@ -35,9 +35,14 @@ const scripts = () => {
 }
 
 const tracker = () => {
-	const filePath = require.resolve('ackee-tracker')
+	const js = require('rosid-handler-js-next')
+	const filePath = resolve(__dirname, '../tracker.js')
 
-	return readFile(filePath, 'utf8')
+	return js(filePath, {
+		optimize: config.isDevelopmentMode === false,
+		nodeGlobals: config.isDevelopmentMode === true,
+		babel: false,
+	})
 }
 
 const build = async (path, fn) => {

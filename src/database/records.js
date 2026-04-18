@@ -29,43 +29,25 @@ const add = async (data) => {
 		return entry == null ? entry : response(entry)
 	}
 
-	// Determine if this is a new visitor session
-	const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
+	const sessionTimeout = 30 * 60 * 1000
 	const now = new Date()
 	let isNewVisitorSession = true
 
-	if (data.visitorId) {
-		// Check if visitor exists and get their FIRST visit time
-		const visitorFirstRecord = await Record.findOne({
-			visitorId: data.visitorId
-		}).sort({ created: 1 })
+	const visitorFirstRecord = await Record.findOne({
+		domainId: data.domainId,
+		visitorId: data.visitorId,
+	}).sort({ created: 1 })
 
-		if (visitorFirstRecord) {
-			// Visitor already exists, check time since FIRST visit
-			const timeSinceFirst = now - visitorFirstRecord.created
-			// Within 30 minutes of first visit = still "new visitor" period
-			// After 30 minutes from first visit = "returning visitor"
-			if (timeSinceFirst <= SESSION_TIMEOUT) {
-				// Still within 30 min of first visit - new visitor
-				isNewVisitorSession = true
-			} else {
-				// More than 30 min since first visit - returning visitor
-				isNewVisitorSession = false
-			}
-			console.log(`[DEBUG] Visitor ${data.visitorId}: timeSinceFirst=${timeSinceFirst}ms (${Math.round(timeSinceFirst/1000/60)} min), SESSION_TIMEOUT=${SESSION_TIMEOUT}ms, isNewVisitorSession=${isNewVisitorSession}`)
-		} else {
-			console.log(`[DEBUG] Visitor ${data.visitorId}: First time visitor, isNewVisitorSession=true`)
-		}
-		// If no previous record found, remains true (new visitor)
+	if (visitorFirstRecord) {
+		const timeSinceFirst = now - visitorFirstRecord.created
+		isNewVisitorSession = timeSinceFirst <= sessionTimeout
 	}
 
-	console.log(`[DEBUG] Creating record with isNewVisitorSession=${isNewVisitorSession}`)
-	
 	return enhance(
-                await Record.create({
-                        clientId: data.clientId,
-                        visitorId: data.visitorId,
-                        domainId: data.domainId,
+		await Record.create({
+			clientId: data.clientId,
+			visitorId: data.visitorId,
+			domainId: data.domainId,
 			siteLocation: data.siteLocation,
 			siteReferrer: data.siteReferrer,
 			siteLanguage: data.siteLanguage,
@@ -82,7 +64,7 @@ const add = async (data) => {
 			browserVersion: data.browserVersion,
 			browserWidth: data.browserWidth,
 			browserHeight: data.browserHeight,
-			isNewVisitorSession: isNewVisitorSession,
+			isNewVisitorSession,
 		}),
 	)
 }

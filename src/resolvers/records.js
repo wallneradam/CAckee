@@ -48,7 +48,7 @@ const polish = (obj) => {
 
 module.exports = {
 	Mutation: {
-                createRecord: async (parent, { domainId, input }, { ip, userAgent, isIgnored, visitorId }) => {
+		createRecord: async (parent, { domainId, input }, { ip, userAgent, isIgnored }) => {
 			// Ignore your own records when logged in
 			if (isIgnored === true) {
 				return {
@@ -59,18 +59,23 @@ module.exports = {
 				}
 			}
 
-                        const clientId = identifier(ip, userAgent, domainId)
-                        
-                        // Get country from IP address
-                        let siteCountry = null
-                        if (ip) {
-                            const geo = geoip.lookup(ip)
-                            if (geo && geo.country) {
-                                siteCountry = geo.country
-                            }
-                        }
-                        
-                        const data = polish({ ...input, clientId, visitorId, domainId, siteCountry })
+			const clientId = identifier(ip, userAgent, domainId)
+
+			let siteCountry = null
+			if (ip) {
+				const geo = geoip.lookup(ip)
+				if (geo && geo.country) {
+					siteCountry = geo.country
+				}
+			}
+
+			const data = polish({
+				...input,
+				clientId,
+				visitorId: input.vid,
+				domainId,
+				siteCountry,
+			})
 
 			const domain = await domains.get(domainId)
 
