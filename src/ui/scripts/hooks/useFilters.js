@@ -4,7 +4,7 @@ import { version } from '../../../../package.json'
 import { SORTINGS_TOP } from '../../../constants/sortings'
 import { RANGES_LAST_7_DAYS } from '../../../constants/ranges'
 import { INTERVALS_DAILY } from '../../../constants/intervals'
-import { VIEWS_TYPE_UNIQUE, VIEWS_TYPE_TOTAL } from '../../../constants/views'
+import { VIEWS_TYPE_TOTAL } from '../../../constants/views'
 import { REFERRERS_TYPE_WITH_SOURCE } from '../../../constants/referrers'
 import { DEVICES_TYPE_WITH_MODEL } from '../../../constants/devices'
 import { BROWSERS_TYPE_WITH_VERSION } from '../../../constants/browsers'
@@ -22,6 +22,7 @@ const SET_DEVICES_TYPE_FILTER = Symbol()
 const SET_BROWSERS_TYPE_FILTER = Symbol()
 const SET_SIZES_TYPE_FILTER = Symbol()
 const SET_SYSTEMS_TYPE_FILTER = Symbol()
+const SET_MAP_DOMAIN_FILTER = Symbol()
 const RESET_FILTERS = Symbol()
 
 // The key should include the package version so we can increase the version number
@@ -36,6 +37,7 @@ const { get, set, reset } = createStorage(`ackee_filter_${ version }`, {
 	browsersType: BROWSERS_TYPE_WITH_VERSION,
 	sizesType: SIZES_TYPE_BROWSER_RESOLUTION,
 	systemsType: SYSTEMS_TYPE_WITH_VERSION,
+	mapDomainId: undefined,
 })
 
 const reducer = (state, action) => {
@@ -84,6 +86,11 @@ const reducer = (state, action) => {
 			return set({
 				...state,
 				systemsType: action.payload,
+			})
+		case SET_MAP_DOMAIN_FILTER:
+			return set({
+				...state,
+				mapDomainId: action.payload,
 			})
 		case RESET_FILTERS:
 			return reset()
@@ -140,6 +147,11 @@ export default () => {
 		payload,
 	}), [ dispatch ])
 
+	const setMapDomainFilter = useCallback((payload) => dispatch({
+		type: SET_MAP_DOMAIN_FILTER,
+		payload,
+	}), [ dispatch ])
+
 	const resetFilters = useCallback(() => dispatch({
 		type: RESET_FILTERS,
 	}), [ dispatch ])
@@ -155,6 +167,7 @@ export default () => {
 		setBrowsersTypeFilter,
 		setSizesTypeFilter,
 		setSystemsTypeFilter,
+		setMapDomainFilter,
 		resetFilters,
 	}
 }

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 
 import * as routes from '../constants/routes'
 import useRoute from '../hooks/useRoute'
+import useDomains from '../api/hooks/domains/useDomains'
 
 import * as views from '../../../constants/views'
 import * as referrers from '../../../constants/referrers'
@@ -128,6 +129,9 @@ const FilterItem = (props) => {
 }
 
 const Filter = (props) => {
+	const domains = useDomains()
+	const selectedMapDomain = domains.value.find((domain) => domain.id === props.filters.mapDomainId)
+
 	const sortingButtons = [
 		createButton('Top', 'Top entries first', props.setSortingFilter, props.filters.sorting, sortings.SORTINGS_TOP),
 		createButton('New', 'New entries only', props.setSortingFilter, props.filters.sorting, sortings.SORTINGS_NEW),
@@ -150,8 +154,17 @@ const Filter = (props) => {
 	const sortingItem = createItem(labels.sortings[props.filters.sorting], sortingButtons)
 	const rangeItem = createItem(labels.ranges[props.filters.range], rangeButtons, props.filters.sorting === sortings.SORTINGS_TOP)
 	const intervalItem = createItem(labels.intervals[props.filters.interval], intervalsButtons)
+	const mapDomainButtons = domains.value.map((domain) => createButton(domain.title, undefined, props.setMapDomainFilter, props.filters.mapDomainId, domain.id))
+	const mapDomainItem = createItem(selectedMapDomain == null ? 'All domains' : selectedMapDomain.title, [
+		createButton('All domains', 'Show all domains combined', props.setMapDomainFilter, props.filters.mapDomainId),
+		mapDomainButtons.length > 0 ? createSeparator() : undefined,
+		...mapDomainButtons,
+	].filter(Boolean))
 
 	const routesMap = {
+		[routes.MAP]: [
+			mapDomainItem,
+		],
 		[routes.VIEWS]: [
 			createItem(labels.views[props.filters.viewsType], [
 				createButton('Unique', 'Unique site views', props.setViewsTypeFilter, props.filters.viewsType, views.VIEWS_TYPE_UNIQUE),
@@ -257,6 +270,7 @@ Filter.propTypes = {
 	setBrowsersTypeFilter: PropTypes.func.isRequired,
 	setSizesTypeFilter: PropTypes.func.isRequired,
 	setSystemsTypeFilter: PropTypes.func.isRequired,
+	setMapDomainFilter: PropTypes.func.isRequired,
 	route: PropTypes.string.isRequired,
 }
 

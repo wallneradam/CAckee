@@ -35,6 +35,7 @@ const Main = (props) => {
 				setBrowsersTypeFilter: props.setBrowsersTypeFilter,
 				setSizesTypeFilter: props.setSizesTypeFilter,
 				setSystemsTypeFilter: props.setSystemsTypeFilter,
+				setMapDomainFilter: props.setMapDomainFilter,
 				route: props.route,
 			}),
 			h(Dashboard, props),
