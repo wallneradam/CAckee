@@ -3,6 +3,7 @@
 const mongoose = require('mongoose')
 const uuid = require('uuid').v4
 const isUrl = require('is-url')
+const config = require('../utils/config')
 
 const isNullOrUrl = (value) => value == null || isUrl(value)
 
@@ -94,7 +95,6 @@ const schema = new mongoose.Schema({
 	created: {
 		type: Date,
 		required: true,
-		index: true,
 		default: Date.now,
 	},
 	updated: {
@@ -110,5 +110,7 @@ const schema = new mongoose.Schema({
 		index: true,
 	},
 })
+
+schema.index({ created: 1 }, { expireAfterSeconds: config.recordTtlDays * 24 * 60 * 60 })
 
 module.exports = mongoose.model('Record', schema)

@@ -6,6 +6,7 @@ The following environment variables are used by Ackee. You can also create a [`.
 - [Port](#port)
 - [Username and password](#username-and-password)
 - [TTL](#ttl)
+- [Record TTL](#record-ttl)
 - [Tracker](#tracker)
 - [Environment](#environment)
 
@@ -52,6 +53,20 @@ Specifies how long a generated token is valid. Defaults to `3600000` (1 day).
 
 ```
 ACKEE_TTL=3600000
+```
+
+## Record TTL
+
+How many days to keep visitor records in the database before MongoDB automatically deletes them via a TTL index. Defaults to `731` (2 years, leap-year safe). Applied to the `created` field of the `records` collection.
+
+Changing this value at runtime only affects newly created records (the TTL index is created once at application startup). To change the retention window on an existing database, drop the existing index and let the application recreate it:
+
+```js
+db.records.dropIndex('created_1')
+```
+
+```
+ACKEE_RECORD_TTL_DAYS=731
 ```
 
 ## Tracker
