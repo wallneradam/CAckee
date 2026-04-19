@@ -39,7 +39,7 @@ const getReturningVisitors = async (ids, interval, limit, dateDetails) => {
 			})()
 
 			return {
-				id: recursiveId([ value, ...ids ]),
+				id: recursiveId([ 'returningVisitors', value, ...ids ]),
 				value,
 				count: entry == null ? 0 : entry.count,
 			}
@@ -77,7 +77,7 @@ const getNewVisitors = async (ids, interval, limit, dateDetails) => {
 			})()
 
 			return {
-				id: recursiveId([ value, ...ids ]),
+				id: recursiveId([ 'newVisitors', value, ...ids ]),
 				value,
 				count: entry == null ? 0 : entry.count,
 			}
