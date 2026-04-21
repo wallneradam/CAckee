@@ -26,14 +26,17 @@ module.exports = (ids, properties, limit, or) => {
 		},
 	]
 
+	const sizeProperties = new Set([ 'browserWidth', 'browserHeight', 'screenWidth', 'screenHeight' ])
+
 	properties.forEach((property) => {
+		const condition = sizeProperties.has(property) === true ? { $gt: 0 } : { $ne: null }
 		if (or === true) {
 			aggregation[0].$match['$or'] = [
 				...(aggregation[0].$match['$or'] || []),
-				{ [property]: { $ne: null } },
+				{ [property]: condition },
 			]
 		} else {
-			aggregation[0].$match[property] = { $ne: null }
+			aggregation[0].$match[property] = condition
 		}
 		aggregation[1].$group._id[property] = `$${ property }`
 	})

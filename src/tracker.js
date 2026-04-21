@@ -89,8 +89,8 @@ const attributes = (detailed = false) => {
 		osVersion: platform.os.version,
 		browserName: platform.name,
 		browserVersion: platform.version,
-		browserWidth: window.outerWidth,
-		browserHeight: window.outerHeight,
+		browserWidth: window.outerWidth || window.innerWidth,
+		browserHeight: window.outerHeight || window.innerHeight,
 	}
 
 	return {
