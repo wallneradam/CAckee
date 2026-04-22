@@ -1,13 +1,28 @@
+.card__inner:has(.worldMap) .status {
+	font-size: .85em;
+}
+
 .worldMap {
 
 	display: grid;
 	gap: $gutter*1.5;
 	min-height: $cardContentHeight;
+	margin-top: math.div($gutter, 1.2);
 
 	&__controls {
+		position: absolute;
+		top: $gutter*1.4;
+		right: $gutter*1.5;
 		display: flex;
 		flex-wrap: wrap;
+		justify-content: flex-end;
 		gap: math.div($gutter, 2);
+
+		@media (max-width: 480px) {
+			top: $gutter*1.2;
+			right: $gutter;
+			gap: math.div($gutter, 4);
+		}
 	}
 
 	&__control {
@@ -23,6 +38,26 @@
 			background: $primary;
 			color: $black;
 		}
+	}
+
+	&__controlLabel {
+
+		&--short {
+			display: none;
+		}
+
+		@media (max-width: 640px) {
+
+			&--full {
+				display: none;
+			}
+
+			&--short {
+				display: inline;
+			}
+
+		}
+
 	}
 
 	&__body {
@@ -82,9 +117,36 @@
 		display: grid;
 		gap: math.div($gutter, 4);
 		min-width: 0;
+
+		&--placeholder {
+
+			@media (max-width: 800px), (hover: none) {
+
+				.worldMap__headline,
+				.worldMap__meta,
+				.worldMap__share {
+					background: $dimmed;
+					border-radius: $innerRadius;
+					color: transparent;
+				}
+
+				.worldMap__headline {
+					width: 55%;
+				}
+
+				.worldMap__meta {
+					width: 45%;
+				}
+
+				.worldMap__share {
+					width: 35%;
+				}
+
+			}
+
+		}
 	}
 
-	&__label,
 	&__share {
 		font-size: .85em;
 	}
