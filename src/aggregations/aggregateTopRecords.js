@@ -9,8 +9,16 @@ module.exports = (ids, properties, range, limit, dateDetails, or) => {
 		{
 			$group: {
 				_id: {},
+				visitors: {
+					$addToSet: '$visitorId',
+				},
+			},
+		},
+		{
+			$project: {
+				_id: '$_id',
 				count: {
-					$sum: 1,
+					$size: '$visitors',
 				},
 			},
 		},
@@ -23,6 +31,8 @@ module.exports = (ids, properties, range, limit, dateDetails, or) => {
 			$limit: limit,
 		},
 	]
+
+	aggregation[0].$match.visitorId = { $exists: true, $ne: null }
 
 	const sizeProperties = new Set([ 'browserWidth', 'browserHeight', 'screenWidth', 'screenHeight' ])
 
