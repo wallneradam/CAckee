@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 const Select = (props) => {
 	return (
 		h('select', {
-			className: 'select',
+			className: [ 'select', props.className ].filter(Boolean).join(' '),
 			id: props.id,
 			required: props.required,
 			disabled: props.disabled,
@@ -22,6 +22,7 @@ const Select = (props) => {
 }
 
 Select.propTypes = {
+	className: PropTypes.string,
 	id: PropTypes.string,
 	required: PropTypes.bool,
 	disabled: PropTypes.bool,

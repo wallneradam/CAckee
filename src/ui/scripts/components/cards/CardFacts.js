@@ -4,6 +4,8 @@ import PropTypes from 'prop-types'
 import formatDuration from '../../utils/formatDuration'
 import formatNumber from '../../utils/formatNumber'
 import pluralize from '../../utils/pluralize'
+import createStorage from '../../utils/createStorage'
+import { version } from '../../../../../package.json'
 
 import Headline from '../Headline'
 import Select from '../Select'
@@ -18,6 +20,11 @@ const averageVisitorOptions = [
 		title: (count) => `An average of ${ count } visitors per day during the last 14 days`,
 	},
 	{
+		value: 'averageViews',
+		label: 'Average views',
+		title: (count) => `An average of ${ count } views per day during the last 14 days`,
+	},
+	{
 		value: 'averageReturningVisitors',
 		label: 'Average returning visitors',
 		title: (count) => `An average of ${ count } returning visitors per day during the last 14 days`,
@@ -28,6 +35,14 @@ const averageVisitorOptions = [
 		title: (count) => `An average of ${ count } new visitors per day during the last 14 days`,
 	},
 ]
+
+const averageVisitorOptionValues = averageVisitorOptions.map((option) => option.value)
+const averageVisitorStorage = createStorage(`ackee_average_visitor_type_${ version }`, 'averageVisitors')
+const getAverageVisitorType = () => {
+	const value = averageVisitorStorage.get()
+
+	return averageVisitorOptionValues.includes(value) ? value : averageVisitorStorage.reset()
+}
 
 const Presentation = (props) => {
 	return (
@@ -54,11 +69,12 @@ const Presentation = (props) => {
 }
 
 const CardFacts = (props) => {
-	const [ averageVisitorType, setAverageVisitorType ] = useState('averageVisitors')
+	const [ averageVisitorType, setAverageVisitorType ] = useState(getAverageVisitorType)
 	const { value } = props.hook(...props.hookArgs)
 
 	const {
 		activeVisitors,
+		averageViews,
 		averageVisitors,
 		averageDuration,
 		viewsToday,
@@ -76,7 +92,7 @@ const CardFacts = (props) => {
 	} = value
 
 	const averageVisitorOption = averageVisitorOptions.find((option) => option.value === averageVisitorType)
-	const averageVisitor = value[averageVisitorType] || averageVisitors
+	const averageVisitor = value[averageVisitorType] || averageVisitors || averageViews
 
 	return (
 		h('div', {
@@ -91,12 +107,13 @@ const CardFacts = (props) => {
 			h(Presentation, {
 				headline: h(Select, {
 					id: 'average-visitors',
+					className: 'facts__select',
 					value: averageVisitorType,
 					items: averageVisitorOptions.map((option) => ({
 						value: option.value,
 						label: option.label,
 					})),
-					onChange: (event) => setAverageVisitorType(event.target.value),
+					onChange: (event) => setAverageVisitorType(averageVisitorStorage.set(event.target.value)),
 				}),
 				value: formatNumber(averageVisitor.count),
 				unit: 'per day',
