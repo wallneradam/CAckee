@@ -31,6 +31,11 @@
 
 	&__top {
 		grid-area: top;
+
+		.select {
+			width: 100%;
+			max-width: 240px;
+		}
 	}
 
 	&__left {

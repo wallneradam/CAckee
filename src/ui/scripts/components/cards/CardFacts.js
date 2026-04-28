@@ -1,4 +1,4 @@
-import { createElement as h } from 'react'
+import { createElement as h, useState } from 'react'
 import PropTypes from 'prop-types'
 
 import formatDuration from '../../utils/formatDuration'
@@ -6,9 +6,28 @@ import formatNumber from '../../utils/formatNumber'
 import pluralize from '../../utils/pluralize'
 
 import Headline from '../Headline'
+import Select from '../Select'
 import TextBadge from '../TextBadge'
 import ChangeBadge from '../ChangeBadge'
 import PresentationValueUnit from '../presentations/PresentationValueUnit'
+
+const averageVisitorOptions = [
+	{
+		value: 'averageVisitors',
+		label: 'Average visitors',
+		title: (count) => `An average of ${ count } visitors per day during the last 14 days`,
+	},
+	{
+		value: 'averageReturningVisitors',
+		label: 'Average returning visitors',
+		title: (count) => `An average of ${ count } returning visitors per day during the last 14 days`,
+	},
+	{
+		value: 'averageNewVisitors',
+		label: 'Average new visitors',
+		title: (count) => `An average of ${ count } new visitors per day during the last 14 days`,
+	},
+]
 
 const Presentation = (props) => {
 	return (
@@ -35,28 +54,29 @@ const Presentation = (props) => {
 }
 
 const CardFacts = (props) => {
+	const [ averageVisitorType, setAverageVisitorType ] = useState('averageVisitors')
 	const { value } = props.hook(...props.hookArgs)
 
 	const {
 		activeVisitors,
-		averageViews,
-                averageDuration,
-                viewsToday,
-                viewsMonth,
-                visitorsToday,
-                visitorsWeek,
-                visitorsMonth,
-                visitorsYear,
-                viewsYear,
-                returningVisitorsToday,
-                returningVisitorsWeek,
-                returningVisitorsMonth,
-                returningVisitorsYear,
-                newVisitorsToday,
-                newVisitorsWeek,
-                newVisitorsMonth,
-                newVisitorsYear,
-        } = value
+		averageVisitors,
+		averageDuration,
+		viewsToday,
+		viewsMonth,
+		visitorsToday,
+		visitorsMonth,
+		visitorsYear,
+		viewsYear,
+		returningVisitorsToday,
+		returningVisitorsMonth,
+		returningVisitorsYear,
+		newVisitorsToday,
+		newVisitorsMonth,
+		newVisitorsYear,
+	} = value
+
+	const averageVisitorOption = averageVisitorOptions.find((option) => option.value === averageVisitorType)
+	const averageVisitor = value[averageVisitorType] || averageVisitors
 
 	return (
 		h('div', {
@@ -69,11 +89,19 @@ const CardFacts = (props) => {
 				addition: h(TextBadge, { type: 'positive', value: 'Live' }),
 			}),
 			h(Presentation, {
-				headline: 'Average views',
-				value: formatNumber(averageViews.count),
+				headline: h(Select, {
+					id: 'average-visitors',
+					value: averageVisitorType,
+					items: averageVisitorOptions.map((option) => ({
+						value: option.value,
+						label: option.label,
+					})),
+					onChange: (event) => setAverageVisitorType(event.target.value),
+				}),
+				value: formatNumber(averageVisitor.count),
 				unit: 'per day',
-				title: `An average of ${ averageViews.count } views per day during the last 14 days`,
-				addition: averageViews.change != null && h(ChangeBadge, { value: averageViews.change }),
+				title: averageVisitorOption.title(averageVisitor.count),
+				addition: averageVisitor.change != null && h(ChangeBadge, { value: averageVisitor.change }),
 			}),
 			h(Presentation, {
 				headline: 'Average duration',
@@ -142,8 +170,8 @@ const CardFacts = (props) => {
 				value: formatNumber(viewsYear),
 				unit: pluralize([ 'views', 'view', 'views' ], viewsYear),
 			}),
-                )
-        )
+		)
+	)
 }
 
 CardFacts.propTypes = {

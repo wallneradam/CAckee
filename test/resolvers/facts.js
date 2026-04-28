@@ -25,6 +25,18 @@ test('fetch facts', async (t) => {
 							count
 							change
 						}
+						averageVisitors {
+							count
+							change
+						}
+						averageReturningVisitors {
+							count
+							change
+						}
+						averageNewVisitors {
+							count
+							change
+						}
 						averageDuration {
 							count
 							change
@@ -48,6 +60,12 @@ test('fetch facts', async (t) => {
 	t.is(facts.activeVisitors, 1)
 	t.is(facts.averageViews.count, 1)
 	t.is(facts.averageViews.change, 17)
+	t.is(typeof facts.averageVisitors.count, 'number')
+	t.true(facts.averageVisitors.change == null || typeof facts.averageVisitors.change === 'number')
+	t.is(typeof facts.averageReturningVisitors.count, 'number')
+	t.true(facts.averageReturningVisitors.change == null || typeof facts.averageReturningVisitors.change === 'number')
+	t.is(typeof facts.averageNewVisitors.count, 'number')
+	t.true(facts.averageNewVisitors.change == null || typeof facts.averageNewVisitors.change === 'number')
 	t.is(facts.averageDuration.count, 55714)
 	t.is(facts.averageDuration.change, 17)
 	t.is(typeof facts.viewsToday, 'number')

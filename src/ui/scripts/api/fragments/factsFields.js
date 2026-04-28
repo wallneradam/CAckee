@@ -8,6 +8,18 @@ export default gql`
 			count
 			change
 		}
+		averageVisitors {
+			count
+			change
+		}
+		averageReturningVisitors {
+			count
+			change
+		}
+		averageNewVisitors {
+			count
+			change
+		}
 		averageDuration {
 			count
 			change

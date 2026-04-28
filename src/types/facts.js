@@ -15,6 +15,18 @@ module.exports = gql`
 		change: Float
 	}
 
+	type AverageVisitors {
+		"""
+		Average number of visitors per day during the last 14 days, excluding the current day.
+		"""
+		count: UnsignedInt!
+		"""
+		Percentage change of the average visitors when comparing the last 7 days with the previous 7 days.
+		Might be undefined when there's not enough data to compare.
+		"""
+		change: Float
+	}
+
 	type AverageDuration {
 		"""
 		Average visit duration in milliseconds for the last 14 days, excluding the current day.
@@ -43,6 +55,18 @@ module.exports = gql`
 		Details about the average number of views.
 		"""
 		averageViews: AverageViews!
+		"""
+		Details about the average number of visitors.
+		"""
+		averageVisitors: AverageVisitors!
+		"""
+		Details about the average number of returning visitors.
+		"""
+		averageReturningVisitors: AverageVisitors!
+		"""
+		Details about the average number of new visitors.
+		"""
+		averageNewVisitors: AverageVisitors!
 		"""
 		Details about the average visit duration.
 		"""

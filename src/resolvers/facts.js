@@ -12,23 +12,26 @@ const domainIds = require('../utils/domainIds')
 const recursiveId = require('../utils/recursiveId')
 const requireAuth = require('../middlewares/requireAuth')
 
+const averageResolver = {
+	count: pipe(requireAuth, (entries) => {
+		const totalCount = entries.slice(1, 15).reduce((acc, entry) => acc + entry.count, 0)
+
+		return Math.round(totalCount / 14)
+	}),
+	change: pipe(requireAuth, (entries) => {
+		const totalCountCurrent = entries.slice(1, 8).reduce((acc, entry) => acc + entry.count, 0)
+		const totalCountPrevious = entries.slice(8, 15).reduce((acc, entry) => acc + entry.count, 0)
+		const totalDifference = totalCountCurrent - totalCountPrevious
+
+		if (totalCountPrevious === 0) return
+
+		return Math.min(Math.max(Math.round(totalDifference / totalCountPrevious * 100), -100), 100)
+	}),
+}
+
 module.exports = {
-	AverageViews: {
-		count: pipe(requireAuth, (entries) => {
-			const totalCount = entries.slice(1, 15).reduce((acc, entry) => acc + entry.count, 0)
-
-			return Math.round(totalCount / 14)
-		}),
-		change: pipe(requireAuth, (entries) => {
-			const totalCountCurrent = entries.slice(1, 8).reduce((acc, entry) => acc + entry.count, 0)
-			const totalCountPrevious = entries.slice(8, 15).reduce((acc, entry) => acc + entry.count, 0)
-			const totalDifference = totalCountCurrent - totalCountPrevious
-
-			if (totalCountPrevious === 0) return
-
-			return Math.min(Math.max(Math.round(totalDifference / totalCountPrevious * 100), -100), 100)
-		}),
-	},
+	AverageViews: averageResolver,
+	AverageVisitors: averageResolver,
 	AverageDuration: {
 		count: pipe(requireAuth, (entries) => {
 			const totalCount = entries.slice(1, 15).reduce((acc, entry) => acc + entry.count, 0)
@@ -66,6 +69,24 @@ module.exports = {
 
 			return entries
 		}),
+		averageVisitors: pipe(requireAuth, async (domain, _, { dateDetails }) => {
+			const ids = await domainIds(domain)
+			const entries = visitors.get(ids, intervals.INTERVALS_DAILY, 15, dateDetails)
+
+			return entries
+		}),
+		averageReturningVisitors: pipe(requireAuth, async (domain, _, { dateDetails }) => {
+			const ids = await domainIds(domain)
+			const entries = returningVisitors.getReturningVisitors(ids, intervals.INTERVALS_DAILY, 15, dateDetails)
+
+			return entries
+		}),
+		averageNewVisitors: pipe(requireAuth, async (domain, _, { dateDetails }) => {
+			const ids = await domainIds(domain)
+			const entries = returningVisitors.getNewVisitors(ids, intervals.INTERVALS_DAILY, 15, dateDetails)
+
+			return entries
+		}),
 		averageDuration: pipe(requireAuth, async (domain, _, { dateDetails }) => {
 			const ids = await domainIds(domain)
 			const entries = durations.get(ids, intervals.INTERVALS_DAILY, 15, dateDetails)
@@ -84,85 +105,85 @@ module.exports = {
 
 			return entries[0].count
 		}),
-                viewsYear: pipe(requireAuth, async (domain, _, { dateDetails }) => {
-                        const ids = await domainIds(domain)
-                        const entries = await views.get(ids, viewsType.VIEWS_TYPE_TOTAL, intervals.INTERVALS_YEARLY, 1, dateDetails)
+		viewsYear: pipe(requireAuth, async (domain, _, { dateDetails }) => {
+			const ids = await domainIds(domain)
+			const entries = await views.get(ids, viewsType.VIEWS_TYPE_TOTAL, intervals.INTERVALS_YEARLY, 1, dateDetails)
 
-                        return entries[0].count
-                }),
-                visitorsToday: pipe(requireAuth, async (domain, _, { dateDetails }) => {
-                        const ids = await domainIds(domain)
-                        const entries = await visitors.get(ids, intervals.INTERVALS_DAILY, 1, dateDetails)
+			return entries[0].count
+		}),
+		visitorsToday: pipe(requireAuth, async (domain, _, { dateDetails }) => {
+			const ids = await domainIds(domain)
+			const entries = await visitors.get(ids, intervals.INTERVALS_DAILY, 1, dateDetails)
 
-                        return entries[0].count
-                }),
-                visitorsWeek: pipe(requireAuth, async (domain, _, { dateDetails }) => {
-                        const ids = await domainIds(domain)
-                        const entries = await visitors.get(ids, intervals.INTERVALS_WEEKLY, 1, dateDetails)
+			return entries[0].count
+		}),
+		visitorsWeek: pipe(requireAuth, async (domain, _, { dateDetails }) => {
+			const ids = await domainIds(domain)
+			const entries = await visitors.get(ids, intervals.INTERVALS_WEEKLY, 1, dateDetails)
 
-                        return entries[0].count
-                }),
-                visitorsMonth: pipe(requireAuth, async (domain, _, { dateDetails }) => {
-                        const ids = await domainIds(domain)
-                        const entries = await visitors.get(ids, intervals.INTERVALS_MONTHLY, 1, dateDetails)
+			return entries[0].count
+		}),
+		visitorsMonth: pipe(requireAuth, async (domain, _, { dateDetails }) => {
+			const ids = await domainIds(domain)
+			const entries = await visitors.get(ids, intervals.INTERVALS_MONTHLY, 1, dateDetails)
 
-                        return entries[0].count
-                }),
-                visitorsYear: pipe(requireAuth, async (domain, _, { dateDetails }) => {
-                        const ids = await domainIds(domain)
-                        const entries = await visitors.get(ids, intervals.INTERVALS_YEARLY, 1, dateDetails)
+			return entries[0].count
+		}),
+		visitorsYear: pipe(requireAuth, async (domain, _, { dateDetails }) => {
+			const ids = await domainIds(domain)
+			const entries = await visitors.get(ids, intervals.INTERVALS_YEARLY, 1, dateDetails)
 
-                        return entries[0].count
-                }),
-                returningVisitorsToday: pipe(requireAuth, async (domain, _, { dateDetails }) => {
-                        const ids = await domainIds(domain)
-                        const entries = await returningVisitors.getReturningVisitors(ids, intervals.INTERVALS_DAILY, 1, dateDetails)
+			return entries[0].count
+		}),
+		returningVisitorsToday: pipe(requireAuth, async (domain, _, { dateDetails }) => {
+			const ids = await domainIds(domain)
+			const entries = await returningVisitors.getReturningVisitors(ids, intervals.INTERVALS_DAILY, 1, dateDetails)
 
-                        return entries[0].count
-                }),
-                returningVisitorsWeek: pipe(requireAuth, async (domain, _, { dateDetails }) => {
-                        const ids = await domainIds(domain)
-                        const entries = await returningVisitors.getReturningVisitors(ids, intervals.INTERVALS_WEEKLY, 1, dateDetails)
+			return entries[0].count
+		}),
+		returningVisitorsWeek: pipe(requireAuth, async (domain, _, { dateDetails }) => {
+			const ids = await domainIds(domain)
+			const entries = await returningVisitors.getReturningVisitors(ids, intervals.INTERVALS_WEEKLY, 1, dateDetails)
 
-                        return entries[0].count
-                }),
-                returningVisitorsMonth: pipe(requireAuth, async (domain, _, { dateDetails }) => {
-                        const ids = await domainIds(domain)
-                        const entries = await returningVisitors.getReturningVisitors(ids, intervals.INTERVALS_MONTHLY, 1, dateDetails)
+			return entries[0].count
+		}),
+		returningVisitorsMonth: pipe(requireAuth, async (domain, _, { dateDetails }) => {
+			const ids = await domainIds(domain)
+			const entries = await returningVisitors.getReturningVisitors(ids, intervals.INTERVALS_MONTHLY, 1, dateDetails)
 
-                        return entries[0].count
-                }),
-                returningVisitorsYear: pipe(requireAuth, async (domain, _, { dateDetails }) => {
-                        const ids = await domainIds(domain)
-                        const entries = await returningVisitors.getReturningVisitors(ids, intervals.INTERVALS_YEARLY, 1, dateDetails)
+			return entries[0].count
+		}),
+		returningVisitorsYear: pipe(requireAuth, async (domain, _, { dateDetails }) => {
+			const ids = await domainIds(domain)
+			const entries = await returningVisitors.getReturningVisitors(ids, intervals.INTERVALS_YEARLY, 1, dateDetails)
 
-                        return entries[0].count
-                }),
-                newVisitorsToday: pipe(requireAuth, async (domain, _, { dateDetails }) => {
-                        const ids = await domainIds(domain)
-                        const entries = await returningVisitors.getNewVisitors(ids, intervals.INTERVALS_DAILY, 1, dateDetails)
+			return entries[0].count
+		}),
+		newVisitorsToday: pipe(requireAuth, async (domain, _, { dateDetails }) => {
+			const ids = await domainIds(domain)
+			const entries = await returningVisitors.getNewVisitors(ids, intervals.INTERVALS_DAILY, 1, dateDetails)
 
-                        return entries[0].count
-                }),
-                newVisitorsWeek: pipe(requireAuth, async (domain, _, { dateDetails }) => {
-                        const ids = await domainIds(domain)
-                        const entries = await returningVisitors.getNewVisitors(ids, intervals.INTERVALS_WEEKLY, 1, dateDetails)
+			return entries[0].count
+		}),
+		newVisitorsWeek: pipe(requireAuth, async (domain, _, { dateDetails }) => {
+			const ids = await domainIds(domain)
+			const entries = await returningVisitors.getNewVisitors(ids, intervals.INTERVALS_WEEKLY, 1, dateDetails)
 
-                        return entries[0].count
-                }),
-                newVisitorsMonth: pipe(requireAuth, async (domain, _, { dateDetails }) => {
-                        const ids = await domainIds(domain)
-                        const entries = await returningVisitors.getNewVisitors(ids, intervals.INTERVALS_MONTHLY, 1, dateDetails)
+			return entries[0].count
+		}),
+		newVisitorsMonth: pipe(requireAuth, async (domain, _, { dateDetails }) => {
+			const ids = await domainIds(domain)
+			const entries = await returningVisitors.getNewVisitors(ids, intervals.INTERVALS_MONTHLY, 1, dateDetails)
 
-                        return entries[0].count
-                }),
-                newVisitorsYear: pipe(requireAuth, async (domain, _, { dateDetails }) => {
-                        const ids = await domainIds(domain)
-                        const entries = await returningVisitors.getNewVisitors(ids, intervals.INTERVALS_YEARLY, 1, dateDetails)
+			return entries[0].count
+		}),
+		newVisitorsYear: pipe(requireAuth, async (domain, _, { dateDetails }) => {
+			const ids = await domainIds(domain)
+			const entries = await returningVisitors.getNewVisitors(ids, intervals.INTERVALS_YEARLY, 1, dateDetails)
 
-                        return entries[0].count
-                }),
-        },
+			return entries[0].count
+		}),
+	},
 	Query: {
 		facts: () => ({}),
 	},
