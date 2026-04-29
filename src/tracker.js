@@ -4,6 +4,56 @@ const isBrowser = typeof window !== 'undefined'
 const VID_KEY = 'vid'
 
 let memoryVid
+let uaChPlatformVersion
+let fontProbeWindowsVersion
+
+if (isBrowser === true && navigator.userAgentData != null && typeof navigator.userAgentData.getHighEntropyValues === 'function') {
+	navigator.userAgentData.getHighEntropyValues([ 'platformVersion' ])
+		.then((ua) => {
+			uaChPlatformVersion = ua.platformVersion
+		})
+		.catch(() => {})
+}
+
+const measureTextWidth = (family) => {
+	const span = document.createElement('span')
+	span.style.cssText = 'position:absolute;left:-9999px;top:-9999px;visibility:hidden;white-space:nowrap;font-size:72px;'
+	span.style.fontFamily = family
+	span.textContent = 'mmmmmmmmmmlli'
+	document.body.appendChild(span)
+	const width = span.offsetWidth
+	document.body.removeChild(span)
+	return width
+}
+
+const probeWindowsVersionByFonts = () => {
+	if (typeof document === 'undefined' || document.body == null) return
+	try {
+		const fallbacks = [ 'monospace', 'sans-serif', 'serif' ]
+		const baselines = fallbacks.map(measureTextWidth)
+		const tested = fallbacks.map((fb) => measureTextWidth(`"Segoe UI Variable", ${ fb }`))
+		const installed = tested.some((width, i) => width !== baselines[i])
+		fontProbeWindowsVersion = installed === true ? '11' : '10'
+	} catch (error) {}
+}
+
+if (isBrowser === true) {
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', probeWindowsVersionByFonts, { once: true })
+	} else {
+		probeWindowsVersionByFonts()
+	}
+}
+
+const resolveOsVersion = (osName, osVersion) => {
+	if (osName !== 'Windows') return osVersion
+	if (uaChPlatformVersion != null) {
+		const major = parseInt(uaChPlatformVersion.split('.')[0], 10)
+		if (Number.isNaN(major) === false) return major >= 13 ? '11' : '10'
+	}
+	if (fontProbeWindowsVersion != null) return fontProbeWindowsVersion
+	return osVersion
+}
 
 const validate = (options = {}) => ({
 	detailed: options.detailed === true,
@@ -86,7 +136,7 @@ const attributes = (detailed = false) => {
 		deviceName: platform.product,
 		deviceManufacturer: platform.manufacturer,
 		osName: platform.os.family,
-		osVersion: platform.os.version,
+		osVersion: resolveOsVersion(platform.os.family, platform.os.version),
 		browserName: platform.name,
 		browserVersion: platform.version,
 		browserWidth: window.outerWidth || window.innerWidth,
