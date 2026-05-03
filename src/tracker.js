@@ -53,14 +53,19 @@ const domReady = isBrowser === true
 
 const trackerReady = Promise.all([ uaChReady, domReady ])
 
-const resolveOsVersion = (osName, osVersion) => {
-	if (osName !== 'Windows') return osVersion
-	if (uaChPlatformVersion != null) {
-		const major = parseInt(uaChPlatformVersion.split('.')[0], 10)
-		if (Number.isNaN(major) === false) return major >= 13 ? '11' : '10'
+const resolveOs = (osName, osVersion) => {
+	if (osName === 'Windows') {
+		if (uaChPlatformVersion != null) {
+			const major = parseInt(uaChPlatformVersion.split('.')[0], 10)
+			if (Number.isNaN(major) === false) return { name: osName, version: major >= 13 ? '11' : '10' }
+		}
+		if (fontProbeWindowsVersion != null) return { name: osName, version: fontProbeWindowsVersion }
+		return { name: osName, version: osVersion }
 	}
-	if (fontProbeWindowsVersion != null) return fontProbeWindowsVersion
-	return osVersion
+	if (osName === 'OS X' && osVersion === '10.15.7') {
+		return { name: 'macOS', version: '' }
+	}
+	return { name: osName, version: osVersion }
 }
 
 const validate = (options = {}) => ({
@@ -136,6 +141,8 @@ const attributes = (detailed = false) => {
 		source: source(),
 	}
 
+	const os = resolveOs(platform.os.family, platform.os.version)
+
 	const detailedData = {
 		siteLanguage: (navigator.language || navigator.userLanguage).substr(0, 2),
 		screenWidth: screen.width,
@@ -143,8 +150,8 @@ const attributes = (detailed = false) => {
 		screenColorDepth: screen.colorDepth,
 		deviceName: platform.product,
 		deviceManufacturer: platform.manufacturer,
-		osName: platform.os.family,
-		osVersion: resolveOsVersion(platform.os.family, platform.os.version),
+		osName: os.name,
+		osVersion: os.version,
 		browserName: platform.name,
 		browserVersion: platform.version,
 		browserWidth: window.outerWidth || window.innerWidth,
