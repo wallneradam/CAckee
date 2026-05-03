@@ -7,14 +7,6 @@ let memoryVid
 let uaChPlatformVersion
 let fontProbeWindowsVersion
 
-if (isBrowser === true && navigator.userAgentData != null && typeof navigator.userAgentData.getHighEntropyValues === 'function') {
-	navigator.userAgentData.getHighEntropyValues([ 'platformVersion' ])
-		.then((ua) => {
-			uaChPlatformVersion = ua.platformVersion
-		})
-		.catch(() => {})
-}
-
 const measureTextWidth = (family) => {
 	const span = document.createElement('span')
 	span.style.cssText = 'position:absolute;left:-9999px;top:-9999px;visibility:hidden;white-space:nowrap;font-size:72px;'
@@ -37,13 +29,29 @@ const probeWindowsVersionByFonts = () => {
 	} catch (error) {}
 }
 
-if (isBrowser === true) {
-	if (document.readyState === 'loading') {
-		document.addEventListener('DOMContentLoaded', probeWindowsVersionByFonts, { once: true })
-	} else {
-		probeWindowsVersionByFonts()
-	}
-}
+const uaChReady = (isBrowser === true && navigator.userAgentData != null && typeof navigator.userAgentData.getHighEntropyValues === 'function')
+	? navigator.userAgentData.getHighEntropyValues([ 'platformVersion' ])
+		.then((ua) => {
+			uaChPlatformVersion = ua.platformVersion
+		})
+		.catch(() => {})
+	: Promise.resolve()
+
+const domReady = isBrowser === true
+	? new Promise((resolve) => {
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', () => {
+				probeWindowsVersionByFonts()
+				resolve()
+			}, { once: true })
+		} else {
+			probeWindowsVersionByFonts()
+			resolve()
+		}
+	})
+	: Promise.resolve()
+
+const trackerReady = Promise.all([ uaChReady, domReady ])
 
 const resolveOsVersion = (osName, osVersion) => {
 	if (osName !== 'Windows') return osVersion
@@ -253,7 +261,9 @@ const detect = () => {
 	const domainId = elem.getAttribute('data-ackee-domain-id')
 	const options = elem.getAttribute('data-ackee-opts') || '{}'
 
-	create(server, JSON.parse(options)).record(domainId)
+	trackerReady.then(() => {
+		create(server, JSON.parse(options)).record(domainId)
+	})
 }
 
 const create = (server, options) => {
