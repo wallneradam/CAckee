@@ -63,7 +63,7 @@ const resolveOs = (osName, osVersion) => {
 		return { name: osName, version: osVersion }
 	}
 	if (osName === 'OS X' && osVersion === '10.15.7') {
-		return { name: 'macOS', version: '' }
+		return { name: 'macOS', version: '10.15.7+' }
 	}
 	return { name: osName, version: osVersion }
 }
