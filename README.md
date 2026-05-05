@@ -28,6 +28,11 @@ This is a modified Ackee fork that takes an honest approach to visitor tracking:
 - **Enhanced dashboard**: Extended dashboard with new metrics and visualizations
 - **30-minute visitor classification**: Visitors are classified as "new" for 30 minutes after first visit, then "returning"
 - **Live dashboard refresh**: The whole dashboard refreshes automatically in the background (via AJAX, no page reload) when you switch back to the tab or when the active visitors count changes. Polling is paused while the tab is hidden to save bandwidth
+- **Improved OS detection**: Original Ackee relied on `platform.js`, which can't tell Windows 10 from Windows 11 (frozen UA), labels modern macOS as `OS X 10.15.7`, and fragments Linux into Linux/Ubuntu/Fedora/etc. buckets. This fork:
+  - **Windows 11 detection** via UA-CH `platformVersion` (Chromium) or "Segoe UI Variable" font probe (fallback)
+  - **macOS** properly labeled as `macOS` instead of `OS X`; Big Sur+ users (where Apple froze the UA at `10_15_7`) shown as `macOS 10.15.7+` since the exact version is no longer detectable
+  - **Linux family** (Linux, Ubuntu, Fedora, Linux aarch64/i686/armv7l) aggregated into a single `Linux` bucket on the dashboard, while raw distro names are preserved in the database for any future analysis
+  - **Missing OS version** displayed as `-` instead of being silently dropped from the Systems card
 
 ### Honest privacy approach:
 - **Uses localStorage for visitor tracking**: The tracker stores a per-site `vid` in the visited site's own `localStorage`
