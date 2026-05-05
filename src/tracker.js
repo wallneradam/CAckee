@@ -65,7 +65,7 @@ const resolveOs = (osName, osVersion) => {
 	if (osName === 'OS X' && osVersion === '10.15.7') {
 		return { name: 'macOS', version: '10.15.7+' }
 	}
-	return { name: osName, version: osVersion }
+	return { name: osName, version: osVersion == null || osVersion === '' ? '-' : osVersion }
 }
 
 const validate = (options = {}) => ({
