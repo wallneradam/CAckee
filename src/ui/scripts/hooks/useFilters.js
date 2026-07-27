@@ -23,6 +23,7 @@ const SET_BROWSERS_TYPE_FILTER = Symbol()
 const SET_SIZES_TYPE_FILTER = Symbol()
 const SET_SYSTEMS_TYPE_FILTER = Symbol()
 const SET_MAP_DOMAIN_FILTER = Symbol()
+const SET_EVENTS_DOMAIN_FILTER = Symbol()
 const RESET_FILTERS = Symbol()
 
 // The key should include the package version so we can increase the version number
@@ -38,6 +39,7 @@ const { get, set, reset } = createStorage(`ackee_filter_${ version }`, {
 	sizesType: SIZES_TYPE_BROWSER_RESOLUTION,
 	systemsType: SYSTEMS_TYPE_WITH_VERSION,
 	mapDomainId: undefined,
+	eventsDomainId: undefined,
 })
 
 const reducer = (state, action) => {
@@ -91,6 +93,11 @@ const reducer = (state, action) => {
 			return set({
 				...state,
 				mapDomainId: action.payload,
+			})
+		case SET_EVENTS_DOMAIN_FILTER:
+			return set({
+				...state,
+				eventsDomainId: action.payload,
 			})
 		case RESET_FILTERS:
 			return reset()
@@ -152,6 +159,11 @@ export default () => {
 		payload,
 	}), [ dispatch ])
 
+	const setEventsDomainFilter = useCallback((payload) => dispatch({
+		type: SET_EVENTS_DOMAIN_FILTER,
+		payload,
+	}), [ dispatch ])
+
 	const resetFilters = useCallback(() => dispatch({
 		type: RESET_FILTERS,
 	}), [ dispatch ])
@@ -168,6 +180,7 @@ export default () => {
 		setSizesTypeFilter,
 		setSystemsTypeFilter,
 		setMapDomainFilter,
+		setEventsDomainFilter,
 		resetFilters,
 	}
 }

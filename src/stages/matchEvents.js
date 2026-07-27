@@ -1,6 +1,6 @@
 'use strict'
 
-module.exports = (ids) => {
+module.exports = (ids, domainIds) => {
 	const stage = {
 		$match: {},
 	}
@@ -8,6 +8,12 @@ module.exports = (ids) => {
 	if (ids != null) {
 		stage.$match.eventId = {
 			$in: ids,
+		}
+	}
+
+	if (domainIds != null) {
+		stage.$match.domainId = {
+			$in: domainIds,
 		}
 	}
 

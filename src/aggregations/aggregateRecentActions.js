@@ -2,9 +2,9 @@
 
 const matchEvents = require('../stages/matchEvents')
 
-module.exports = (ids, limit) => {
+module.exports = (ids, limit, domainIds) => {
 	const aggregation = [
-		matchEvents(ids),
+		matchEvents(ids, domainIds),
 		{
 			$sort: {
 				created: -1,

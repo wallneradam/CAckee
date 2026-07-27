@@ -53,10 +53,10 @@ const update = async (id, data) => {
 	)
 }
 
-const getChart = async (ids, type, interval, limit, dateDetails) => {
+const getChart = async (ids, type, interval, limit, dateDetails, domainIds) => {
 	const aggregation = (() => {
-		if (type === 'TOTAL') return aggregateActions(ids, false, interval, limit, dateDetails)
-		if (type === 'AVERAGE') return aggregateActions(ids, true, interval, limit, dateDetails)
+		if (type === 'TOTAL') return aggregateActions(ids, false, interval, limit, dateDetails, domainIds)
+		if (type === 'AVERAGE') return aggregateActions(ids, true, interval, limit, dateDetails, domainIds)
 	})()
 
 	const enhance = (entries) => {
@@ -89,9 +89,12 @@ const getChart = async (ids, type, interval, limit, dateDetails) => {
 			})()
 
 			return {
-				id: recursiveId([ value, ...ids ]),
+				// The domainIds are part of the id because the Apollo cache
+				// would otherwise merge entries of different domain filters
+				id: recursiveId([ value, ...ids, ...(domainIds || []) ]),
 				value,
 				count: entry == null ? 0 : entry.count,
+				visitors: entry == null ? 0 : entry.visitors,
 			}
 		})
 	}
@@ -101,17 +104,17 @@ const getChart = async (ids, type, interval, limit, dateDetails) => {
 	)
 }
 
-const getList = async (ids, sorting, type, range, limit, dateDetails) => {
+const getList = async (ids, sorting, type, range, limit, dateDetails, domainIds) => {
 	const aggregation = (() => {
 		if (type === 'TOTAL') {
-			if (sorting === sortings.SORTINGS_TOP) return aggregateTopActions(ids, false, range, limit, dateDetails)
-			if (sorting === sortings.SORTINGS_NEW) return aggregateNewActions(ids, limit)
-			if (sorting === sortings.SORTINGS_RECENT) return aggregateRecentActions(ids, limit)
+			if (sorting === sortings.SORTINGS_TOP) return aggregateTopActions(ids, false, range, limit, dateDetails, domainIds)
+			if (sorting === sortings.SORTINGS_NEW) return aggregateNewActions(ids, limit, domainIds)
+			if (sorting === sortings.SORTINGS_RECENT) return aggregateRecentActions(ids, limit, domainIds)
 		}
 		if (type === 'AVERAGE') {
-			if (sorting === sortings.SORTINGS_TOP) return aggregateTopActions(ids, true, range, limit, dateDetails)
-			if (sorting === sortings.SORTINGS_NEW) return aggregateNewActions(ids, limit)
-			if (sorting === sortings.SORTINGS_RECENT) return aggregateRecentActions(ids, limit)
+			if (sorting === sortings.SORTINGS_TOP) return aggregateTopActions(ids, true, range, limit, dateDetails, domainIds)
+			if (sorting === sortings.SORTINGS_NEW) return aggregateNewActions(ids, limit, domainIds)
+			if (sorting === sortings.SORTINGS_RECENT) return aggregateRecentActions(ids, limit, domainIds)
 		}
 	})()
 
@@ -124,9 +127,12 @@ const getList = async (ids, sorting, type, range, limit, dateDetails) => {
 			const value = enhanceId(entry._id)
 
 			return {
-				id: recursiveId([ value, sorting, type, range, ...ids ]),
+				// The domainIds are part of the id because the Apollo cache
+				// would otherwise merge entries of different domain filters
+				id: recursiveId([ value, sorting, type, range, ...ids, ...(domainIds || []) ]),
 				value,
 				count: entry.count,
+				visitors: entry.visitors,
 				created: entry.created,
 			}
 		})

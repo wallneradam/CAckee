@@ -36,6 +36,7 @@ const Main = (props) => {
 				setSizesTypeFilter: props.setSizesTypeFilter,
 				setSystemsTypeFilter: props.setSystemsTypeFilter,
 				setMapDomainFilter: props.setMapDomainFilter,
+				setEventsDomainFilter: props.setEventsDomainFilter,
 				route: props.route,
 			}),
 			h(Dashboard, props),

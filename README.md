@@ -26,6 +26,7 @@ This is a modified Ackee fork that takes an honest approach to visitor tracking:
 - **Country-based analytics**: Visitor statistics by country with IP geolocation
 - **World map view**: Interactive map tab showing unique visitor distribution across countries for the last 24 hours, 7 days and 30 days
 - **Enhanced dashboard**: Extended dashboard with new metrics and visualizations
+- **Domain-aware events with unique visitors**: Actions carry the `vid` and the `domainId`, so every event key shows how many unique visitors triggered it (on row hover) and the events view can be filtered by domain
 - **30-minute visitor classification**: Visitors are classified as "new" for 30 minutes after first visit, then "returning"
 - **Live dashboard refresh**: The whole dashboard refreshes automatically in the background (via AJAX, no page reload) when you switch back to the tab or when the active visitors count changes. Polling is paused while the tab is hidden to save bandwidth
 - **Improved OS detection**: Original Ackee relied on `platform.js`, which can't tell Windows 10 from Windows 11 (frozen UA), labels modern macOS as `OS X 10.15.7`, and fragments Linux into Linux/Ubuntu/Fedora/etc. buckets. This fork:

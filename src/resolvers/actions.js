@@ -4,6 +4,7 @@ const KnownError = require('../utils/KnownError')
 const messages = require('../utils/messages')
 const events = require('../database/events')
 const actions = require('../database/actions')
+const domains = require('../database/domains')
 
 const polish = (obj) => {
 	return Object.entries(obj).reduce((acc, [ key, value ]) => {
@@ -18,7 +19,7 @@ const polish = (obj) => {
 
 module.exports = {
 	Mutation: {
-		createAction: async (parent, { eventId, input }, { isIgnored }) => {
+		createAction: async (parent, { eventId, domainId, input }, { isIgnored }) => {
 			// Ignore your own actions when logged in
 			if (isIgnored === true) {
 				return {
@@ -29,11 +30,22 @@ module.exports = {
 				}
 			}
 
-			const data = polish({ ...input, eventId })
+			const data = polish({ ...input, eventId, visitorId: input.vid, domainId })
+
+			// The vid is only an input alias for the visitorId
+			delete data.vid
 
 			const event = await events.get(eventId)
 
 			if (event == null) throw new KnownError('Unknown event')
+
+			// The domainId is optional to stay compatible with trackers that
+			// don't send it, but a given domain must exist
+			if (data.domainId != null) {
+				const domain = await domains.get(data.domainId)
+
+				if (domain == null) throw new KnownError('Unknown domain')
+			}
 
 			let entry
 

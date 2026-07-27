@@ -2,10 +2,11 @@ import { gql } from '@apollo/client'
 
 export default gql`
 	fragment listField on EventStatistics {
-		list(sorting: $sorting, type: $type, range: $range) {
+		list(sorting: $sorting, type: $type, range: $range, domainId: $domainId) {
 			id
 			value
 			count
+			visitors
 			created
 		}
 	}

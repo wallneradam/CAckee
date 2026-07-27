@@ -24,6 +24,9 @@ const Row = (props) => {
 			),
 			h('div', { className: 'flexList__column flexList__column--text-adjustment' },
 				h('span', { className: 'flexList__truncated' }, props.text),
+				// Entries that carry a visitor count show it on hover, so the
+				// key stays readable while the row is idle
+				props.visitors != null && h('span', { className: 'flexList__obscured' }, `${ props.visitors } ${ props.visitors === 1 ? 'visitor' : 'visitors' }`),
 			),
 		)
 	)
@@ -55,6 +58,7 @@ const PresentationCounterList = (props) => {
 						count: props.formatter(item.count),
 						url: item.url,
 						text: item.text,
+						visitors: item.visitors,
 					})
 				)),
 			),
@@ -68,6 +72,7 @@ PresentationCounterList.propTypes = {
 			url: PropTypes.object,
 			text: PropTypes.string.isRequired,
 			count: PropTypes.number.isRequired,
+			visitors: PropTypes.number,
 		}),
 	).isRequired,
 	formatter: PropTypes.func.isRequired,

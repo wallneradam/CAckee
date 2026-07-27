@@ -10,7 +10,9 @@ Ackee won't track personal information by default, but tracked events might eith
 
 ### Creating events
 
-Create a new event in the settings of Ackee and you're ready to go. Ackee shows the id and a usage example when you click on an existing event. You can use the code to get started or by taking a look at the documentation of [ackee-tracker](https://github.com/electerious/ackee-tracker).
+Create a new event in the settings of Ackee and you're ready to go. Ackee shows the id and a usage example when you click on an existing event.
+
+> The `ackee-tracker` npm package is **not** compatible with this fork, because the fork requires an anonymous visitor identifier (`vid`) that the package doesn't send. Use the `tracker.js` served by your own Ackee instance instead. It exposes the same API on `window.ackeeTracker`.
 
 #### Event type
 
@@ -23,15 +25,21 @@ The event type specifies how Ackee will show the aggregated data in the UI. It c
 
 ### Adding actions
 
-An action should be added to an event whenever the user does what you want to track. It's similar to domains that get filled with records. You can add an action to an event [using the GraphQL API](API.md#Create%20an%20action) or using [ackee-tracker](https://github.com/electerious/ackee-tracker). An action creation can be triggered by anything that executes JS.
+An action should be added to an event whenever the user does what you want to track. It's similar to domains that get filled with records. You can add an action to an event [using the GraphQL API](API.md#Create%20an%20action) or using the tracker. An action creation can be triggered by anything that executes JS.
 
 Setup:
 
-```js
-import * as ackeeTracker from 'ackee-tracker'
-
-const instance = ackeeTracker.create('https://ackee.example.com')
+```html
+<script async src="https://ackee.example.com/tracker.js"></script>
 ```
+
+```js
+const instance = ackeeTracker.create('https://ackee.example.com', {
+	domainId: 'hd11f820-68a1-19e3-a5b4-11d3bf10a4fc'
+})
+```
+
+The tracker sends the anonymous visitor identifier along with every action, so the UI can show how many unique visitors triggered an event key. The `domainId` option makes the actions filterable by domain in the UI. It's optional and only needed when the instance doesn't record page views: `record(domainId)` remembers the domain and reuses it for subsequent actions.
 
 Examples:
 

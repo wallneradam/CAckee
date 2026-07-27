@@ -1,10 +1,11 @@
 'use strict'
 
 const matchEvents = require('../stages/matchEvents')
+const countVisitors = require('../utils/countVisitors')
 
-module.exports = (ids, limit) => {
+module.exports = (ids, limit, domainIds) => {
 	const aggregation = [
-		matchEvents(ids),
+		matchEvents(ids, domainIds),
 		{
 			$group: {
 				_id: {
@@ -16,6 +17,17 @@ module.exports = (ids, limit) => {
 				created: {
 					$first: '$created',
 				},
+				visitors: {
+					$addToSet: '$visitorId',
+				},
+			},
+		},
+		{
+			$project: {
+				_id: '$_id',
+				count: '$count',
+				created: '$created',
+				visitors: countVisitors,
 			},
 		},
 		{

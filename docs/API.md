@@ -324,8 +324,8 @@ mutation createEvent($input: CreateEventInput!) {
 ### Create an action
 
 ```graphql
-mutation createAction($eventId: ID!, $input: CreateActionInput!) {
-	createAction(eventId: $eventId, input: $input) {
+mutation createAction($eventId: ID!, $domainId: ID, $input: CreateActionInput!) {
+	createAction(eventId: $eventId, domainId: $domainId, input: $input) {
 		payload {
 			id
 		}
@@ -336,12 +336,16 @@ mutation createAction($eventId: ID!, $input: CreateActionInput!) {
 ```json
 {
   "eventId": "c8865d94-9077-420f-86a0-32545bcbf61b",
+  "domainId": "hd11f820-68a1-19e3-a5b4-11d3bf10a4fc",
   "input": {
+    "vid": "0e1a8b6c-8a54-4f5a-9e0f-2b1c3d4e5f60",
     "key": "Action Key",
     "value": 1
   }
 }
 ```
+
+`domainId` and `vid` are optional. Send both to see the number of unique visitors of an event key in the UI and to filter the event statistics by domain. The `vid` is the same anonymous visitor identifier the tracker sends along with records.
 
 ### Update an action
 

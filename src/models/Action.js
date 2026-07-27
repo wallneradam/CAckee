@@ -15,6 +15,14 @@ const schema = new mongoose.Schema({
 		required: true,
 		index: true,
 	},
+	visitorId: {
+		type: String,
+		index: true,
+	},
+	domainId: {
+		type: String,
+		index: true,
+	},
 	key: {
 		type: String,
 	},

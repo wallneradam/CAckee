@@ -131,6 +131,7 @@ const FilterItem = (props) => {
 const Filter = (props) => {
 	const domains = useDomains()
 	const selectedMapDomain = domains.value.find((domain) => domain.id === props.filters.mapDomainId)
+	const selectedEventsDomain = domains.value.find((domain) => domain.id === props.filters.eventsDomainId)
 
 	const sortingButtons = [
 		createButton('Top', 'Top entries first', props.setSortingFilter, props.filters.sorting, sortings.SORTINGS_TOP),
@@ -161,6 +162,13 @@ const Filter = (props) => {
 		...mapDomainButtons,
 	].filter(Boolean))
 
+	const eventsDomainButtons = domains.value.map((domain) => createButton(domain.title, undefined, props.setEventsDomainFilter, props.filters.eventsDomainId, domain.id))
+	const eventsDomainItem = createItem(selectedEventsDomain == null ? 'All domains' : selectedEventsDomain.title, [
+		createButton('All domains', 'Show all domains combined', props.setEventsDomainFilter, props.filters.eventsDomainId),
+		eventsDomainButtons.length > 0 ? createSeparator() : undefined,
+		...eventsDomainButtons,
+	].filter(Boolean))
+
 	const routesMap = {
 		[routes.MAP]: [
 			mapDomainItem,
@@ -189,6 +197,7 @@ const Filter = (props) => {
 			intervalItem,
 		],
 		[routes.EVENTS]: [
+			eventsDomainItem,
 			intervalItem,
 			sortingItem,
 		],
@@ -271,6 +280,7 @@ Filter.propTypes = {
 	setSizesTypeFilter: PropTypes.func.isRequired,
 	setSystemsTypeFilter: PropTypes.func.isRequired,
 	setMapDomainFilter: PropTypes.func.isRequired,
+	setEventsDomainFilter: PropTypes.func.isRequired,
 	route: PropTypes.string.isRequired,
 }
 

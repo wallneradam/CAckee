@@ -39,6 +39,10 @@ module.exports = gql`
 		Sum of values on that date.
 		"""
 		count: Float!
+		"""
+		Number of unique visitors that triggered the event on that date. Only counts actions that were sent with a visitor identifier.
+		"""
+		visitors: Float
 	}
 
 	type EventListEntry {
@@ -54,6 +58,10 @@ module.exports = gql`
 		Sum of values of the current event key.
 		"""
 		count: Float
+		"""
+		Number of unique visitors that triggered the event key. Only counts actions that were sent with a visitor identifier and is unavailable when sorting by RECENT.
+		"""
+		visitors: Float
 		"""
 		Identifies the date and time when the object was created.
 		"""
@@ -77,7 +85,11 @@ module.exports = gql`
 			"""
 			Number of entries to return. Starts with the current day, month or year depending on the chosen interval.
 			"""
-			limit: Int = 14
+			limit: Int = 14,
+			"""
+			Only include actions of this domain. Includes actions of all domains when not specified.
+			"""
+			domainId: ID
 		): [EventChartEntry!]
 		"""
 		The list type should be used when showing events in a list. It groups events by their key and shows the total or average sum of values on each entry.
@@ -89,7 +101,11 @@ module.exports = gql`
 			"""
 			Number of entries to return.
 			"""
-			limit: Int = 30
+			limit: Int = 30,
+			"""
+			Only include actions of this domain. Includes actions of all domains when not specified.
+			"""
+			domainId: ID
 		): [EventListEntry!]
 	}
 `

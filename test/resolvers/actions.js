@@ -5,6 +5,7 @@ const listen = require('test-listen')
 const uuid = require('uuid').v4
 
 const server = require('../../src/server')
+const Action = require('../../src/models/Action')
 const { connectToDatabase, fillDatabase, cleanupDatabase, disconnectFromDatabase, api } = require('./_utils')
 
 const base = listen(server)
@@ -77,6 +78,69 @@ test.serial('update action', async (t) => {
 	const { json } = await api(base, body, t.context.token.id)
 
 	t.true(json.data.updateAction.success)
+})
+
+test.serial('create action with vid and domainId', async (t) => {
+	const key = uuid()
+
+	const body = {
+		query: `
+			mutation createAction($eventId: ID!, $domainId: ID, $input: CreateActionInput!) {
+				createAction(eventId: $eventId, domainId: $domainId, input: $input) {
+					success
+					payload {
+						id
+					}
+				}
+			}
+		`,
+		variables: {
+			eventId: t.context.event.id,
+			domainId: t.context.domain.id,
+			input: {
+				vid: 'test-vid',
+				key,
+				value: 1,
+			},
+		},
+	}
+
+	const { json } = await api(base, body, t.context.token.id)
+
+	t.true(json.data.createAction.success)
+
+	const action = await Action.findOne({
+		id: json.data.createAction.payload.id,
+	})
+
+	t.is(action.visitorId, 'test-vid')
+	t.is(action.domainId, t.context.domain.id)
+})
+
+test.serial('reject action creation with unknown domain', async (t) => {
+	const body = {
+		query: `
+			mutation createAction($eventId: ID!, $domainId: ID, $input: CreateActionInput!) {
+				createAction(eventId: $eventId, domainId: $domainId, input: $input) {
+					success
+				}
+			}
+		`,
+		variables: {
+			eventId: t.context.event.id,
+			domainId: uuid(),
+			input: {
+				vid: 'test-vid',
+				key: uuid(),
+				value: 1,
+			},
+		},
+	}
+
+	const { json } = await api(base, body, t.context.token.id)
+
+	t.truthy(json.errors)
+	t.is(json.errors[0].message, 'Unknown domain')
 })
 
 test.serial('ignore action creation when logged in', async (t) => {

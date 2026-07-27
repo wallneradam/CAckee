@@ -72,6 +72,10 @@ const validate = (options = {}) => ({
 	detailed: options.detailed === true,
 	ignoreLocalhost: options.ignoreLocalhost !== false,
 	ignoreOwnVisits: options.ignoreOwnVisits !== false,
+	debug: options.debug === true,
+	// Attached to actions so the UI can filter event statistics by domain.
+	// Optional, because the domain is usually known from the record call.
+	domainId: options.domainId,
 })
 
 const isLocalhost = (hostname) => {
@@ -193,10 +197,10 @@ const updateRecordBody = (recordId) => ({
 	},
 })
 
-const createActionBody = (eventId, input) => ({
+const createActionBody = (eventId, domainId, input) => ({
 	query: `
-		mutation createAction($eventId: ID!, $input: CreateActionInput!) {
-			createAction(eventId: $eventId, input: $input) {
+		mutation createAction($eventId: ID!, $domainId: ID, $input: CreateActionInput!) {
+			createAction(eventId: $eventId, domainId: $domainId, input: $input) {
 				payload {
 					id
 				}
@@ -205,6 +209,7 @@ const createActionBody = (eventId, input) => ({
 	`,
 	variables: {
 		eventId,
+		domainId,
 		input,
 	},
 })
@@ -228,6 +233,22 @@ const endpoint = (server) => {
 	return server + (hasTrailingSlash === true ? '' : '/') + 'api'
 }
 
+const timeZone = () => {
+	try {
+		return new Intl.DateTimeFormat().resolvedOptions().timeZone
+	} catch (error) {
+		return
+	}
+}
+
+// Errors thrown inside the xhr callbacks can't be caught by the caller and
+// would end up as uncaught errors on the site that includes the tracker.
+// Analytics must never break the site it measures, so failures are swallowed
+// and only surfaced when the debug option is enabled.
+const fail = (options, message) => {
+	if (options.debug === true) console.warn(`Ackee: ${ message }`)
+}
+
 const send = (url, body, options, next) => {
 	const xhr = new XMLHttpRequest()
 
@@ -235,7 +256,7 @@ const send = (url, body, options, next) => {
 
 	xhr.onload = () => {
 		if (xhr.status !== 200) {
-			throw new Error('Server returned with an unhandled status')
+			return fail(options, 'Server returned with an unhandled status')
 		}
 
 		let json = null
@@ -243,19 +264,31 @@ const send = (url, body, options, next) => {
 		try {
 			json = JSON.parse(xhr.responseText)
 		} catch (error) {
-			throw new Error('Failed to parse response from server')
+			return fail(options, 'Failed to parse response from server')
 		}
 
 		if (json.errors != null) {
-			throw new Error(json.errors[0].message)
+			return fail(options, json.errors[0].message)
 		}
 
-		if (typeof next === 'function') {
-			return next(json)
+		try {
+			if (typeof next === 'function') {
+				return next(json)
+			}
+		} catch (error) {
+			return fail(options, error.message)
 		}
 	}
 
+	xhr.onerror = () => {
+		fail(options, 'Failed to reach the server')
+	}
+
 	xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+
+	const userTimeZone = timeZone()
+	if (userTimeZone != null) xhr.setRequestHeader('Time-Zone', userTimeZone)
+
 	xhr.withCredentials = options.ignoreOwnVisits
 	xhr.send(JSON.stringify(body))
 }
@@ -294,7 +327,13 @@ const create = (server, options) => {
 		return fakeInstance
 	}
 
+	// Actions are sent with the domain of the most recent record, so a tracker
+	// that only calls record() still gets domain-aware event statistics
+	let currentDomainId = options.domainId
+
 	const _record = (domainId, attrs = attributes(options.detailed), next) => {
+		currentDomainId = domainId
+
 		let isStopped = false
 		const stop = () => {
 			isStopped = true
@@ -352,7 +391,9 @@ const create = (server, options) => {
 	}
 
 	const _action = (eventId, attrs, next) => {
-		send(url, createActionBody(eventId, attrs), options, (json) => {
+		const input = { vid: vid(), ...attrs }
+
+		send(url, createActionBody(eventId, currentDomainId, input), options, (json) => {
 			const actionId = json.data.createAction.payload.id
 
 			if (isFakeId(actionId) === true) {
@@ -386,6 +427,11 @@ if (isBrowser === true) {
 		attributes,
 		detect,
 		create,
+		// Resolves once the user agent client hints and the font probe have
+		// finished. Callers that drive the tracker themselves (e.g. a single
+		// page app) must await it before the first record, otherwise the
+		// operating system version of that record is incomplete.
+		ready: trackerReady,
 	}
 
 	detect()

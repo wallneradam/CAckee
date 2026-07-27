@@ -2,13 +2,24 @@
 
 const intervals = require('../constants/intervals')
 const matchEvents = require('../stages/matchEvents')
+const countVisitors = require('../utils/countVisitors')
 
-module.exports = (ids, average, interval, limit, dateDetails) => {
+module.exports = (ids, average, interval, limit, dateDetails, domainIds) => {
 	const aggregation = [
-		matchEvents(ids),
+		matchEvents(ids, domainIds),
 		{
 			$group: {
 				_id: {},
+				visitors: {
+					$addToSet: '$visitorId',
+				},
+			},
+		},
+		{
+			$project: {
+				_id: '$_id',
+				count: '$count',
+				visitors: countVisitors,
 			},
 		},
 	]

@@ -5,7 +5,7 @@ import chartField from '../../fragments/chartField'
 import enhanceEventChart from '../../../enhancers/enhanceEventChart'
 
 const QUERY = gql`
-	query fetchEventChartEntries($id: ID!, $interval: Interval!, $type: EventChartType!, $limit: Int) {
+	query fetchEventChartEntries($id: ID!, $interval: Interval!, $type: EventChartType!, $limit: Int, $domainId: ID) {
 		event(id: $id) {
 			id
 			statistics {
