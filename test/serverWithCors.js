@@ -16,7 +16,7 @@ test('return cors headers if env var specifies one', async (t) => {
 		ACKEE_ALLOW_ORIGIN: url.origin,
 	})
 
-	const { headers } = await fetch(url.href)
+	const { headers } = await fetch(url.href, { headers: { Origin: url.origin } })
 
 	t.is(headers.get('Access-Control-Allow-Origin'), url.origin)
 	t.is(headers.get('Access-Control-Allow-Methods'), 'GET, POST, PATCH, OPTIONS')

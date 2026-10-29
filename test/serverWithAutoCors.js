@@ -25,13 +25,13 @@ test.afterEach.always(async (t) => {
 
 test('return cors headers for domain with fully qualifed domain name', async (t) => {
 	const url = new URL('/api', await base)
-	const origin = 'fqdn.example.com'
+	const origin = 'https://fqdn.example.com'
 
 	const restore = mockedEnv({
 		ACKEE_AUTO_ORIGIN: 'true',
 	})
 
-	const { headers } = await fetch(url.href, { headers: { Host: origin } })
+	const { headers } = await fetch(url.href, { headers: { Origin: origin } })
 
 	t.is(headers.get('Access-Control-Allow-Origin'), origin)
 	t.is(headers.get('Access-Control-Allow-Methods'), 'GET, POST, PATCH, OPTIONS')
@@ -43,13 +43,13 @@ test('return cors headers for domain with fully qualifed domain name', async (t)
 
 test('do not return cors headers for domain that is not a fully qualified domain name', async (t) => {
 	const url = new URL('/api', await base)
-	const origin = 'not-an-fqdn'
+	const origin = 'https://not-an-fqdn'
 
 	const restore = mockedEnv({
 		ACKEE_AUTO_ORIGIN: 'true',
 	})
 
-	const { headers } = await fetch(url.href, { headers: { Host: origin } })
+	const { headers } = await fetch(url.href, { headers: { Origin: origin } })
 
 	t.is(headers.get('Access-Control-Allow-Origin'), null)
 	t.is(headers.get('Access-Control-Allow-Methods'), null)
