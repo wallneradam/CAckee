@@ -15,6 +15,7 @@ import { MODALS_VIEWS, MODALS_DURATIONS, MODALS_VISITORS, MODALS_RETURNING_VISIT
 
 import useMergedActiveVisitors from '../../api/hooks/facts/useMergedActiveVisitors'
 import useMergedFacts from '../../api/hooks/facts/useMergedFacts'
+import useDomainFacts from '../../api/hooks/domains/useDomainFacts'
 import useMergedViews from '../../api/hooks/views/useMergedViews'
 import useMergedDurations from '../../api/hooks/durations/useMergedDurations'
 import useMergedVisitors from '../../api/hooks/visitors/useMergedVisitors'
@@ -30,6 +31,7 @@ import useMergedLanguages from '../../api/hooks/languages/useMergedLanguages'
 import useMergedCountries from '../../api/hooks/countries/useMergedCountries'
 
 import CardFacts from '../cards/CardFacts'
+import CardDomainFacts from '../cards/CardDomainFacts'
 import CardStatistics from '../cards/CardStatistics'
 
 import RendererViews from '../renderers/RendererViews'
@@ -46,6 +48,12 @@ const RouteOverview = (props) => {
 			h(CardFacts, {
 				hook: useMergedFacts,
 				hookArgs: [],
+			}),
+			h('div', { className: 'content__spacer' }),
+			h(CardDomainFacts, {
+				hook: useDomainFacts,
+				hookArgs: [],
+				onDomainClick: (domain) => props.setRoute(`/domains/${ domain.id }`),
 			}),
 			h('div', { className: 'content__spacer' }),
 			h(CardStatistics, {

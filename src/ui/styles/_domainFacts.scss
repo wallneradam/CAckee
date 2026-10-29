@@ -1,0 +1,16 @@
+.domainFacts {
+
+	grid-column: 1 / -1;
+	display: grid;
+	gap: $gutter*1.5;
+	width: 100%;
+
+	&__headline {
+		margin: 0;
+	}
+
+	&__title {
+		margin-bottom: math.div($gutter, 1.5);
+	}
+
+}
