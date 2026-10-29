@@ -14,6 +14,7 @@ const findMatchingOrigin = require('./utils/findMatchingOrigin')
 const customTracker = require('./utils/customTracker')
 const createApolloServer = require('./utils/createApolloServer')
 const { createMicroContext } = require('./utils/createContext')
+const setSecurityHeaders = require('./utils/securityHeaders')
 
 const index = readFile(resolve(__dirname, '../dist/index.html')).catch(signale.fatal)
 const favicon = readFile(resolve(__dirname, '../dist/favicon.ico')).catch(signale.fatal)
@@ -80,6 +81,12 @@ const attachCorsHeaders = (fn) => async (request, response) => {
 		response.setHeader('Access-Control-Allow-Credentials', 'true')
 		response.setHeader('Access-Control-Max-Age', '3600')
 	}
+
+	return fn(request, response)
+}
+
+const attachSecurityHeaders = (fn) => async (request, response) => {
+	setSecurityHeaders(response)
 
 	return fn(request, response)
 }
@@ -154,9 +161,11 @@ const routes = [
 ].filter(Boolean)
 
 module.exports = micro(
-	attachCorsHeaders(
-		catchError(
-			router(...routes),
+	attachSecurityHeaders(
+		attachCorsHeaders(
+			catchError(
+				router(...routes),
+			),
 		),
 	),
 )

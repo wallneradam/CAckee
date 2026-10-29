@@ -3,7 +3,10 @@
 const COOKIE_NAME = 'ackee_ignore'
 
 module.exports = {
-	isSet: (cookie = '') => cookie.includes(`${ COOKIE_NAME }=1`),
+	isSet: (cookie = '') => cookie.split(';').some((part) => {
+		const [ key, ...rest ] = part.trim().split('=')
+		return key === COOKIE_NAME && rest.join('=') === '1'
+	}),
 	on: {
 		name: COOKIE_NAME,
 		value: '1',

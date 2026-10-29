@@ -59,6 +59,7 @@ const update = async (id, data) => {
 			},
 		}, {
 			new: true,
+			runValidators: true,
 		}),
 	)
 }

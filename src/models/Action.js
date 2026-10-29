@@ -25,13 +25,18 @@ const schema = new mongoose.Schema({
 	},
 	key: {
 		type: String,
+		maxlength: 500,
 	},
 	value: {
 		type: Number,
-		required: true,
+		// Only required on creation, updates may reset the value using null
+		required() {
+			return this.isNew === true
+		},
 	},
 	details: {
 		type: String,
+		maxlength: 2000,
 	},
 	created: {
 		type: Date,

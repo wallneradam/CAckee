@@ -4,7 +4,22 @@ const { subMilliseconds, subHours, subDays, subWeeks, subMonths, subYears, start
 const serverTimeZone = require('./timeZone')
 const intervals = require('../constants/intervals')
 
-module.exports = (userTimeZone = serverTimeZone) => {
+// Validate the timezone string against the Intl API. Falls back to the
+// server timezone when the client-supplied value is absent or invalid,
+// preventing a RangeError from propagating through the request.
+const sanitizeTimeZone = (timeZone) => {
+	if (timeZone == null) return serverTimeZone
+
+	try {
+		new Intl.DateTimeFormat(undefined, { timeZone })
+		return timeZone
+	} catch {
+		return serverTimeZone
+	}
+}
+
+module.exports = (requestedTimeZone) => {
+	const userTimeZone = sanitizeTimeZone(requestedTimeZone)
 	const currentDate = new Date()
 
 	// This is the biggest, positive timezone offset possible (starting from UTC).
