@@ -1,16 +1,27 @@
 .domainFacts {
 
-	grid-column: 1 / -1;
-	display: grid;
-	gap: $gutter*1.5;
-	width: 100%;
-
-	&__headline {
-		margin: 0;
+	&__divider {
+		grid-column: 1 / -1;
+		appearance: none;
+		border: none;
+		background: mix($card, $black, 50%);
+		padding: math.div($gutter, 2.5) $gutter*1.5;
+		width: 100%;
+		color: $light;
+		font: inherit;
+		font-size: .85em;
+		text-align: left;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		cursor: pointer;
+		transition: color .2s;
 	}
 
-	&__title {
-		margin-bottom: math.div($gutter, 1.5);
+	&__divider:hover,
+	&__divider:focus {
+		color: $white;
+		outline: none;
 	}
 
 }

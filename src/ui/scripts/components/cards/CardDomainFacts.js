@@ -1,4 +1,4 @@
-import { createElement as h } from 'react'
+import { createElement as h, Fragment } from 'react'
 import PropTypes from 'prop-types'
 
 import formatNumber from '../../utils/formatNumber'
@@ -11,7 +11,7 @@ const Presentation = (props) => {
 	return (
 		h('div', { className: 'facts__card' },
 			h(Headline, {
-				type: 'h3',
+				type: 'h2',
 				size: 'small',
 				className: 'facts__top',
 			}, props.headline),
@@ -25,44 +25,32 @@ const Presentation = (props) => {
 	)
 }
 
-const Row = (props) => {
-	const { visitorsToday, returningVisitorsToday, newVisitorsToday } = props.facts
-
-	return (
-		h('div', { className: 'domainFacts__domain' },
-			h(Headline, {
-				type: 'h3',
-				size: 'medium',
-				className: 'domainFacts__title',
-				onClick: props.onClick,
-			}, props.title),
-			h('div', { className: 'facts' },
-				h(Presentation, { headline: 'Visitors today', value: visitorsToday }),
-				h(Presentation, { headline: 'Returning visitors today', value: returningVisitorsToday }),
-				h(Presentation, { headline: 'New visitors today', value: newVisitorsToday }),
-			),
-		)
-	)
-}
-
 const CardDomainFacts = (props) => {
 	const { value } = props.hook(...props.hookArgs)
 
 	if (value.length === 0) return null
 
 	return (
-		h('div', { className: 'domainFacts' },
-			h(Headline, {
-				type: 'h2',
-				size: 'medium',
-				className: 'domainFacts__headline',
-			}, 'Domains'),
-			value.map((domain) => h(Row, {
-				key: domain.id,
-				title: domain.title,
-				facts: domain.facts,
-				onClick: () => props.onDomainClick(domain),
-			})),
+		h('div', { className: 'facts' },
+			value.map((domain) => h(Fragment, { key: domain.id },
+				h('button', {
+					className: 'domainFacts__divider',
+					title: `Open ${ domain.title }`,
+					onClick: () => props.onDomainClick(domain),
+				}, domain.title),
+				h(Presentation, {
+					headline: 'Visitors today',
+					value: domain.facts.visitorsToday,
+				}),
+				h(Presentation, {
+					headline: 'Returning visitors today',
+					value: domain.facts.returningVisitorsToday,
+				}),
+				h(Presentation, {
+					headline: 'New visitors today',
+					value: domain.facts.newVisitorsToday,
+				}),
+			)),
 		)
 	)
 }
